@@ -99,6 +99,11 @@ export default class NavbarMobile extends Vue {
     @apply flex;
   }
 
+  &__clickable {
+    @apply cursor-pointer;
+    @apply font-medium no-underline;
+  }
+
   &__hamburger {
     @apply ml-3;
     @apply z-10;

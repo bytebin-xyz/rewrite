@@ -31,6 +31,18 @@
         </template>
 
         <template v-else>
+          <li class="nav-desktop__link">
+            <nuxt-link class="nav-desktop__clickable nav-desktop__icon" to="/@me/files">
+              <img alt="My Files" src="@/assets/svg/search.svg" srcset="" />
+            </nuxt-link>
+          </li>
+
+          <li class="nav-desktop__link">
+            <nuxt-link class="nav-desktop__clickable nav-desktop__icon" to="/@me/files">
+              <img alt="My Files" src="@/assets/svg/folder.svg" srcset="" />
+            </nuxt-link>
+          </li>
+
           <li class="nav-desktop__dropdown">
             <user-dropdown />
           </li>
@@ -58,6 +70,33 @@ export default class NavbarDesktop extends Vue {}
     @apply flex;
   }
 
+  &__clickable {
+    @apply cursor-pointer;
+    @apply font-medium no-underline;
+    @apply p-3;
+    @apply rounded;
+    @apply text-base text-secondary-300;
+
+    &:hover {
+      @apply bg-secondary-800;
+    }
+  }
+
+  &__dropdown {
+    @apply ml-2;
+  }
+
+  &__icon {
+    &:hover {
+      @apply bg-secondary-800;
+    }
+
+    & img {
+      height: 24px;
+      width: 29px;
+    }
+  }
+
   &__left,
   &__right {
     @apply flex flex-row items-center;
@@ -74,17 +113,12 @@ export default class NavbarDesktop extends Vue {}
 
   &__link {
     @apply items-center;
-    @apply mx-2 my-0;
-    @apply text-base text-secondary-300;
+    @apply mx-1 my-0;
 
     display: inherit;
 
     &:first-child {
       @apply ml-0;
-    }
-
-    &:hover {
-      @apply text-secondary-400;
     }
 
     &:last-child {

@@ -25,7 +25,7 @@
       @click="close"
     >
       <li class="user-dropdown__link user-dropdown__link--profile">
-        <nuxt-link class="user-dropdown__clickable" to="/profile">
+        <nuxt-link class="user-dropdown__clickable" to="/@me/files">
           <img
             class="user-dropdown__avatar"
             :src="`https://avatars.dicebear.com/api/jdenticon/${$accessor.user.uid}.svg`"
@@ -33,10 +33,12 @@
 
           <div>
             <span class="user-dropdown__username">{{ $accessor.user.display_name }}</span>
-            <span class="text-gray-600">View Profile</span>
+            <span class="text-gray-600">My Files</span>
           </div>
         </nuxt-link>
       </li>
+
+      <li class="user-dropdown__divider"></li>
 
       <li class="user-dropdown__link">
         <nuxt-link class="user-dropdown__clickable" to="/settings">
@@ -122,12 +124,11 @@ $hover-color: #f1f3f6;
     @apply px-4 py-0;
     @apply text-black text-sm;
 
-    &:focus {
-      @apply outline-none;
-    }
-
     &:focus,
     &:hover {
+      @apply border-none;
+      @apply outline-none;
+
       background-color: #f1f3f6;
     }
 
@@ -136,12 +137,11 @@ $hover-color: #f1f3f6;
       @apply border-none rounded-sm;
       @apply cursor-pointer;
 
-      &:focus {
-        @apply outline-none;
-      }
-
+      &:focus,
       &:hover {
         @apply bg-red-200;
+        @apply border-none;
+        @apply outline-none;
         @apply text-red-600;
       }
     }
@@ -160,6 +160,7 @@ $hover-color: #f1f3f6;
 
     &--toggler {
       @apply m-0;
+      @apply select-none;
 
       width: 10px;
     }
@@ -176,7 +177,6 @@ $hover-color: #f1f3f6;
       @apply box-border;
       @apply flex flex-row;
 
-      border-bottom: 1px solid #f1f3f6;
       height: 72px;
     }
   }
@@ -201,13 +201,13 @@ $hover-color: #f1f3f6;
 
   &__toggler {
     @apply bg-secondary-900;
-    @apply border-2 border-secondary-800 rounded-sm;
+    @apply border-2 border-secondary-800 rounded;
     @apply flex flex-row items-center;
     @apply px-4 py-0;
     @apply text-secondary-300;
 
     background-color: lighten(#282a41, 5%);
-    height: 52px;
+    height: 48px;
 
     &:focus,
     &:hover {

@@ -28,6 +28,7 @@ export default class Navbar extends Vue {}
   @apply w-full;
 
   height: 84px;
+  letter-spacing: 0.5px;
   max-width: 1600px;
 
   &__brand {
@@ -36,14 +37,5 @@ export default class Navbar extends Vue {}
 
     margin: 2px;
   }
-}
-
-.navbar::v-deep .nav-desktop__clickable,
-.navbar::v-deep .nav-mobile__clickable {
-  @apply cursor-pointer;
-  @apply font-medium no-underline;
-
-  letter-spacing: 0.5px;
-  padding: 2px 5px;
 }
 </style>
