@@ -1,0 +1,44 @@
+.form {
+  @apply flex flex-col items-center justify-center;
+  @apply mt-6;
+
+  &__group {
+    @apply flex flex-col;
+    @apply mx-0 my-3;
+    @apply w-full;
+  }
+
+  &__group-error {
+    @apply font-normal text-base text-left text-red-900;
+    @apply mx-0 my-3;
+  }
+
+  &__group-errors {
+    @apply bg-red-300;
+    @apply px-4 py-0;
+  }
+
+  &__input {
+    @apply bg-secondary-900 border border-secondary-700 border-solid rounded-sm;
+    @apply box-border;
+    @apply m-0 p-4;
+    @apply outline-none;
+    @apply text-secondary-300;
+    @apply w-full;
+
+    transition: border 0.15s ease-in-out;
+
+    &:focus {
+      @apply border-secondary-500;
+    }
+
+    &--error {
+      @apply border-red-500 #{!important};
+    }
+  }
+
+  &__label {
+    @apply font-semibold text-secondary-300;
+    @apply mb-3;
+  }
+}
