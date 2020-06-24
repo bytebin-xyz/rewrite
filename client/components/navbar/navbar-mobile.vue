@@ -31,8 +31,14 @@
 
       <template v-else>
         <li class="nav-mobile__link">
-          <nuxt-link class="nav-mobile__clickable" to="/profile">
-            Profile
+          <nuxt-link class="nav-mobile__clickable" to="/@me/files">
+            My Files
+          </nuxt-link>
+        </li>
+
+        <li class="nav-mobile__link">
+          <nuxt-link class="nav-mobile__clickable" to="/search">
+            Search
           </nuxt-link>
         </li>
 
