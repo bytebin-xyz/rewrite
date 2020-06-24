@@ -21,8 +21,8 @@ export default class DefaultLayout extends Vue {}
 
 <style lang="scss">
 [data-focus-visible-added]:focus {
-  @apply border-2 border-solid border-secondary-400 rounded #{!important};
-  @apply outline-none #{!important};
+  @apply border-2 border-solid border-secondary-400 rounded;
+  @apply outline-none;
 }
 
 *:focus:not([data-focus-visible-added]) {
@@ -31,9 +31,6 @@ export default class DefaultLayout extends Vue {}
 
 body {
   @apply bg-secondary-800;
-  // background: linear-gradient(to bottom right, #282A41, #4F5382);
-  // background-repeat: no-repeat;
-  // background-size: cover;
 
   font-family: "Roboto", sans-serif;
   -moz-osx-font-smoothing: grayscale;
@@ -41,8 +38,6 @@ body {
 }
 
 #app__navbar {
-  // @apply bg-secondary-900;
-  // @apply shadow-lg;
   @apply px-4;
 }
 

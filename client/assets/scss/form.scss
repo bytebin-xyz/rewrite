@@ -19,7 +19,8 @@
   }
 
   &__input {
-    @apply bg-secondary-900 border border-secondary-700 border-solid rounded-sm;
+    @apply bg-secondary-900;
+    @apply border border-secondary-700 border-solid rounded-sm;
     @apply box-border;
     @apply m-0 p-4;
     @apply outline-none;

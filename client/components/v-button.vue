@@ -13,7 +13,14 @@
       <img alt="X" class="btn__icon" src="@/assets/svg/cross.svg" />
     </div>
 
-    <spinner v-else-if="status === 'pending'" class="btn__spinner" size="small" />
+    <beat-loader
+      v-else-if="status === 'pending'"
+      class="flex"
+      color="#848BD8"
+      sizeUnit="px"
+      :loading="true"
+      :size="10"
+    />
 
     <div v-else-if="status === 'success'" class="btn__icon-container">
       <img alt=":)" class="btn__icon" src="@/assets/svg/checkmark.svg" />
@@ -85,7 +92,7 @@ export default class VButton extends Vue {
 
   &:focus,
   &:hover {
-    background-color: lighten(#282A41, 2%);
+    background-color: lighten(#282a41, 2%);
   }
 
   &__icon-container {

@@ -4,7 +4,7 @@
 
     <h2>
       Don't have an account yet?
-      <nuxt-link to="/login">
+      <nuxt-link to="/register">
         Sign Up
       </nuxt-link>
     </h2>
@@ -123,7 +123,7 @@ export default class Login extends Vue {
 
         setTimeout(() => {
           this.$router.push("/profile");
-        }, 1000);
+        }, 1500);
       })
       .catch((error: Error) => {
         this.error = error.message;

@@ -97,7 +97,11 @@ export const config: Configuration = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [{ src: "./plugins/axios.plugin" }, { src: "./plugins/vuelidate.plugin" }],
+  plugins: [
+    { src: "./plugins/axios.plugin" },
+    { src: "./plugins/spinners.plugin" },
+    { src: "./plugins/vuelidate.plugin" }
+  ],
 
   recaptcha: {
     hideBadge: true,

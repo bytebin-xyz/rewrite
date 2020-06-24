@@ -10,6 +10,7 @@ module.exports = {
     "require-await": "off",
     semi: ["warn", "always"],
     "space-before-function-paren": "off",
+    "vue/attribute-hyphenation": "off",
     "vue/html-self-closing": "off" // conflicts with prettier
   }
 };

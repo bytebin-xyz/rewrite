@@ -188,7 +188,7 @@ export default class Register extends Vue {
 
         setTimeout(() => {
           this.$router.push("/profile");
-        }, 1000);
+        }, 1500);
       })
       .catch((error: Error) => {
         this.error = error.message;
