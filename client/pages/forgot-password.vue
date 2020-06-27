@@ -72,17 +72,20 @@ import { email, required } from "vuelidate/lib/validators";
 import VButton from "../components/v-button.vue";
 
 @Component({
+  meta: {
+    guestOnly: true
+  },
   layout: "clean",
   transition: "fade"
 })
 export default class ForgotPassword extends Vue {
   @Ref() readonly button!: VButton;
 
-  private error: string | null = null;
-  private sent = false;
-
   @Validate({ email, required })
   private email = "";
+
+  private error: string | null = null;
+  private sent = false;
 
   sendPasswordResetEmail() {
     if (this.$v.$invalid) return this.$v.$touch();

@@ -63,9 +63,7 @@
         </div>
 
         <div class="form__group">
-          <label class="form__label" for="password">
-            <span>Password</span>
-          </label>
+          <label class="form__label" for="password">Password</label>
 
           <input
             id="password"
@@ -89,9 +87,7 @@
         </div>
 
         <div class="form__group">
-          <label class="form__label" for="confirm-password">
-            <span>Confirm Password</span>
-          </label>
+          <label class="form__label" for="confirm-password">>Confirm Password</label>
 
           <input
             id="confirm-password"
@@ -149,13 +145,14 @@ import { alphaNum, email, maxLength, minLength, required, sameAs } from "vuelida
 import VButton from "../components/v-button.vue";
 
 @Component({
+  meta: {
+    guestOnly: true
+  },
   layout: "clean",
   transition: "fade"
 })
 export default class Register extends Vue {
   @Ref() readonly button!: VButton;
-
-  private error: string | null = null;
 
   @Validate({ email, required })
   private email = "";
@@ -168,6 +165,8 @@ export default class Register extends Vue {
 
   @Validate({ alphaNum, maxLength: maxLength(32), required })
   private username = "";
+
+  private error: string | null = null;
 
   async mounted() {
     if (this.$accessor.isAuthenticated) {

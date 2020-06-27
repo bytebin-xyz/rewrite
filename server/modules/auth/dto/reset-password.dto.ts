@@ -7,4 +7,8 @@ export class ResetPasswordDto {
     message: "Your password must be at least 8 characters long!"
   })
   newPassword!: string;
+
+  @IsNotEmpty({ message: "Password reset token cannot be missing!" })
+  @IsString()
+  token!: string;
 }

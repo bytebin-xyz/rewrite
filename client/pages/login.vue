@@ -88,19 +88,22 @@ import { required } from "vuelidate/lib/validators";
 import VButton from "../components/v-button.vue";
 
 @Component({
+  meta: {
+    guestOnly: true
+  },
   layout: "clean",
   transition: "fade"
 })
 export default class Login extends Vue {
-  @Ref() readonly button!: VButton;
-
-  private error: string | null = null;
+  @Ref() private readonly button!: VButton;
 
   @Validate({ required })
   private password = "";
 
   @Validate({ required })
   private username = "";
+
+  private error: string | null = null;
 
   async mounted() {
     if (this.$accessor.isAuthenticated) {
@@ -124,9 +127,7 @@ export default class Login extends Vue {
       .then(() => {
         this.button.success();
 
-        setTimeout(() => {
-          this.$router.push("/profile");
-        }, 1500);
+        setTimeout(() => this.$router.push("/profile"), 1500);
       })
       .catch((error: Error) => {
         this.error = error.message;

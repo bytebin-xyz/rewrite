@@ -125,16 +125,14 @@ export class AuthController {
     await this.auth.resendUserActivationEmail(user);
   }
 
-  @Post("reset-password/:token")
-  @Redirect("/login")
+  @Post("reset-password")
   @Throttle(10, 10 * 60)
   @UseGuards(ThrottlerGuard)
-  async resetPassword(
-    @Body() { newPassword }: ResetPasswordDto,
-    @Param("token") token: string
-  ): Promise<IRedirect | void> {
+  async resetPassword(@Body() { newPassword, token }: ResetPasswordDto): Promise<void> {
     if (!(await this.auth.resetPassword(token, newPassword))) {
-      return { url: "/" };
+      throw new BadRequestException(
+        "Invalid password reset link, please make sure the link is the same as the one shown in the email."
+      );
     }
   }
 }

@@ -15,7 +15,7 @@ export const config: Configuration = {
    */
   build: {
     cache: true,
-    transpile: [/typed-vuex/, "vuelidate-property-decorators"]
+    transpile: [/typed-vuex/, "vuelidate-property-decorators"],
 
     /*
      ** You can extend webpack config here
@@ -120,7 +120,7 @@ export const config: Configuration = {
   },
 
   router: {
-    middleware: ["auth.middleware"]
+    middleware: ["auth.middleware", "guest-only.middleware"]
   },
 
   server: {

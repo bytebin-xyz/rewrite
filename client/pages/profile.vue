@@ -23,11 +23,7 @@ import { Component, Vue } from "nuxt-property-decorator";
   },
   transition: "fade"
 })
-export default class Profile extends Vue {
-  get me() {
-    return this.$accessor.user;
-  }
-}
+export default class Profile extends Vue {}
 </script>
 
 <style lang="scss" scoped>
