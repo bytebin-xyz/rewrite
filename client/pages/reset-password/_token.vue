@@ -82,9 +82,6 @@ import { minLength, required, sameAs } from "vuelidate/lib/validators";
 import VButton from "../../components/v-button.vue";
 
 @Component({
-  meta: {
-    guestOnly: true
-  },
   layout: "clean",
   transition: "fade"
 })
