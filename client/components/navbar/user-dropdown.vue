@@ -198,18 +198,18 @@ $hover-color: #f1f3f6;
   }
 
   &__toggler {
-    @apply bg-secondary-900;
-    @apply border-2 border-secondary-800 rounded;
+    @apply bg-primary-900;
+    @apply border-2 border-primary-800 rounded;
     @apply flex flex-row items-center;
     @apply px-4 py-0;
-    @apply text-secondary-300;
+    @apply text-primary-300;
 
     background-color: lighten(#282a41, 5%);
     height: 48px;
 
     &:focus,
     &:hover {
-      @apply bg-secondary-800;
+      @apply bg-primary-800;
     }
   }
 

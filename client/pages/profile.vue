@@ -28,7 +28,7 @@ export default class Profile extends Vue {}
 
 <style lang="scss" scoped>
 .user {
-  @apply bg-secondary-900;
+  @apply bg-primary-900;
   @apply flex flex-col items-center;
 
   &__avatar {

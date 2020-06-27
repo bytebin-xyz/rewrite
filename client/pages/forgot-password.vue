@@ -118,7 +118,7 @@ export default class ForgotPassword extends Vue {
 }
 
 h1 {
-  @apply font-medium text-3xl text-center text-secondary-200;
+  @apply font-medium text-3xl text-center text-primary-200;
   @apply mb-3;
   @apply text-2xl;
 
@@ -129,7 +129,7 @@ h1 {
 
 h2 {
   @apply leading-loose;
-  @apply text-center text-lg text-secondary-300;
+  @apply text-center text-lg text-primary-300;
 
   @screen md_max {
     @apply leading-normal;
@@ -137,11 +137,11 @@ h2 {
   }
 
   & a {
-    @apply text-secondary-400;
+    @apply text-primary-400;
     @apply underline;
 
     &:hover {
-      @apply text-secondary-500;
+      @apply text-primary-500;
     }
   }
 }

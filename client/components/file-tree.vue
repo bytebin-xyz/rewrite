@@ -11,7 +11,7 @@ export default class FileTree extends Vue {}
 
 <style lang="scss" scoped>
 .file-tree {
-  @apply bg-secondary-900;
+  @apply bg-primary-900;
   @apply rounded;
   @apply shadow-lg;
 }

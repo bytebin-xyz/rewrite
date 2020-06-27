@@ -12,7 +12,7 @@ export default class FileExplorer extends Vue {
 
 <style lang="scss" scoped>
 .file-explorer {
-  @apply bg-secondary-900;
+  @apply bg-primary-900;
   @apply flex flex-col;
   @apply mt-4;
   @apply rounded;

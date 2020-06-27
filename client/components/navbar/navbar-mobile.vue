@@ -126,18 +126,18 @@ export default class NavbarMobile extends Vue {
     @apply h-full;
     @apply mx-0 my-3;
     @apply px-1 py-0;
-    @apply text-lg text-secondary-300;
+    @apply text-lg text-primary-300;
 
     height: 40px;
 
     &:hover {
-      @apply text-secondary-400;
+      @apply text-primary-400;
     }
   }
 
   &__links {
     @apply absolute;
-    @apply bg-secondary-900;
+    @apply bg-primary-900;
     @apply box-border;
     @apply flex-col hidden;
     @apply left-0 top-0;

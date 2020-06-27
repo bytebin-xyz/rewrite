@@ -28,7 +28,7 @@ export default class Breadcrumbs extends Vue {
 
 <style lang="scss" scoped>
 .breadcrumbs {
-  @apply bg-secondary-900;
+  @apply bg-primary-900;
   @apply px-6 py-4;
   @apply rounded;
   @apply shadow-lg;
@@ -40,7 +40,7 @@ export default class Breadcrumbs extends Vue {
 
 .breadcrumb {
   @apply flex;
-  @apply text-secondary-300;
+  @apply text-primary-300;
 
   &:not(:last-child)::after {
     content: url("../assets/svg/chevron-right.svg");
@@ -61,7 +61,7 @@ export default class Breadcrumbs extends Vue {
   &__name {
     &:hover {
       @apply cursor-pointer;
-      @apply text-secondary-100;
+      @apply text-primary-100;
     }
   }
 }

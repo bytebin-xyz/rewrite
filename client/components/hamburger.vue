@@ -48,7 +48,7 @@ export default class Hamburger extends Vue {
   &-inner,
   &-inner::after,
   &-inner::before {
-    @apply bg-secondary-600 #{!important};
+    @apply bg-primary-600 #{!important};
   }
 }
 </style>

@@ -10,8 +10,8 @@
   transition: background-color 0.2s ease;
 
   &--dark {
-    @apply bg-secondary-900;
-    @apply text-secondary-400;
+    @apply bg-primary-900;
+    @apply text-primary-400;
 
     &:focus,
     &:hover {
@@ -20,8 +20,8 @@
   }
 
   &--light {
-    @apply bg-secondary-800;
-    @apply text-secondary-300;
+    @apply bg-primary-800;
+    @apply text-primary-300;
 
     &:focus,
     &:hover {
@@ -41,7 +41,7 @@
   }
 
   &--pending {
-    @apply bg-secondary-900 #{!important};
+    @apply bg-primary-900 #{!important};
   }
 
   &--success {

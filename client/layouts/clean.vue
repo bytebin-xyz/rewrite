@@ -29,7 +29,7 @@ export default class CleanLayout extends Vue {}
 
 <style lang="scss">
 #layout__clean {
-  @apply bg-secondary-900;
+  @apply bg-primary-900;
 
   font-family: "Roboto", sans-serif;
   -moz-osx-font-smoothing: grayscale;

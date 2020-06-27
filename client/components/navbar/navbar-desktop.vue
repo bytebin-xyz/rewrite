@@ -87,10 +87,10 @@ export default class NavbarDesktop extends Vue {}
     @apply font-medium no-underline;
     @apply p-3;
     @apply rounded-sm;
-    @apply text-base text-secondary-300;
+    @apply text-base text-primary-300;
 
     &:hover:not([class^="btn"]) {
-      @apply bg-secondary-800;
+      @apply bg-primary-800;
     }
   }
 
@@ -100,7 +100,7 @@ export default class NavbarDesktop extends Vue {}
 
   &__icon {
     &:hover {
-      @apply bg-secondary-800;
+      @apply bg-primary-800;
     }
 
     & img {

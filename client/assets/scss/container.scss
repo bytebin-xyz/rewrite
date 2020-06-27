@@ -3,11 +3,11 @@
   @apply rounded;
 
   &--dark {
-    @apply bg-secondary-900;
+    @apply bg-primary-900;
   }
 
   &--light {
-    @apply bg-secondary-800;
+    @apply bg-primary-800;
   }
   
   &--pad-xs {

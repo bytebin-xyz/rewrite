@@ -2,6 +2,8 @@ import { AxiosError } from "axios";
 
 import { Context } from "@nuxt/types";
 
+import "@nuxtjs/axios";
+
 interface ErrorInterface {
   error?: string;
   message: string | string[];

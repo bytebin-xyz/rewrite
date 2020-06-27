@@ -68,7 +68,7 @@ export default class Logo extends Vue {
   @apply flex items-center justify-center;
 
   &__name {
-    @apply font-bold text-2xl text-secondary-400;
+    @apply font-bold text-2xl text-primary-400;
 
     font-family: "IBM Plex Sans", sans-serif;
 

@@ -45,7 +45,7 @@ export default class ErrorPage extends Vue {
   @apply rounded;
 
   &__message {
-    @apply font-normal text-3xl text-center text-secondary-400;
+    @apply font-normal text-3xl text-center text-primary-400;
     @apply my-8;
     @apply text-2xl;
 
@@ -55,21 +55,21 @@ export default class ErrorPage extends Vue {
   }
 
   &__return {
-    @apply bg-secondary-500;
+    @apply bg-primary-500;
     @apply border-none rounded-sm;
-    @apply font-semibold  text-secondary-900;
+    @apply font-semibold  text-primary-900;
     @apply p-4;
     @apply rounded;
 
     transition: background-color 0.2s ease;
 
     &:hover {
-      @apply bg-secondary-600;
+      @apply bg-primary-600;
     }
   }
 
   &__title {
-    @apply font-bold text-3xl text-center text-secondary-300;
+    @apply font-bold text-3xl text-center text-primary-300;
     @apply m-0;
     @apply text-4xl;
 

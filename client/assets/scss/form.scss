@@ -26,18 +26,18 @@
   }
 
   &__input {
-    @apply bg-secondary-900;
-    @apply border border-secondary-700 border-solid rounded-sm;
+    @apply bg-primary-900;
+    @apply border border-primary-700 border-solid rounded-sm;
     @apply box-border;
     @apply m-0 p-4;
     @apply outline-none;
-    @apply text-secondary-300;
+    @apply text-primary-300;
     @apply w-full;
 
     transition: border 0.15s ease-in-out;
 
     &:focus {
-      @apply border-secondary-500;
+      @apply border-primary-500;
     }
 
     &--error {
@@ -46,7 +46,7 @@
   }
 
   &__label {
-    @apply font-semibold text-secondary-300;
+    @apply font-semibold text-primary-300;
     @apply mb-3;
   }
 }

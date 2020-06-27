@@ -18,7 +18,7 @@ export default class Navbar extends Vue {}
 
 <style lang="scss" scoped>
 .navbar {
-  @apply bg-secondary-900;
+  @apply bg-primary-900;
   @apply box-border;
   @apply flex flex-row items-center;
   @apply mx-auto;
