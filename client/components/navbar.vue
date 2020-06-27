@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <nuxt-link class="navbar__brand" to="/">
-      <logo />
+      <logo :size="72" />
     </nuxt-link>
 
     <navbar-desktop />
@@ -21,7 +21,7 @@ export default class Navbar extends Vue {}
   @apply bg-secondary-900;
   @apply box-border;
   @apply flex flex-row items-center;
-  @apply mx-auto mt-4;
+  @apply mx-auto;
   @apply px-4 py-0;
   @apply rounded-lg;
   @apply shadow-lg;

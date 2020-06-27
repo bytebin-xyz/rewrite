@@ -39,7 +39,7 @@ export const config: Configuration = {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ["./assets/scss/main.scss"],
 
   dev: isDev,
 
@@ -73,6 +73,10 @@ export const config: Configuration = {
       }
     ],
     title: "Bytebin"
+  },
+
+  layoutTransition: {
+    name: "fade"
   },
 
   /*
@@ -119,8 +123,13 @@ export const config: Configuration = {
     middleware: ["auth.middleware"]
   },
 
-  // https://typescript.nuxtjs.org/guide/setup.html#module-options
-  typescript: {},
+  server: {
+    port: 3000,
+    host: "0.0.0.0"
+  },
 
-  srcDir: "client"
+  srcDir: "client",
+
+  // https://typescript.nuxtjs.org/guide/setup.html#module-options
+  typescript: {}
 };

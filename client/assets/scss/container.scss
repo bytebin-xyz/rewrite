@@ -1,0 +1,28 @@
+.container {
+  @apply my-6;
+  @apply rounded;
+
+  &--dark {
+    @apply bg-secondary-900;
+  }
+
+  &--light {
+    @apply bg-secondary-800;
+  }
+  
+  &--pad-xs {
+    padding: 10px;
+  }
+
+  &--pad-sm {
+    padding: 20px;
+  }
+
+  &--pad-md {
+    padding: 30px;
+  }
+
+  &--pad-lg {
+    padding: 40px;
+  }
+}

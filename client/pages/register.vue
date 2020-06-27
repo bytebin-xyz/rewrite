@@ -9,129 +9,134 @@
       </nuxt-link>
     </h2>
 
-    <form class="form" novalidate @submit.prevent="register">
-      <div class="form__group">
-        <label class="form__label" for="username">Username</label>
+    <div class="container container--light container--pad-sm">
+      <form class="form" novalidate @submit.prevent="register">
+        <div class="form__group">
+          <label class="form__label" for="username">Username</label>
 
-        <input
-          id="username"
-          v-model="$v.username.$model"
-          class="form__input"
-          :class="{ 'form__input--error': $v.username.$error }"
-          autocomplete="username"
-          name="username"
-          type="text"
-        />
+          <input
+            id="username"
+            v-model="$v.username.$model"
+            class="form__input"
+            :class="{ 'form__input--error': $v.username.$error }"
+            autocomplete="username"
+            name="username"
+            type="text"
+          />
 
-        <div v-if="$v.username.$dirty && $v.username.$error" class="form__group-errors">
-          <p v-if="!$v.username.alphaNum" class="form__group-error">
-            Usernames must be alphanumeric.
-          </p>
+          <div v-if="$v.username.$dirty && $v.username.$error" class="form__group-errors">
+            <p v-if="!$v.username.alphaNum" class="form__group-error">
+              Usernames must be alphanumeric.
+            </p>
 
-          <p v-if="!$v.username.maxLength" class="form__group-error">
-            Usernames cannot exceed {{ $v.username.$params.maxLength.max }} characters.
-          </p>
+            <p v-if="!$v.username.maxLength" class="form__group-error">
+              Usernames cannot exceed {{ $v.username.$params.maxLength.max }} characters.
+            </p>
 
-          <p v-if="!$v.username.required" class="form__group-error">
-            Field is required.
-          </p>
+            <p v-if="!$v.username.required" class="form__group-error">
+              Field is required.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="form__group">
-        <label class="form__label" for="email">Email Address</label>
+        <div class="form__group">
+          <label class="form__label" for="email">Email Address</label>
 
-        <input
-          id="email"
-          v-model="$v.email.$model"
-          class="form__input"
-          :class="{ 'form__input--error': $v.email.$error }"
-          name="email"
-          type="email"
-        />
+          <input
+            id="email"
+            v-model="$v.email.$model"
+            class="form__input"
+            :class="{ 'form__input--error': $v.email.$error }"
+            name="email"
+            type="email"
+          />
 
-        <div v-if="$v.email.$dirty && $v.email.$error" class="form__group-errors">
-          <p v-if="!$v.email.email" class="form__group-error">
-            You must enter a valid email address.
-          </p>
+          <div v-if="$v.email.$dirty && $v.email.$error" class="form__group-errors">
+            <p v-if="!$v.email.email" class="form__group-error">
+              You must enter a valid email address.
+            </p>
 
-          <p v-if="!$v.email.required" class="form__group-error">
-            Field is required.
-          </p>
+            <p v-if="!$v.email.required" class="form__group-error">
+              Field is required.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="form__group">
-        <label class="form__label" for="password">
-          <span>Password</span>
-        </label>
+        <div class="form__group">
+          <label class="form__label" for="password">
+            <span>Password</span>
+          </label>
 
-        <input
-          id="password"
-          v-model="$v.password.$model"
-          class="form__input"
-          :class="{ 'form__input--error': $v.password.$error }"
-          autocomplete="new-password"
-          name="password"
-          type="password"
-        />
+          <input
+            id="password"
+            v-model="$v.password.$model"
+            class="form__input"
+            :class="{ 'form__input--error': $v.password.$error }"
+            autocomplete="new-password"
+            name="password"
+            type="password"
+          />
 
-        <div v-if="$v.password.$dirty && $v.password.$error" class="form__group-errors">
-          <p v-if="!$v.password.minLength" class="form__group-error">
-            Passwords must be at least {{ $v.password.$params.minLength.min }} characters long.
-          </p>
+          <div v-if="$v.password.$dirty && $v.password.$error" class="form__group-errors">
+            <p v-if="!$v.password.minLength" class="form__group-error">
+              Passwords must be at least {{ $v.password.$params.minLength.min }} characters long.
+            </p>
 
-          <p v-if="!$v.password.required" class="form__group-error">
-            Field is required.
-          </p>
+            <p v-if="!$v.password.required" class="form__group-error">
+              Field is required.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="form__group">
-        <label class="form__label" for="confirm-password">
-          <span>Confirm Password</span>
-        </label>
+        <div class="form__group">
+          <label class="form__label" for="confirm-password">
+            <span>Confirm Password</span>
+          </label>
 
-        <input
-          id="confirm-password"
-          v-model="$v.repeatPassword.$model"
-          class="form__input"
-          :class="{ 'form__input--error': $v.repeatPassword.$error }"
-          autocomplete="new-password"
-          name="confirm-password"
-          type="password"
-        />
+          <input
+            id="confirm-password"
+            v-model="$v.repeatPassword.$model"
+            class="form__input"
+            :class="{ 'form__input--error': $v.repeatPassword.$error }"
+            autocomplete="new-password"
+            name="confirm-password"
+            type="password"
+          />
 
-        <div v-if="$v.repeatPassword.$dirty && $v.repeatPassword.$error" class="form__group-errors">
-          <p v-if="!$v.repeatPassword.sameAsPassword" class="form__group-error">
-            Your password does not match.
-          </p>
+          <div
+            v-if="$v.repeatPassword.$dirty && $v.repeatPassword.$error"
+            class="form__group-errors"
+          >
+            <p v-if="!$v.repeatPassword.sameAsPassword" class="form__group-error">
+              Your password does not match.
+            </p>
 
-          <p v-if="!$v.repeatPassword.required" class="form__group-error">
-            Field is required.
-          </p>
+            <p v-if="!$v.repeatPassword.required" class="form__group-error">
+              Field is required.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div v-if="error" class="form__group">
-        <div class="form__group-errors">
-          <p class="form__group-error">
-            {{ error }}
-          </p>
+        <div v-if="error" class="form__group">
+          <div class="form__group-errors">
+            <p class="form__group-error">
+              {{ error }}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <v-button ref="button" type="submit">
-        Register
-      </v-button>
-    </form>
+        <v-button ref="button" class="my-3" type="submit">
+          Register
+        </v-button>
+      </form>
 
-    <p class="recaptcha">
-      This site is protected by reCAPTCHA and the Google
-      <a class="recaptcha__link" href="https://policies.google.com/privacy">Privacy Policy</a> and
-      <a class="recaptcha__link" href="https://policies.google.com/terms">Terms of Service</a>
-      apply.
-    </p>
+      <p class="recaptcha">
+        This site is protected by reCAPTCHA and the Google
+        <a class="recaptcha__link" href="https://policies.google.com/privacy">Privacy Policy</a> and
+        <a class="recaptcha__link" href="https://policies.google.com/terms">Terms of Service</a>
+        apply.
+      </p>
+    </div>
   </div>
 </template>
 
@@ -144,6 +149,7 @@ import { alphaNum, email, maxLength, minLength, required, sameAs } from "vuelida
 import VButton from "../components/v-button.vue";
 
 @Component({
+  layout: "clean",
   transition: "fade"
 })
 export default class Register extends Vue {
@@ -199,10 +205,11 @@ export default class Register extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/scss/container.scss";
 @import "@/assets/scss/form.scss";
 
 h1 {
-  @apply font-medium text-3xl text-center text-secondary-100;
+  @apply font-medium text-3xl text-center text-secondary-200;
   @apply mb-3;
   @apply text-2xl;
 
@@ -233,7 +240,7 @@ h2 {
 .recaptcha {
   @apply font-normal text-sm text-secondary-300;
   @apply leading-relaxed;
-  @apply my-2;
+  @apply mb-0 mt-2;
 
   &__link {
     @apply text-secondary-400;
@@ -247,6 +254,6 @@ h2 {
 #register {
   @apply m-auto;
   @apply max-w-lg;
-  @apply px-6 py-0;
+  @apply px-6;
 }
 </style>

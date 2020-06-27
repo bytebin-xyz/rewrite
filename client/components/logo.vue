@@ -1,6 +1,11 @@
 <template>
   <div class="logo">
-    <svg class="logo__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+    <svg
+      class="logo__icon"
+      :style="styles"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 300 300"
+    >
       <defs>
         <linearGradient
           id="gradient"
@@ -26,12 +31,12 @@
       </g>
     </svg>
 
-    <span class="logo__name">Bytebin</span>
+    <span v-if="!hideBrandName" class="logo__name">Bytebin</span>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator";
+import { Component, Prop, Vue } from "nuxt-property-decorator";
 
 @Component({
   head: {
@@ -43,20 +48,27 @@ import { Component, Vue } from "nuxt-property-decorator";
     ]
   }
 })
-export default class Logo extends Vue {}
+export default class Logo extends Vue {
+  @Prop({ default: false, type: Boolean })
+  private readonly hideBrandName!: boolean;
+
+  @Prop({ default: 72, type: Number })
+  private readonly size!: number;
+
+  get styles() {
+    return {
+      width: `${this.size}px`
+    };
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 .logo {
-  @apply flex flex-row items-center p-0;
-
-  &__icon {
-    width: 72px;
-  }
+  @apply flex items-center justify-center;
 
   &__name {
     @apply font-bold text-2xl text-secondary-400;
-    @apply mr-2;
 
     font-family: "IBM Plex Sans", sans-serif;
 

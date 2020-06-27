@@ -127,7 +127,10 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
           resave: false,
           saveUninitialized: false,
           secret: config.get("SESSION_SECRET") as string,
-          store: new MongoStore({ mongooseConnection })
+          store: new MongoStore({
+            mongooseConnection,
+            stringify: false
+          })
         }
       })
     }),

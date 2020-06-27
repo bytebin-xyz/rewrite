@@ -1,9 +1,10 @@
 <template>
   <button
     ref="hamburger"
-    aria-label="Menu"
     class="hamburger hamburger--collapse"
     type="button"
+    :aria-expanded="collapsed ? 'false' : 'true'"
+    :class="{ 'is-active': !collapsed }"
     @click="toggle"
   >
     <span class="hamburger-box">
@@ -19,17 +20,21 @@ import { Component, Ref, Vue } from "nuxt-property-decorator";
 export default class Hamburger extends Vue {
   @Ref() private readonly hamburger!: HTMLButtonElement;
 
+  private collapsed = true;
+
   collapse() {
-    this.hamburger.classList.remove("is-active");
+    this.collapsed = true;
+    this.$emit("click");
   }
 
   expand() {
-    this.hamburger.classList.add("is-active");
+    this.collapsed = false;
+    this.$emit("click");
   }
 
   toggle() {
-    this.hamburger.classList.toggle("is-active");
-    this.$emit("click");
+    if (this.collapsed) this.expand();
+    else this.collapse();
   }
 }
 </script>

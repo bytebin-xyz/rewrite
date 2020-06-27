@@ -1,11 +1,18 @@
 .form {
   @apply flex flex-col items-center justify-center;
-  @apply mt-6;
 
   &__group {
     @apply flex flex-col;
-    @apply mx-0 my-3;
+    @apply my-3;
     @apply w-full;
+
+    &:first-child {
+      @apply mt-0;
+    }
+
+    &:last-child {
+      @apply mb-0;
+    }
   }
 
   &__group-error {

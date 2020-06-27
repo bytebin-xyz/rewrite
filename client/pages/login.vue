@@ -9,71 +9,73 @@
       </nuxt-link>
     </h2>
 
-    <form class="form" novalidate @submit.prevent="login">
-      <div class="form__group">
-        <label class="form__label" for="username">Username</label>
+    <div class="container container--light container--pad-sm">
+      <form class="form" novalidate @submit.prevent="login">
+        <div class="form__group">
+          <label class="form__label" for="username">Username</label>
 
-        <input
-          id="username"
-          v-model="$v.username.$model"
-          class="form__input"
-          :class="{ 'form__input--error': $v.username.$error }"
-          autocomplete="username"
-          name="username"
-          type="text"
-        />
+          <input
+            id="username"
+            v-model="$v.username.$model"
+            class="form__input"
+            :class="{ 'form__input--error': $v.username.$error }"
+            autocomplete="username"
+            name="username"
+            type="text"
+          />
 
-        <div v-if="$v.username.$dirty && $v.username.$error" class="form__group-errors">
-          <p v-if="!$v.username.required" class="form__group-error">
-            Field is required.
-          </p>
+          <div v-if="$v.username.$dirty && $v.username.$error" class="form__group-errors">
+            <p v-if="!$v.username.required" class="form__group-error">
+              Field is required.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="form__group">
-        <label class="form__label form__label--password" for="password">
-          <span class="mr-3">Password</span>
-          <nuxt-link class="form__forgot-password" to="/forgot-password">
-            Forgot Password?
-          </nuxt-link>
-        </label>
+        <div class="form__group">
+          <label class="form__label form__label--password" for="password">
+            <span class="mr-3">Password</span>
+            <nuxt-link class="form__forgot-password" to="/forgot-password">
+              Forgot Password?
+            </nuxt-link>
+          </label>
 
-        <input
-          id="password"
-          v-model="$v.password.$model"
-          class="form__input"
-          :class="{ 'form__input--error': $v.password.$error }"
-          autocomplete="new-password"
-          name="password"
-          type="password"
-        />
+          <input
+            id="password"
+            v-model="$v.password.$model"
+            class="form__input"
+            :class="{ 'form__input--error': $v.password.$error }"
+            autocomplete="new-password"
+            name="password"
+            type="password"
+          />
 
-        <div v-if="$v.password.$dirty && $v.password.$error" class="form__group-errors">
-          <p v-if="!$v.password.required" class="form__group-error">
-            Field is required.
-          </p>
+          <div v-if="$v.password.$dirty && $v.password.$error" class="form__group-errors">
+            <p v-if="!$v.password.required" class="form__group-error">
+              Field is required.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div v-if="error" class="form__group">
-        <div class="form__group-errors">
-          <p class="form__group-error">
-            {{ error }}
-          </p>
+        <div v-if="error" class="form__group">
+          <div class="form__group-errors">
+            <p class="form__group-error">
+              {{ error }}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <v-button ref="button" type="submit">
-        Log In
-      </v-button>
-    </form>
+        <v-button ref="button" class="my-3" type="submit">
+          Log In
+        </v-button>
+      </form>
 
-    <p class="recaptcha">
-      This site is protected by reCAPTCHA and the Google
-      <a class="recaptcha__link" href="https://policies.google.com/privacy">Privacy Policy</a> and
-      <a class="recaptcha__link" href="https://policies.google.com/terms">Terms of Service</a>
-      apply.
-    </p>
+      <p class="recaptcha">
+        This site is protected by reCAPTCHA and the Google
+        <a class="recaptcha__link" href="https://policies.google.com/privacy">Privacy Policy</a> and
+        <a class="recaptcha__link" href="https://policies.google.com/terms">Terms of Service</a>
+        apply.
+      </p>
+    </div>
   </div>
 </template>
 
@@ -86,6 +88,7 @@ import { required } from "vuelidate/lib/validators";
 import VButton from "../components/v-button.vue";
 
 @Component({
+  layout: "clean",
   transition: "fade"
 })
 export default class Login extends Vue {
@@ -137,6 +140,7 @@ export default class Login extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/scss/container.scss";
 @import "@/assets/scss/form.scss";
 
 .form {
@@ -156,7 +160,7 @@ export default class Login extends Vue {
 }
 
 h1 {
-  @apply font-medium text-3xl text-center text-secondary-100;
+  @apply font-medium text-3xl text-center text-secondary-200;
   @apply mb-3;
   @apply text-2xl;
 
@@ -187,7 +191,7 @@ h2 {
 .recaptcha {
   @apply font-normal text-sm text-secondary-300;
   @apply leading-relaxed;
-  @apply my-2;
+  @apply mb-0 mt-2;
 
   &__link {
     @apply text-secondary-400;
@@ -201,6 +205,6 @@ h2 {
 #login {
   @apply m-auto;
   @apply max-w-lg;
-  @apply px-6 py-0;
+  @apply px-4;
 }
 </style>

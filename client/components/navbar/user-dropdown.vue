@@ -25,7 +25,7 @@
       @click="close"
     >
       <li class="user-dropdown__link user-dropdown__link--profile">
-        <nuxt-link class="user-dropdown__clickable" to="/@me/files">
+        <nuxt-link class="user-dropdown__clickable" :to="`/files/@${$accessor.user.username}`">
           <img
             class="user-dropdown__avatar"
             :src="`https://avatars.dicebear.com/api/jdenticon/${$accessor.user.uid}.svg`"
@@ -116,19 +116,18 @@ $hover-color: #f1f3f6;
   }
 
   &__clickable {
+    @apply border-none;
     @apply cursor-pointer;
     @apply flex flex-row items-center;
     @apply h-full w-full;
     @apply m-0;
     @apply no-underline;
+    @apply outline-none;
     @apply px-4 py-0;
     @apply text-black text-sm;
 
     &:focus,
     &:hover {
-      @apply border-none;
-      @apply outline-none;
-
       background-color: #f1f3f6;
     }
 
@@ -136,13 +135,12 @@ $hover-color: #f1f3f6;
       @apply bg-transparent;
       @apply border-none rounded-sm;
       @apply cursor-pointer;
+      @apply text-red-600;
 
       &:focus,
       &:hover {
         @apply bg-red-200;
-        @apply border-none;
         @apply outline-none;
-        @apply text-red-600;
       }
     }
   }
@@ -186,7 +184,7 @@ $hover-color: #f1f3f6;
     @apply bg-white;
     @apply flex-col hidden;
     @apply list-none;
-    @apply m-0 mt-4;
+    @apply m-0 mt-3;
     @apply overflow-hidden;
     @apply p-0;
     @apply rounded;

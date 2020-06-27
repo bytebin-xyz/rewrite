@@ -1,0 +1,50 @@
+.btn {
+  @apply border-none rounded-sm;
+  @apply cursor-pointer;
+  @apply flex items-center justify-center;
+  @apply font-semibold;
+  @apply p-4;
+  @apply w-full;
+
+  height: 48px;
+  transition: background-color 0.2s ease;
+
+  &--dark {
+    @apply bg-secondary-900;
+    @apply text-secondary-400;
+
+    &:focus,
+    &:hover {
+      background-color: lighten(#282a41, 2%);
+    }
+  }
+
+  &--light {
+    @apply bg-secondary-800;
+    @apply text-secondary-300;
+
+    &:focus,
+    &:hover {
+      background-color: darken(#3b3f61, 3%);
+    }
+  }
+
+  &--fail,
+  &--pending,
+  &--success {
+    @apply cursor-default;
+    @apply px-0 py-3;
+  }
+
+  &--fail {
+    @apply bg-red-600 #{!important};
+  }
+
+  &--pending {
+    @apply bg-secondary-900 #{!important};
+  }
+
+  &--success {
+    @apply bg-green-600 #{!important};
+  }
+}

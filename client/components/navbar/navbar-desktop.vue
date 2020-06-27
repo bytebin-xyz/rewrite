@@ -24,7 +24,7 @@
           </li>
 
           <li class="nav-desktop__link">
-            <nuxt-link class="nav-desktop__clickable nav-desktop__register" to="/register">
+            <nuxt-link class="btn btn__register btn--light nav-desktop__clickable" to="/register">
               Sign Up
             </nuxt-link>
           </li>
@@ -32,13 +32,16 @@
 
         <template v-else>
           <li class="nav-desktop__link">
-            <nuxt-link class="nav-desktop__clickable nav-desktop__icon" to="/@me/files">
-              <img alt="My Files" src="@/assets/svg/search.svg" srcset="" />
+            <nuxt-link class="nav-desktop__clickable nav-desktop__icon" to="/search">
+              <img alt="Stream" src="@/assets/svg/stream.svg" srcset="" />
             </nuxt-link>
           </li>
 
           <li class="nav-desktop__link">
-            <nuxt-link class="nav-desktop__clickable nav-desktop__icon" to="/@me/files">
+            <nuxt-link
+              class="nav-desktop__clickable nav-desktop__icon"
+              :to="`/files/@${$accessor.user.username}`"
+            >
               <img alt="My Files" src="@/assets/svg/folder.svg" srcset="" />
             </nuxt-link>
           </li>
@@ -60,6 +63,15 @@ export default class NavbarDesktop extends Vue {}
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/scss/button.scss";
+
+.btn {
+  &__register {
+    @apply rounded-sm;
+    @apply px-5 py-3 #{!important};
+  }
+}
+
 .nav-desktop {
   @apply flex-row items-center hidden;
   @apply w-full;
@@ -74,10 +86,10 @@ export default class NavbarDesktop extends Vue {}
     @apply cursor-pointer;
     @apply font-medium no-underline;
     @apply p-3;
-    @apply rounded;
+    @apply rounded-sm;
     @apply text-base text-secondary-300;
 
-    &:hover {
+    &:hover:not([class^="btn"]) {
       @apply bg-secondary-800;
     }
   }
@@ -132,19 +144,6 @@ export default class NavbarDesktop extends Vue {}
     @apply m-0 mr-auto;
     @apply overflow-hidden;
     @apply pt-1;
-  }
-
-  &__register {
-    @apply bg-secondary-800;
-    @apply rounded-sm;
-    @apply text-secondary-300 #{!important};
-    @apply px-5 py-2 #{!important};
-
-    transition: background-color 0.1s ease-in;
-
-    &:hover {
-      background-color: darken(#3b3f61, 3%);
-    }
   }
 }
 </style>

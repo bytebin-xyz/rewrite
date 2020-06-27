@@ -4,9 +4,8 @@
       id="hamburger"
       ref="hamburger"
       aria-controls="nav-dropdown"
-      :aria-expanded="opened"
       class="nav-mobile__hamburger"
-      @click="opened = !opened"
+      @click="toggle"
     />
 
     <ul
@@ -14,6 +13,7 @@
       :class="{ 'nav-mobile__links--opened': opened }"
       class="nav-mobile__links"
       aria-labelledby="hamburger"
+      @click="close"
     >
       <template v-if="!$accessor.isAuthenticated">
         <li class="nav-mobile__link">
@@ -31,7 +31,7 @@
 
       <template v-else>
         <li class="nav-mobile__link">
-          <nuxt-link class="nav-mobile__clickable" to="/@me/files">
+          <nuxt-link class="nav-mobile__clickable" :to="`/files/@${$accessor.user.username}`">
             My Files
           </nuxt-link>
         </li>
@@ -80,15 +80,19 @@ import Hamburger from "../hamburger.vue";
 export default class NavbarMobile extends Vue {
   @Ref() readonly hamburger!: Hamburger;
 
-  opened = false;
+  private opened = false;
 
-  private created() {
-    this.$router.beforeEach((_, __, next) => {
-      this.hamburger.collapse();
-      this.opened = false;
+  close() {
+    this.opened = false;
+  }
 
-      next();
-    });
+  open() {
+    this.opened = true;
+  }
+
+  toggle() {
+    if (this.opened) this.close();
+    else this.open();
   }
 }
 </script>

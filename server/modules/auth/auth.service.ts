@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { Collection } from "mongodb";
+import { Connection, Model } from "mongoose";
 
-import { Model } from "mongoose";
+import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
+import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 
 import { PasswordReset } from "./interfaces/password-reset.interface";
 import { UserActivation } from "./interfaces/user-activation.interface";
@@ -14,8 +15,13 @@ import { User } from "~/server/modules/users/interfaces/user.interface";
 import { generateId } from "~/common/utils/generateId";
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnApplicationBootstrap {
+  private sessions!: Collection;
+
   constructor(
+    @InjectConnection()
+    private readonly connection: Connection,
+
     @InjectModel("PasswordReset")
     private readonly passwordResets: Model<PasswordReset>,
 
@@ -25,6 +31,10 @@ export class AuthService {
     private readonly nodemailer: NodemailerService,
     private readonly users: UsersService
   ) {}
+
+  async onApplicationBootstrap(): Promise<void> {
+    this.sessions = await this.connection.db.collection("sessions");
+  }
 
   async activate(token: string): Promise<User | void> {
     const activation = await this.userActivations.findOne({ token });
@@ -39,14 +49,16 @@ export class AuthService {
     return user;
   }
 
-  async forgotPassword(email: string): Promise<void> {
+  async forgotPassword(email: string): Promise<boolean> {
     const user = await this.users.findOne({ email });
-    if (!user) return;
+    if (!user) return false;
 
-    const token = await generateId(16);
+    const token = await generateId(32);
 
     await this.passwordResets.create({ token, uid: user.uid });
     await this.nodemailer.sendPasswordResetEmail(token, user);
+
+    return true;
   }
 
   login(username: string, password: string): Promise<User | null> {
@@ -71,14 +83,21 @@ export class AuthService {
   }
 
   async resetPassword(token: string, newPassword: string): Promise<boolean> {
-    const reset = await this.passwordResets.findOne({ token });
-    if (!reset) return false;
+    const passwordReset = await this.passwordResets.findOne({ token });
+    if (!passwordReset) return false;
 
-    const user = await this.users.findOne({ uid: reset.uid });
+    const user = await this.users.findOne({ uid: passwordReset.uid });
     if (!user) return false;
 
-    await user.changePassword(newPassword);
-    await Promise.allSettled([this.nodemailer.sendPasswordChangedEmail(user), reset.deleteOne()]);
+    await Promise.allSettled([
+      this.sessions.deleteMany({ "session.uid": passwordReset.uid }),
+      user.changePassword(newPassword)
+    ]);
+
+    await Promise.allSettled([
+      this.nodemailer.sendPasswordChangedEmail(user),
+      passwordReset.deleteOne()
+    ]);
 
     return true;
   }

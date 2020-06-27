@@ -81,7 +81,7 @@ export class NodemailerService implements OnModuleInit {
   }
 
   async sendPasswordResetEmail(token: string, user: User) {
-    const resetPasswordLink = `${this.baseURL}/auth/reset-password/${token}`;
+    const resetPasswordLink = `${this.baseURL}/reset-password/${token}`;
     const html = await renderMJML(path.join(__dirname, "./mjml/password-reset.mjml"), {
       resetPasswordLink,
       username: user.username

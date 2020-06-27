@@ -8,7 +8,8 @@ import {
   Redirect,
   Session,
   UnauthorizedException,
-  UseGuards
+  UseGuards,
+  BadRequestException
 } from "@nestjs/common";
 
 import { Throttle, ThrottlerGuard } from "nestjs-throttler";
@@ -25,8 +26,8 @@ import { RecaptchaAction } from "~/server/decorators/recaptcha-action.decorator"
 import { RecaptchaScore } from "~/server/decorators/recaptcha-score.decorator";
 import { RecaptchaGuard } from "~/server/guards/recaptcha.guard";
 
-import { ISession } from "~/server/interfaces/session.interface";
 import { IRedirect } from "~/server/interfaces/redirect.interface";
+import { ISession } from "~/server/interfaces/session.interface";
 
 import { AuthGuard } from "~/server/modules/auth/guards/auth.guard";
 
@@ -38,8 +39,8 @@ export class AuthController {
   constructor(private readonly auth: AuthService, private readonly users: UsersService) {}
 
   @Get("activate/:token")
+  @Redirect("/login")
   @Throttle(10, 10 * 60)
-  @Redirect("/profile")
   async activate(
     @Param("token") token: string,
     @Session() session: ISession
@@ -48,14 +49,16 @@ export class AuthController {
 
     const user = await this.auth.activate(token);
     if (!user) return { url: "/" };
-
-    session.uid = user.uid;
   }
 
   @Post("forgot-password")
   @Throttle(10, 10 * 60)
   async forgotPassword(@Body() { email }: ForgotPasswordDto): Promise<void> {
-    await this.auth.forgotPassword(email);
+    if (!(await this.auth.forgotPassword(email))) {
+      throw new BadRequestException(
+        `Account does not exist for ${email}. Maybe you used a different email address to sign up?`
+      );
+    }
   }
 
   @Post("login")

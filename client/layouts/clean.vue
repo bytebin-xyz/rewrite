@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <div id="app__navbar">
-      <navbar />
+    <div id="app__logo">
+      <nuxt-link to="/">
+        <logo :hideBrandName="true" :size="100" />
+      </nuxt-link>
     </div>
 
     <div id="app__view">
-      <div id="app__container">
-        <nuxt />
-      </div>
+      <nuxt />
     </div>
   </div>
 </template>
@@ -20,38 +20,31 @@ import "focus-visible";
 @Component({
   head: {
     bodyAttrs: {
-      id: "layout__default"
+      id: "layout__clean"
     }
   }
 })
-export default class DefaultLayout extends Vue {}
+export default class CleanLayout extends Vue {}
 </script>
 
 <style lang="scss">
-#layout__default {
-  @apply bg-secondary-800;
+#layout__clean {
+  @apply bg-secondary-900;
 
   font-family: "Roboto", sans-serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 
-  & #app {
+  & #app__logo {
+    @apply flex justify-center items-center;
     @apply mt-4;
   }
 
-  & #app__container {
-    @apply mx-auto;
+  & #app__view {
+    @apply m-auto;
+    @apply px-0 py-8;
 
     max-width: 1600px;
-  }
-
-  & #app__navbar,
-  & #app__view {
-    @apply px-4;
-  }
-
-  & #app__view {
-    @apply py-12;
   }
 }
 </style>

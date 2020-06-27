@@ -1,15 +1,17 @@
 <template>
-  <div class="home"></div>
+  <div id="stream"></div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
 
 @Component({
-  layout: "default",
+  meta: {
+    requiresAuth: true
+  },
   transition: "fade"
 })
-export default class Home extends Vue {}
+export default class Stream extends Vue {}
 </script>
 
 <style lang="scss" scoped></style>
