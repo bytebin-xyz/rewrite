@@ -1,12 +1,15 @@
+$btn-height: 48px;
+
 .btn {
-  @apply border-none rounded-sm;
   @apply cursor-pointer;
   @apply flex items-center justify-center;
   @apply font-semibold;
+  @apply outline-none;
   @apply p-4;
+  @apply rounded-sm;
   @apply w-full;
 
-  height: 48px;
+  height: $btn-height;
   transition: background-color 0.2s ease;
 
   &--dark {

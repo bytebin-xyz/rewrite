@@ -13,7 +13,7 @@
     class="btn"
   >
     <div v-if="status === 'fail'">
-      <img alt="X" class="btn__icon" src="@/assets/svg/cross.svg" />
+      <cross-icon fill="#fff" :height="24" />
     </div>
 
     <beat-loader
@@ -26,7 +26,7 @@
     />
 
     <div v-else-if="status === 'success'">
-      <img alt=":)" class="btn__icon" src="@/assets/svg/checkmark.svg" />
+      <checkmark-icon fill="#fff" :height="24" />
     </div>
 
     <slot v-else />
@@ -62,14 +62,14 @@ export default class VButton extends Vue {
     type: String,
     validator: (theme: any) => Object.values(ButtonTheme).includes(theme)
   })
-  private readonly theme!: ButtonTheme;
+  private readonly theme = ButtonTheme.Dark;
 
   @Prop({
     default: ButtonType.Button,
     type: String,
     validator: (type: any) => Object.values(ButtonType).includes(type)
   })
-  private readonly type!: ButtonType;
+  private readonly type = ButtonType.Button;
 
   private status = ButtonStatus.Idle;
 
@@ -93,10 +93,4 @@ export default class VButton extends Vue {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/button.scss";
-
-.btn {
-  &__icon {
-    height: 24px;
-  }
-}
 </style>

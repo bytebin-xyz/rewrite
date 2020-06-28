@@ -31,10 +31,6 @@ export default class CleanLayout extends Vue {}
 #layout__clean {
   @apply bg-primary-900;
 
-  font-family: "Roboto", sans-serif;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-
   & #app__logo {
     @apply flex justify-center items-center;
     @apply mt-4;

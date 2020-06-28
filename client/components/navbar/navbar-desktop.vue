@@ -24,7 +24,10 @@
           </li>
 
           <li class="nav-desktop__link">
-            <nuxt-link class="btn btn__register btn--light nav-desktop__clickable" to="/register">
+            <nuxt-link
+              class="btn btn__register btn--light nav-desktop__clickable"
+              to="/register"
+            >
               Sign Up
             </nuxt-link>
           </li>
@@ -33,7 +36,7 @@
         <template v-else>
           <li class="nav-desktop__link">
             <nuxt-link class="nav-desktop__clickable nav-desktop__icon" to="/search">
-              <img alt="Stream" src="@/assets/svg/stream.svg" srcset="" />
+              <stream-icon fill="#848BD8" :size="24" />
             </nuxt-link>
           </li>
 
@@ -42,7 +45,7 @@
               class="nav-desktop__clickable nav-desktop__icon"
               :to="`/files/@${$accessor.user.username}`"
             >
-              <img alt="My Files" src="@/assets/svg/folder.svg" srcset="" />
+              <folder-icon fill="#848BD8" :size="24" />
             </nuxt-link>
           </li>
 
@@ -65,11 +68,8 @@ export default class NavbarDesktop extends Vue {}
 <style lang="scss" scoped>
 @import "@/assets/scss/button.scss";
 
-.btn {
-  &__register {
-    @apply rounded-sm;
-    @apply px-5 py-3 #{!important};
-  }
+.btn__register {
+  @apply px-5 py-3 #{!important}
 }
 
 .nav-desktop {
@@ -89,8 +89,13 @@ export default class NavbarDesktop extends Vue {}
     @apply rounded-sm;
     @apply text-base text-primary-300;
 
-    &:hover:not([class^="btn"]) {
-      @apply bg-primary-800;
+    &:not([class^="btn"]) {
+      @apply border-none;
+
+      &:focus,
+      &:hover {
+        @apply bg-primary-800;
+      }
     }
   }
 
@@ -101,11 +106,6 @@ export default class NavbarDesktop extends Vue {}
   &__icon {
     &:hover {
       @apply bg-primary-800;
-    }
-
-    & img {
-      height: 24px;
-      width: 29px;
     }
   }
 

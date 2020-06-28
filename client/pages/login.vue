@@ -9,7 +9,7 @@
       </nuxt-link>
     </h2>
 
-    <div class="container container--light container--pad-sm">
+    <div class="wrapper wrapper--light wrapper--pad-sm">
       <form class="form" novalidate @submit.prevent="login">
         <div class="form__group">
           <label class="form__label" for="username">Username</label>
@@ -141,8 +141,8 @@ export default class Login extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/container.scss";
 @import "@/assets/scss/form.scss";
+@import "@/assets/scss/wrapper.scss";
 
 .form {
   &__forgot-password {

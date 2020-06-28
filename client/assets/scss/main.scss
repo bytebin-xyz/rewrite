@@ -1,14 +1,14 @@
+body {
+  font-family: "Roboto", sans-serif;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+
+  transition: background 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
 [data-focus-visible-added]:focus {
   @apply border-2 border-solid border-primary-400 rounded;
   @apply outline-none;
-}
-
-*:focus:not([data-focus-visible-added]) {
-  @apply outline-none;
-}
-
-body {
-  transition: background 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
 .fade-enter-active,

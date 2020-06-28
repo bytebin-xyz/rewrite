@@ -42,10 +42,7 @@ export const actions = actionTree(
     },
 
     me({ commit }) {
-      // prettier-ignore
-      return this.$axios
-        .get<User>("/users/@me")
-        .then(({ data }) => commit("setUser", data));
+      return this.$axios.get<User>("/users/@me").then(({ data }) => commit("setUser", data));
     },
 
     register({ commit }, payload: RegisterDto) {

@@ -2,11 +2,22 @@
   <nav class="breadcrumbs">
     <ol class="breadcrumbs__items">
       <li class="breadcrumb">
-        <img alt="" class="breadcrumb__cloud" src="@/assets/svg/cloud.svg" />
+        <cloud-icon class="breadcrumb__cloud" fill="#CED1EF" :size="24" />
+        <chevron-icon class="breadcrumb__arrow" direction="right" fill="#CED1EF" :size="8" />
       </li>
 
       <li v-for="(item, index) of items" :key="item" class="breadcrumb">
-        <span class="breadcrumb__name" @click="$emit('click', item, index)">{{ item }}</span>
+        <span class="breadcrumb__name" @click="$emit('click', item, index)">
+          {{ item }}
+        </span>
+
+        <chevron-icon
+          v-if="index < items.length - 1"
+          class="breadcrumb__arrow"
+          direction="right"
+          fill="#CED1EF"
+          :size="8"
+        />
       </li>
     </ol>
   </nav>
@@ -42,20 +53,14 @@ export default class Breadcrumbs extends Vue {
   @apply flex;
   @apply text-primary-300;
 
-  &:not(:last-child)::after {
-    content: url("../assets/svg/chevron-right.svg");
-
+  &__arrow {
     @apply inline-block;
     @apply mx-3;
-
-    width: 8px;
   }
 
   &__cloud {
     @apply cursor-default;
     @apply inline-block;
-
-    width: 24px;
   }
 
   &__name {

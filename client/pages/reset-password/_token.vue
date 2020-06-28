@@ -2,7 +2,7 @@
   <div id="reset-password">
     <h1>Reset your Password</h1>
 
-    <div class="container container--light container--pad-sm">
+    <div class="wrapper wrapper--light wrapper--pad-sm">
       <form novalidate @submit.prevent="resetPassword">
         <div class="form__group">
           <label class="form__label" for="new-password">New Password</label>
@@ -121,8 +121,8 @@ export default class ResetPassword extends Vue {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/button.scss";
-@import "@/assets/scss/container.scss";
 @import "@/assets/scss/form.scss";
+@import "@/assets/scss/wrapper.scss";
 
 #reset-password {
   @apply m-auto;

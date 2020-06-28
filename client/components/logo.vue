@@ -2,7 +2,7 @@
   <div class="logo">
     <svg
       class="logo__icon"
-      :style="styles"
+      :style="{ width: `${size}px` }"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 300 300"
     >
@@ -54,12 +54,6 @@ export default class Logo extends Vue {
 
   @Prop({ default: 72, type: Number })
   private readonly size!: number;
-
-  get styles() {
-    return {
-      width: `${this.size}px`
-    };
-  }
 }
 </script>
 
@@ -69,6 +63,7 @@ export default class Logo extends Vue {
 
   &__name {
     @apply font-bold text-2xl text-primary-400;
+    @apply mr-2;
 
     font-family: "IBM Plex Sans", sans-serif;
 

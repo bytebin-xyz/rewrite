@@ -45,6 +45,15 @@ export default class Hamburger extends Vue {
 .hamburger {
   @apply flex;
 
+  &:focus {
+    @apply outline-none;
+  }
+
+  &[data-focus-visible-added]:focus {
+    @apply bg-primary-800;
+    @apply rounded-lg;
+  }
+
   &-inner,
   &-inner::after,
   &-inner::before {

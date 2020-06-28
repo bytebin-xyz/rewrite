@@ -31,10 +31,6 @@ export default class DefaultLayout extends Vue {}
 #layout__default {
   @apply bg-primary-800;
 
-  font-family: "Roboto", sans-serif;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-
   & #app {
     @apply mt-4;
   }

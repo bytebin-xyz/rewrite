@@ -11,11 +11,7 @@
         {{ $accessor.user.display_name }}
       </span>
 
-      <img
-        alt=""
-        class="user-dropdown__icon user-dropdown__icon--toggler"
-        src="@/assets/svg/chevron-down.svg"
-      />
+      <chevron-icon direction="down" fill="#848BD8" :size="10" />
     </button>
 
     <ul
@@ -42,14 +38,14 @@
 
       <li class="user-dropdown__link">
         <nuxt-link class="user-dropdown__clickable" to="/settings">
-          <img class="user-dropdown__icon" src="@/assets/svg/edit.svg" alt="" />
+          <edit-icon class="mr-2" fill="#aaa" :size="16" />
           <span>Edit Settings</span>
         </nuxt-link>
       </li>
 
       <li class="user-dropdown__link">
         <nuxt-link class="user-dropdown__clickable" to="/developers">
-          <img class="user-dropdown__icon" src="@/assets/svg/code.svg" alt="" />
+          <code-icon class="mr-2" fill="#aaa" :size="16" />
           <span>Developer Panel</span>
         </nuxt-link>
       </li>
@@ -61,7 +57,7 @@
           class="user-dropdown__clickable user-dropdown__clickable--logout"
           @click="$accessor.logout().finally(() => $router.push('/'))"
         >
-          <img class="user-dropdown__icon" src="@/assets/svg/logout.svg" alt="X" />
+          <logout-icon class="mr-2" fill="#F56565" :size="16" />
           <span>Log Out</span>
         </button>
       </li>
@@ -155,13 +151,6 @@ $hover-color: #f1f3f6;
     @apply mr-3;
 
     width: 16px;
-
-    &--toggler {
-      @apply m-0;
-      @apply select-none;
-
-      width: 10px;
-    }
   }
 
   &__link {
@@ -201,11 +190,16 @@ $hover-color: #f1f3f6;
     @apply bg-primary-900;
     @apply border-2 border-primary-800 rounded;
     @apply flex flex-row items-center;
+    @apply outline-none;
     @apply px-4 py-0;
     @apply text-primary-300;
 
     background-color: lighten(#282a41, 5%);
     height: 48px;
+
+    &:focus {
+      @apply rounded #{!important};
+    }
 
     &:focus,
     &:hover {

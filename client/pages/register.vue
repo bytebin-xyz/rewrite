@@ -9,7 +9,7 @@
       </nuxt-link>
     </h2>
 
-    <div class="container container--light container--pad-sm">
+    <div class="wrapper wrapper--light wrapper--pad-sm">
       <form class="form" novalidate @submit.prevent="register">
         <div class="form__group">
           <label class="form__label" for="username">Username</label>
@@ -87,7 +87,7 @@
         </div>
 
         <div class="form__group">
-          <label class="form__label" for="confirm-password">>Confirm Password</label>
+          <label class="form__label" for="confirm-password">Confirm Password</label>
 
           <input
             id="confirm-password"
@@ -204,8 +204,8 @@ export default class Register extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/container.scss";
 @import "@/assets/scss/form.scss";
+@import "@/assets/scss/wrapper.scss";
 
 h1 {
   @apply font-medium text-3xl text-center text-primary-200;

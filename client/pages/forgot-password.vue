@@ -3,7 +3,7 @@
     <h1>Reset your Password</h1>
 
     <template v-if="sent">
-      <div class="container container--light container--pad-sm">
+      <div class="wrapper wrapper--light wrapper--pad-sm">
         <h2>
           We have sent you an email containing a link to reset your password. If you do not receive
           it within a few minutes, check your spam folder.
@@ -21,7 +21,7 @@
         reset your password.
       </h2>
 
-      <div class="container container--light container--pad-sm">
+      <div class="wrapper wrapper--light wrapper--pad-sm">
         <form novalidate @submit.prevent="sendPasswordResetEmail">
           <div class="form__group">
             <label class="form__label" for="email">Email Address</label>
@@ -108,8 +108,8 @@ export default class ForgotPassword extends Vue {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/button.scss";
-@import "@/assets/scss/container.scss";
 @import "@/assets/scss/form.scss";
+@import "@/assets/scss/wrapper.scss";
 
 #forgot-password {
   @apply m-auto;
