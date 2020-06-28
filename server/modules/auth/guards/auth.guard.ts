@@ -1,21 +1,8 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 
-import { Request } from "express";
-
-import { ISession } from "~/server/interfaces/session.interface";
+import { IRequest } from "~server/interfaces/request.interface";
 
 import { UsersService } from "~server/modules/users/users.service";
-import { User } from "~server/modules/users/interfaces/user.interface";
-
-export interface IRequest extends Request {
-  session?: ISession;
-  user?: User;
-}
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -29,7 +16,7 @@ export class AuthGuard implements CanActivate {
     }
 
     const user = await this.users.findOne({ uid: req.session.uid });
-    if (!user) throw new UnauthorizedException("You are not logged in!");
+    if (!user || user.deleted) throw new UnauthorizedException("You are not logged in!");
 
     req.user = user;
 

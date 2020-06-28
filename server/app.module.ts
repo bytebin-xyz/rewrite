@@ -14,8 +14,8 @@ import { Connection } from "mongoose";
 import { AppController } from "./app.controller";
 
 import { AuthModule } from "./modules/auth/auth.module";
+import { MeModule } from "./modules/me/me.module";
 import { NodemailerModule } from "./modules/nodemailer/nodemailer.module";
-import { SettingsModule } from "./modules/settings/settings.module";
 import { UsersModule } from "./modules/users/users.module";
 
 import ms = require("ms");
@@ -76,6 +76,8 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
       })
     }),
 
+    MeModule,
+
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -134,8 +136,6 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
         }
       })
     }),
-
-    SettingsModule,
 
     UsersModule
   ],

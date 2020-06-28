@@ -6,8 +6,6 @@ import { Schema } from "mongoose";
 
 import { hideSchemaProperty } from "~common/utils/hideSchemaProperty";
 
-import ms = require("ms");
-
 export const UserSchema = new Schema(
   {
     activated: {
@@ -18,8 +16,13 @@ export const UserSchema = new Schema(
       default: (): Date => new Date(),
       type: Date
     },
+    deleted: {
+      default: false,
+      type: Boolean
+    },
     display_name: {
       maxlength: 32,
+      required: true,
       type: String,
       unique: true,
       validate: {
@@ -27,18 +30,15 @@ export const UserSchema = new Schema(
       }
     },
     email: {
+      required: true,
       type: String,
       unique: true,
       validate: {
         validator: isEmail
       }
     },
-    expires_at: {
-      default: (): Date => new Date(),
-      expires: ms("1d") / 1000,
-      type: Date
-    },
     password: {
+      required: true,
       type: String
     },
     uid: {
@@ -50,6 +50,7 @@ export const UserSchema = new Schema(
     },
     username: {
       maxlength: 32,
+      required: true,
       type: String,
       unique: true,
       validate: {
@@ -76,6 +77,13 @@ UserSchema.methods.activate = async function () {
   }
 };
 
+UserSchema.methods.changeDisplayName = async function (newDisplayName: string) {
+  if (this.display_name === newDisplayName) return;
+
+  this.display_name = newDisplayName;
+  await this.save();
+};
+
 UserSchema.methods.changeEmail = async function (newEmail: string) {
   if (this.email === newEmail) return;
 
@@ -93,4 +101,13 @@ UserSchema.methods.changePassword = async function (newPassword: string) {
 
 UserSchema.methods.comparePassword = function (password: string) {
   return bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.delete = async function () {
+  if (!this.deleted) {
+    this.deleted = true;
+    this.email = "";
+
+    await this.save();
+  }
 };

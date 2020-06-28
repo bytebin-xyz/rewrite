@@ -127,7 +127,7 @@ export default class Login extends Vue {
       .then(() => {
         this.button.success();
 
-        setTimeout(() => this.$router.push("/profile"), 1500);
+        setTimeout(() => this.$router.push(`/files/@${this.username}`), 1500);
       })
       .catch((error: Error) => {
         this.error = error.message;

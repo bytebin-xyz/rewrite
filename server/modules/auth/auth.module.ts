@@ -9,20 +9,13 @@ import { AuthService } from "./auth.service";
 
 import { AuthGuard } from "./guards/auth.guard";
 
-import { PasswordResetSchema } from "./schemas/password-reset.schema";
-import { UserActivationSchema } from "./schemas/user-activation.schema";
+import { PasswordResetSchema } from "~server/modules/nodemailer/schemas/password-reset.schema";
 
 @Module({
   imports: [
     HttpModule,
-
-    MongooseModule.forFeature([
-      { name: "PasswordReset", schema: PasswordResetSchema },
-      { name: "UserActivation", schema: UserActivationSchema }
-    ]),
-
+    MongooseModule.forFeature([{ name: "PasswordReset", schema: PasswordResetSchema }]),
     ThrottlerModule.forRoot({}),
-
     UsersModule
   ],
   exports: [AuthGuard],

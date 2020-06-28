@@ -2,10 +2,7 @@ import {
   Body,
   ConflictException,
   Controller,
-  Get,
-  Param,
   Post,
-  Redirect,
   Session,
   UnauthorizedException,
   UseGuards,
@@ -26,37 +23,20 @@ import { RecaptchaAction } from "~/server/decorators/recaptcha-action.decorator"
 import { RecaptchaScore } from "~/server/decorators/recaptcha-score.decorator";
 import { RecaptchaGuard } from "~/server/guards/recaptcha.guard";
 
-import { IRedirect } from "~/server/interfaces/redirect.interface";
 import { ISession } from "~/server/interfaces/session.interface";
 
-import { AuthGuard } from "~/server/modules/auth/guards/auth.guard";
-
-import { User as IUser } from "~server/modules/users/interfaces/user.interface";
-import { User } from "~/server/decorators/user.decorator";
+import { User } from "~server/modules/users/interfaces/user.interface";
 
 @Controller("auth")
 export class AuthController {
   constructor(private readonly auth: AuthService, private readonly users: UsersService) {}
-
-  @Get("activate/:token")
-  @Redirect("/login")
-  @Throttle(10, 10 * 60)
-  async activate(
-    @Param("token") token: string,
-    @Session() session: ISession
-  ): Promise<IRedirect | void> {
-    if (session.user) return;
-
-    const user = await this.auth.activate(token);
-    if (!user) return { url: "/" };
-  }
 
   @Post("forgot-password")
   @Throttle(10, 10 * 60)
   async forgotPassword(@Body() { email }: ForgotPasswordDto): Promise<void> {
     if (!(await this.auth.forgotPassword(email))) {
       throw new BadRequestException(
-        `Account does not exist for ${email}. Maybe you used a different email address to sign up?`
+        `Account does not exist for ${email}. Maybe you signed up with a different email address?`
       );
     }
   }
@@ -70,8 +50,8 @@ export class AuthController {
   async login(
     @Body() { password, username }: LoginDto,
     @Session() session: ISession
-  ): Promise<IUser> {
-    const user = await this.auth.login(username, password);
+  ): Promise<User> {
+    const user = await this.users.validate(username, password);
     if (!user) throw new UnauthorizedException("Invalid login credentials!");
 
     session.uid = user.uid;
@@ -102,7 +82,7 @@ export class AuthController {
   async register(
     @Body() { email, username, password }: RegisterDto,
     @Session() session: ISession
-  ): Promise<IUser> {
+  ): Promise<User> {
     if (await this.users.exists({ email })) {
       throw new ConflictException("This email already exists!");
     }
@@ -118,18 +98,11 @@ export class AuthController {
     return user;
   }
 
-  @Post("resend-user-activation")
-  @Throttle(10, 10 * 60)
-  @UseGuards(AuthGuard)
-  async resendUserActivation(@User() user: IUser): Promise<void> {
-    await this.auth.resendUserActivationEmail(user);
-  }
-
   @Post("reset-password")
   @Throttle(10, 10 * 60)
   @UseGuards(ThrottlerGuard)
   async resetPassword(@Body() { newPassword, token }: ResetPasswordDto): Promise<void> {
-    if (!(await this.auth.resetPassword(token, newPassword))) {
+    if (!(await this.auth.resetPassword(newPassword, token))) {
       throw new BadRequestException(
         "Invalid password reset link, please make sure the link is the same as the one shown in the email."
       );
