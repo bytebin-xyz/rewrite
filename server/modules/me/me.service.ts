@@ -24,11 +24,11 @@ export class MeService {
     return user;
   }
 
-  async changeEmail(user: User, newEmail: string): Promise<void> {
+  async changeEmail(newEmail: string, user: User): Promise<void> {
     await this.nodemailer.sendEmailConfirmation(newEmail, user);
   }
 
-  async changePassword(user: User, newPassword: string): Promise<void> {
+  async changePassword(newPassword: string, user: User): Promise<void> {
     await user.changePassword(newPassword);
     await this.nodemailer.sendPasswordChangedEmail(user);
   }

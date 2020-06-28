@@ -51,7 +51,7 @@ export class MeController {
   @Post("change-email")
   @UseGuards(AuthGuard)
   async changeEmail(@Body() { newEmail }: ChangeEmailDto, @User() user: IUser): Promise<void> {
-    await this.me.changeEmail(user, newEmail);
+    await this.me.changeEmail(newEmail, user);
   }
 
   @Post("change-password")
@@ -64,7 +64,7 @@ export class MeController {
       throw new UnauthorizedException("Your old password is incorrect.");
     }
 
-    await this.me.changePassword(user, newPassword);
+    await this.me.changePassword(newPassword, user);
   }
 
   @Patch("confirm-email/:token")
