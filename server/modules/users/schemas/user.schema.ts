@@ -6,6 +6,8 @@ import { Schema } from "mongoose";
 
 import { hideSchemaProperty } from "~common/utils/hideSchemaProperty";
 
+import ms = require("ms");
+
 export const UserSchema = new Schema(
   {
     activated: {
@@ -13,7 +15,12 @@ export const UserSchema = new Schema(
       type: Boolean
     },
     created_at: {
-      default: (): Date => new Date(),
+      default: () => new Date(),
+      type: Date
+    },
+    expires_at: {
+      default: () => new Date(Date.now() + ms("7d")),
+      expires: 0,
       type: Date
     },
     deleted: {
@@ -31,6 +38,7 @@ export const UserSchema = new Schema(
     },
     email: {
       required: true,
+      set: (value: string) => value.toLowerCase(),
       type: String,
       unique: true,
       validate: {
@@ -45,12 +53,14 @@ export const UserSchema = new Schema(
       maxlength: 16,
       minlength: 16,
       required: true,
+      set: (value: string) => value.toLowerCase(),
       type: String,
       unique: true
     },
     username: {
       maxlength: 32,
       required: true,
+      set: (value: string) => value.toLowerCase(),
       type: String,
       unique: true,
       validate: {
@@ -105,9 +115,12 @@ UserSchema.methods.comparePassword = function (password: string) {
 
 UserSchema.methods.delete = async function () {
   if (!this.deleted) {
+    // Don't actually delete the user document to prevent recycling display names + usernames
+    this.activated = false;
     this.deleted = true;
-    this.email = "";
+    this.email = null;
+    this.password = null;
 
-    await this.save();
+    await this.save({ validateBeforeSave: false });
   }
 };

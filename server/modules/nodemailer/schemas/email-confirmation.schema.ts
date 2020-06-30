@@ -9,12 +9,17 @@ import ms = require("ms");
 export const EmailConfirmationSchema = new Schema(
   {
     created_at: {
-      default: (): Date => new Date(),
-      expires: ms("1d") / 1000,
+      default: () => new Date(),
+      type: Date
+    },
+    expires_at: {
+      default: () => new Date(Date.now() + ms("3d")),
+      expires: 0,
       type: Date
     },
     new_email: {
       required: true,
+      set: (value: string) => value.toLowerCase(),
       type: String,
       validate: {
         validator: isEmail
@@ -24,6 +29,7 @@ export const EmailConfirmationSchema = new Schema(
       maxlength: 64,
       minlength: 64,
       required: true,
+      set: (value: string) => value.toLowerCase(),
       type: String,
       unique: true
     },
@@ -31,6 +37,7 @@ export const EmailConfirmationSchema = new Schema(
       maxlength: 16,
       minlength: 16,
       required: true,
+      set: (value: string) => value.toLowerCase(),
       type: String
     }
   },

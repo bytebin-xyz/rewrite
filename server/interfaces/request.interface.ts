@@ -6,5 +6,5 @@ import { User } from "~server/modules/users/interfaces/user.interface";
 
 export interface IRequest extends Request {
   session?: ISession;
-  user?: User;
+  user: User | null;
 }

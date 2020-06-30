@@ -128,7 +128,7 @@ export const config: Configuration = {
     host: "0.0.0.0"
   },
 
-  srcDir: "client",
+  srcDir: path.join(__dirname, "./client"),
 
   // https://typescript.nuxtjs.org/guide/setup.html#module-options
   typescript: {}

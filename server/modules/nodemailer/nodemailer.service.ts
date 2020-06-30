@@ -3,10 +3,10 @@ import * as path from "path";
 import nodemailer from "nodemailer";
 
 import { ConfigService } from "@nestjs/config";
-import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
+import { Inject, Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { Model } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
 
 import { NODEMAILER_TRANSPORTER_OPTIONS } from "./nodemailer.constants";
 
@@ -23,12 +23,13 @@ import { generateId } from "~/common/utils/generateId";
 import { renderMJML } from "~/common/utils/renderMJML";
 import { settle } from "~common/utils/settle";
 
-import Mail = require("nodemailer/lib/mailer");
-
 @Injectable()
-export class NodemailerService implements OnModuleInit {
+export class NodemailerService implements OnApplicationBootstrap {
   private readonly baseURL = `http://${this.config.get("DOMAIN")}`;
-  private readonly transporter: Mail;
+
+  private readonly transporter = nodemailer.createTransport(this.transporterOptions, {
+    from: `Bytebin <${this.transporterOptions.from}>`
+  });
 
   constructor(
     @Inject(NODEMAILER_TRANSPORTER_OPTIONS)
@@ -44,44 +45,63 @@ export class NodemailerService implements OnModuleInit {
     private readonly userActivations: Model<UserActivation>,
 
     private readonly config: ConfigService
-  ) {
-    this.transporter = nodemailer.createTransport(this.transporterOptions, {
-      from: `Bytebin <${this.transporterOptions.from}>`
-    });
-  }
+  ) {}
 
-  async onModuleInit(): Promise<void> {
+  async onApplicationBootstrap(): Promise<void> {
     await this.verify();
   }
 
-  deleteAll(uid: string) {
-    return settle([
-      this.emailConfirmations.deleteMany({ uid }),
-      this.passwordResets.deleteMany({ uid }),
-      this.userActivations.deleteMany({ uid })
+  async deleteAllFor(
+    query: FilterQuery<EmailConfirmation | PasswordReset | UserActivation>
+  ): Promise<void> {
+    await settle([
+      this.emailConfirmations.deleteMany(query),
+      this.passwordResets.deleteMany(query),
+      this.userActivations.deleteMany(query)
     ]);
   }
 
-  async findEmailConfirmation(token: string): Promise<EmailConfirmation | null> {
-    return this.emailConfirmations.findOne({ token });
+  async findEmailConfirmation(
+    query: FilterQuery<EmailConfirmation>
+  ): Promise<EmailConfirmation | null> {
+    return this.emailConfirmations.findOne(query);
   }
 
-  async findPasswordReset(token: string): Promise<PasswordReset | null> {
-    return this.passwordResets.findOne({ token });
+  async findPasswordReset(query: FilterQuery<PasswordReset>): Promise<PasswordReset | null> {
+    return this.passwordResets.findOne(query);
   }
 
-  async findUserActivation(token: string): Promise<UserActivation | null> {
-    return this.userActivations.findOne({ token });
+  async findUserActivation(query: FilterQuery<UserActivation>): Promise<UserActivation | null> {
+    return this.userActivations.findOne(query);
   }
 
   async send(options: SendMailOptions): Promise<void> {
-    await this.verify();
     await this.transporter.sendMail(options);
+  }
+
+  async sendEmailChanged(user: User) {
+    const forgotPasswordLink = `${this.baseURL}/forgot-password`;
+    const html = await renderMJML(path.join(__dirname, "./mjml/email-changed.mjml"), {
+      displayName: user.display_name,
+      forgotPasswordLink
+    });
+
+    await this.send({
+      html,
+      subject: "Your email has been changed.",
+      text: [
+        `Hey ${user.display_name}\n`,
+        "Your email has been changed.",
+        "If this was not you, please reset your password immediately using the link below.\n",
+        forgotPasswordLink
+      ].join("\n"),
+      to: user.email
+    });
   }
 
   async sendEmailConfirmation(newEmail: string, user: User) {
     const token = await generateId(32);
-    const confirmEmailLink = `${this.baseURL}/me/confirm-email/${token}`;
+    const confirmEmailLink = `${this.baseURL}/settings/confirm-email/${token}`;
 
     await this.emailConfirmations.create({ new_email: newEmail, token, uid: user.uid });
 
@@ -94,16 +114,16 @@ export class NodemailerService implements OnModuleInit {
       html,
       subject: "Please confirm your email address.",
       text: [
-        `Hey @${user.display_name}\n`,
-        "Your password has been changed.",
-        "If this was not you, please reset your password immediately using the link below.",
+        `Hey ${user.display_name}\n`,
+        "To confirm your email address, please visit the link below.",
+        "This email confirmation link is only valid for the next 72 hours.\n",
         confirmEmailLink
       ].join("\n"),
-      to: user.email
+      to: newEmail
     });
   }
 
-  async sendPasswordChangedEmail(user: User) {
+  async sendPasswordChanged(user: User) {
     const forgotPasswordLink = `${this.baseURL}/forgot-password`;
     const html = await renderMJML(path.join(__dirname, "./mjml/password-changed.mjml"), {
       displayName: user.display_name,
@@ -114,16 +134,16 @@ export class NodemailerService implements OnModuleInit {
       html,
       subject: "Your password has been changed.",
       text: [
-        `Hey @${user.display_name}\n`,
+        `Hey ${user.display_name}\n`,
         "Your password has been changed.",
-        "If this was not you, please reset your password immediately using the link below.",
+        "If this was not you, please reset your password immediately using the link below.\n",
         forgotPasswordLink
       ].join("\n"),
       to: user.email
     });
   }
 
-  async sendPasswordResetEmail(user: User) {
+  async sendPasswordReset(user: User) {
     const token = await generateId(32);
     const resetPasswordLink = `${this.baseURL}/reset-password/${token}`;
 
@@ -138,18 +158,18 @@ export class NodemailerService implements OnModuleInit {
       html,
       subject: "Password Reset",
       text: [
-        `Hey @${user.display_name},\n`,
+        `Hey ${user.display_name},\n`,
         "To reset your password, please visit the link below.",
-        `${resetPasswordLink}\n`,
-        "This link will expire is 3 hours."
+        "This password reset link is only valid for the next 3 hours.\n",
+        resetPasswordLink
       ].join("\n"),
       to: user.email
     });
   }
 
-  async sendUserActivationEmail(user: User) {
+  async sendUserActivation(user: User) {
     const token = await generateId(32);
-    const activationLink = `${this.baseURL}/me/activate/${token}`;
+    const activationLink = `${this.baseURL}/settings/activate/${token}`;
 
     await this.userActivations.create({ token, uid: user.uid });
 
@@ -162,10 +182,10 @@ export class NodemailerService implements OnModuleInit {
       html,
       subject: "Activate your account.",
       text: [
-        `Hey @${user.display_name},\n`,
-        "Please activate your account by visiting the link below.",
-        `${activationLink}\n`,
-        "This link will expire in 3 days."
+        `Hey ${user.display_name},\n`,
+        "To finish up the registration process, please activate your account by visiting the link below",
+        "You have 7 days to activate your account before it is deleted for inactivity.\n",
+        activationLink
       ].join("\n"),
       to: user.email
     });

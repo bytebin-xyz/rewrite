@@ -9,7 +9,7 @@
     "lib": ["esnext", "esnext.asynciterable", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./dist/server",
+    "outDir": "./dist",
     "paths": {
       "~/*": ["./*"],
       "~client/*": ["./client/*"],

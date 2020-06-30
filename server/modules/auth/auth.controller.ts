@@ -1,12 +1,13 @@
 import {
+  BadRequestException,
   Body,
   ConflictException,
   Controller,
+  Headers,
   Post,
   Session,
   UnauthorizedException,
-  UseGuards,
-  BadRequestException
+  UseGuards
 } from "@nestjs/common";
 
 import { Throttle, ThrottlerGuard } from "nestjs-throttler";
@@ -28,6 +29,7 @@ import { ISession } from "~/server/interfaces/session.interface";
 import { User } from "~server/modules/users/interfaces/user.interface";
 
 @Controller("auth")
+@UseGuards(ThrottlerGuard)
 export class AuthController {
   constructor(private readonly auth: AuthService, private readonly users: UsersService) {}
 
@@ -46,22 +48,22 @@ export class AuthController {
   @RecaptchaScore(0.8)
   @Throttle(10, 10 * 60)
   @UseGuards(RecaptchaGuard)
-  @UseGuards(ThrottlerGuard)
   async login(
     @Body() { password, username }: LoginDto,
-    @Session() session: ISession
+    @Session() session: ISession,
+    @Headers("user-agent") userAgent?: string
   ): Promise<User> {
-    const user = await this.users.validate(username, password);
+    const user = await this.auth.login(username, password);
     if (!user) throw new UnauthorizedException("Invalid login credentials!");
 
     session.uid = user.uid;
+    session.userAgent = userAgent;
 
     return user;
   }
 
   @Post("logout")
   @Throttle(10, 1 * 60)
-  @UseGuards(ThrottlerGuard)
   logout(@Session() session: ISession): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!session.uid) return resolve();
@@ -78,10 +80,10 @@ export class AuthController {
   @RecaptchaScore(0.8)
   @Throttle(5, 10 * 60)
   @UseGuards(RecaptchaGuard)
-  @UseGuards(ThrottlerGuard)
   async register(
     @Body() { email, username, password }: RegisterDto,
-    @Session() session: ISession
+    @Session() session: ISession,
+    @Headers("user-agent") userAgent?: string
   ): Promise<User> {
     if (await this.users.exists({ email })) {
       throw new ConflictException("This email already exists!");
@@ -94,13 +96,13 @@ export class AuthController {
     const user = await this.auth.register(email, password, username);
 
     session.uid = user.uid;
+    session.userAgent = userAgent;
 
     return user;
   }
 
   @Post("reset-password")
   @Throttle(10, 10 * 60)
-  @UseGuards(ThrottlerGuard)
   async resetPassword(@Body() { newPassword, token }: ResetPasswordDto): Promise<void> {
     if (!(await this.auth.resetPassword(newPassword, token))) {
       throw new BadRequestException(

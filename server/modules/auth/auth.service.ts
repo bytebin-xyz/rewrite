@@ -30,32 +30,37 @@ export class AuthService implements OnApplicationBootstrap {
     const user = await this.users.findOne({ email });
     if (!user) return false;
 
-    await this.nodemailer.sendPasswordResetEmail(user);
+    await this.nodemailer.sendPasswordReset(user);
 
     return true;
+  }
+
+  async login(username: string, password: string): Promise<User | void> {
+    const user = await this.users.findOne({ $or: [{ email: username }, { username }] });
+    if (user && (await user.comparePassword(password))) return user;
+  }
+
+  async logoutAllDevices(user: User) {
+    await this.sessions.deleteMany({ "session.uid": user.uid });
   }
 
   async register(email: string, password: string, username: string): Promise<User> {
     const user = await this.users.create(email, password, username);
 
-    await this.nodemailer.sendUserActivationEmail(user);
+    await this.nodemailer.sendUserActivation(user);
 
     return user;
   }
 
   async resetPassword(newPassword: string, token: string): Promise<boolean> {
-    const passwordReset = await this.nodemailer.findPasswordReset(token);
+    const passwordReset = await this.nodemailer.findPasswordReset({ token });
     if (!passwordReset) return false;
 
     const user = await this.users.findOne({ uid: passwordReset.uid });
     if (!user) return false;
 
-    await settle([
-      this.sessions.deleteMany({ "session.uid": passwordReset.uid }),
-      user.changePassword(newPassword)
-    ]);
-
-    await settle([this.nodemailer.sendPasswordChangedEmail(user), passwordReset.deleteOne()]);
+    await settle([this.logoutAllDevices(user), user.changePassword(newPassword)]);
+    await settle([this.nodemailer.sendPasswordChanged(user), passwordReset.deleteOne()]);
 
     return true;
   }

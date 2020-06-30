@@ -62,14 +62,14 @@ export default class VButton extends Vue {
     type: String,
     validator: (theme: any) => Object.values(ButtonTheme).includes(theme)
   })
-  private readonly theme = ButtonTheme.Dark;
+  private readonly theme!: ButtonTheme;
 
   @Prop({
     default: ButtonType.Button,
     type: String,
     validator: (type: any) => Object.values(ButtonType).includes(type)
   })
-  private readonly type = ButtonType.Button;
+  private readonly type!: ButtonType;
 
   private status = ButtonStatus.Idle;
 

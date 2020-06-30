@@ -25,7 +25,7 @@ type Links = { children: string[]; name: string; to: string };
 
 @Component
 export default class Sidenav extends Vue {
-  @Prop() private readonly links: Links[] = [];
+  @Prop() private readonly links!: Links[];
 }
 </script>
 

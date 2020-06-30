@@ -21,22 +21,19 @@
         </mj-text>
 
         <mj-text font-size="16px" line-height="32px" padding-bottom="15px" padding-top="25px">
-          <h2 style="margin: 0;">You have requested to change your email.</h2>
+          <h2 style="margin: 0;">Your email has been changed.</h2>
         </mj-text>
 
         <mj-text font-size="20px" line-height="32px">
-          <p style="margin: 0;">If this was not you, then you can ignore this email.</p>
+          <p style="margin: 0;">If this was you, then no further action is needed.</p>
         </mj-text>
 
         <mj-text font-size="20px" line-height="32px">
-          <p style="margin: 0;">
-            Otherwise, please click on the button below to confirm your email address.
-            <strong>This email confirmation link is only valid for the next 3 hours.</strong>
-          </p>
+          <p style="margin: 0;">If you did <strong>NOT</strong> perform this action, your account has been compromised. Please reset your password immediately by clicking on the button below.</p>
         </mj-text>
 
-        <mj-button font-size="20px" href="<%= confirmEmailLink %>" padding="25px">
-          Confirm Email Address
+        <mj-button font-size="20px" href="<%= forgotPasswordLink %>" padding="25px">
+          Recover Account
         </mj-button>
 
         <mj-text line-height="20px" padding-bottom="0">
@@ -44,8 +41,8 @@
         </mj-text>
 
         <mj-text padding-top="0">
-          <a href="<%= confirmEmailLink %>" style="color: #395ECA;" target="_blank">
-            <%= confirmEmailLink %>
+          <a href="<%= forgotPasswordLink %>" style="color: #395ECA;" target="_blank">
+            <%= forgotPasswordLink %>
           </a>
         </mj-text>
       </mj-column>

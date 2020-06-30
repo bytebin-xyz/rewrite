@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -14,8 +15,9 @@ import {
 
 import { Throttle, ThrottlerGuard } from "nestjs-throttler";
 
-import { MeService } from "./me.service";
+import { SettingsService } from "./settings.service";
 
+import { ChangeDisplayNameDto } from "./dto/change-display-name.dto";
 import { ChangeEmailDto } from "./dto/change-email.dto";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { DeleteAccountDto } from "./dto/delete-account.dto";
@@ -28,30 +30,47 @@ import { ISession } from "~/server/interfaces/session.interface";
 import { AuthGuard } from "~/server/modules/auth/guards/auth.guard";
 
 import { User as IUser } from "~server/modules/users/interfaces/user.interface";
+import { UsersService } from "~server/modules/users/users.service";
 
-@Controller("me")
+@Controller("settings")
 @Throttle(30, 60)
 @UseGuards(ThrottlerGuard)
-export class MeController {
-  constructor(private readonly me: MeService) {}
+export class SettingsController {
+  constructor(private readonly settings: SettingsService, private readonly users: UsersService) {}
 
   @Get("activate/:token")
   @Redirect("/login")
-  @Throttle(10, 10 * 60)
   async activate(
     @Param("token") token: string,
     @Session() session: ISession
   ): Promise<IRedirect | void> {
     if (session.user) return;
 
-    const user = await this.me.activate(token);
+    const user = await this.settings.activate(token);
     if (!user) return { url: "/" };
+  }
+
+  @Patch("change-display-name")
+  @UseGuards(AuthGuard)
+  async changeDisplayName(
+    @Body() { newDisplayName }: ChangeDisplayNameDto,
+    @User() user: IUser
+  ): Promise<void> {
+    if (await this.users.exists({ display_name: newDisplayName })) {
+      throw new ConflictException("Display name already taken!");
+    }
+
+    await user.changeDisplayName(newDisplayName);
   }
 
   @Post("change-email")
   @UseGuards(AuthGuard)
   async changeEmail(@Body() { newEmail }: ChangeEmailDto, @User() user: IUser): Promise<void> {
-    await this.me.changeEmail(newEmail, user);
+    if (await this.users.exists({ email: newEmail })) {
+      throw new ConflictException("Email already taken!");
+    }
+
+    await this.settings.changeEmail(newEmail, user);
   }
 
   @Post("change-password")
@@ -64,13 +83,15 @@ export class MeController {
       throw new UnauthorizedException("Your old password is incorrect.");
     }
 
-    await this.me.changePassword(newPassword, user);
+    await this.settings.changePassword(newPassword, user);
   }
 
-  @Patch("confirm-email/:token")
+  @Get("confirm-email/:token")
   @Redirect("/settings")
-  async confirmEmail(@Param("token") token: string): Promise<void> {
-    await this.me.confirmEmail(token);
+  async confirmEmail(@Param("token") token: string): Promise<IRedirect | void> {
+    if (!(await this.settings.confirmEmail(token))) {
+      return { url: "/" };
+    }
   }
 
   @Delete("delete-account")
@@ -80,13 +101,12 @@ export class MeController {
       throw new UnauthorizedException("Your password is incorrect!");
     }
 
-    await this.me.deleteUser(user);
+    await this.settings.deleteAccount(user);
   }
 
   @Post("resend-user-activation")
-  @Throttle(10, 10 * 60)
   @UseGuards(AuthGuard)
   async resendUserActivation(@User() user: IUser): Promise<void> {
-    await this.me.resendUserActivationEmail(user);
+    await this.settings.resendUserActivationEmail(user);
   }
 }

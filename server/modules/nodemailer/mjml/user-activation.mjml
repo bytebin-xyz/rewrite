@@ -25,7 +25,10 @@
         </mj-text>
 
         <mj-text font-size="20px" line-height="32px">
-          <p style="margin: 0;">To finish up the registration process, you need to activate your account. You can do this by clicking on the button below!</p>
+          <p style="margin: 0;">
+            To finish up the registration process, you need to activate your account. You can do this by clicking on the button below!
+            <strong>You have 7 days to activate your account before it is deleted for inactivity.</strong>
+          </p>
         </mj-text>
 
         <mj-button font-size="20px" href="<%= activationLink %>" padding="25px">

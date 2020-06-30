@@ -16,8 +16,13 @@ export class AuthGuard implements CanActivate {
     }
 
     const user = await this.users.findOne({ uid: req.session.uid });
-    if (!user || user.deleted) throw new UnauthorizedException("You are not logged in!");
 
+    if (!user || user.deleted) {
+      req.session.destroy(() => {});
+      throw new UnauthorizedException("You are not logged in!");
+    }
+
+    req.session.lastUsed = new Date();
     req.user = user;
 
     return true;

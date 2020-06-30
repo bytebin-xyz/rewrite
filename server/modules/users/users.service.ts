@@ -11,10 +11,7 @@ import { generateId } from "~common/utils/generateId";
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel("User")
-    private readonly users: Model<User>
-  ) {}
+  constructor(@InjectModel("User") private readonly users: Model<User>) {}
 
   async create(email: string, password: string, username: string): Promise<User> {
     return this.users.create({
@@ -22,13 +19,12 @@ export class UsersService {
       email,
       password: await bcrypt.hash(password, 10),
       uid: await generateId(8),
-      username: username.toLowerCase()
+      username
     });
   }
 
   async findOne(query: FilterQuery<User>): Promise<User | null> {
-    const user = await this.users.findOne(query);
-    return user;
+    return this.users.findOne({ ...query, deleted: false });
   }
 
   exists(query: FilterQuery<User>): Promise<boolean> {
@@ -36,14 +32,6 @@ export class UsersService {
   }
 
   async search(query: FilterQuery<PartialUser>): Promise<PartialUser | null> {
-    const user = await this.users.findOne(query, "-activated -email");
-    return user;
-  }
-
-  async validate(username: string, password: string): Promise<User | null> {
-    const user = await this.users.findOne({ username });
-    if (user && (await user.comparePassword(password))) return user;
-
-    return null;
+    return this.users.findOne(query, "-activated -email -username");
   }
 }

@@ -11,8 +11,12 @@ const MAX_RESEND_ATTEMPTS = 5;
 export const UserActivationSchema = new Schema(
   {
     created_at: {
-      default: (): Date => new Date(),
-      expires: ms("3d") / 1000,
+      default: () => new Date(),
+      type: Date
+    },
+    expires_at: {
+      default: () => new Date(Date.now() + ms("7d")),
+      expires: 0,
       type: Date
     },
     times_resent: {
@@ -25,6 +29,7 @@ export const UserActivationSchema = new Schema(
       maxlength: 64,
       minlength: 64,
       required: true,
+      set: (value: string) => value.toLowerCase(),
       type: String,
       unique: true
     },
@@ -32,6 +37,7 @@ export const UserActivationSchema = new Schema(
       maxlength: 16,
       minlength: 16,
       required: true,
+      set: (value: string) => value.toLowerCase(),
       type: String,
       unique: true
     }
