@@ -1,0 +1,77 @@
+$btn-height: 48px;
+
+.btn {
+  @apply cursor-pointer;
+  @apply flex items-center justify-center;
+  @apply font-semibold;
+  @apply outline-none;
+  @apply px-5 py-4;
+  @apply rounded-sm;
+  @apply w-auto;
+
+  height: $btn-height;
+  transition: background-color 0.25s ease;
+
+  @screen sm_max {
+    @apply w-full;
+  }
+  
+  &__indicator {
+    @apply absolute;
+    @apply flex;
+  }
+
+  &--danger {
+    @apply bg-red-700;
+    @apply text-white;
+
+    &:focus,
+    &:hover {
+      background-color: darken(#C53030, 5%);
+    }
+  }
+
+  &--dark {
+    @apply bg-primary-900;
+    @apply text-primary-400;
+
+    &:focus,
+    &:hover {
+      background-color: lighten(#282a41, 2%);
+    }
+  }
+
+  &--light {
+    @apply bg-primary-800;
+    @apply text-primary-300;
+
+    &:focus,
+    &:hover {
+      background-color: darken(#3b3f61, 3%);
+    }
+  }
+
+  &--ok {
+    @apply bg-green-700;
+    @apply text-white;
+
+    &:focus,
+    &:hover {
+      background-color: darken(#2F855A, 5%);
+    }
+  }
+
+  &--fail,
+  &--pending,
+  &--success {
+    @apply cursor-default;
+  }
+
+  &--fail {
+    @apply bg-red-700 #{!important};
+  }
+
+  &--success {
+    @apply bg-green-700 #{!important};
+  }
+}

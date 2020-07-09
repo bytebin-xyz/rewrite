@@ -1,0 +1,38 @@
+.section {
+  @apply my-4;
+  @apply rounded;
+  @apply shadow-lg;
+
+  &:first-child {
+    @apply mt-0;
+  }
+
+  &:last-child {
+    @apply mb-0;
+  }
+
+  &__body {
+    @apply mt-8;
+  }
+
+  &__footer {
+  }
+
+  &__header {
+  }
+
+  &__heading {
+    @apply font-bold text-3xl text-primary-200;
+    @apply mb-3;
+  }
+
+  &__subheading {
+    @apply font-medium text-lg text-primary-300;
+    @apply mb-3;
+  }
+
+  &__text {
+    @apply font-normal text-base text-primary-300;
+    @apply mb-3;
+  }
+}
