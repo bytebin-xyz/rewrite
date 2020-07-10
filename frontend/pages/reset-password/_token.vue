@@ -17,7 +17,7 @@
             type="password"
           />
 
-          <div v-if="$v.newPassword.$dirty && $v.newPassword.$error" class="form__errors">
+          <div v-if="$v.newPassword.$error" class="form__errors">
             <p v-if="!$v.newPassword.minLength" class="form__message">
               Passwords must be at least {{ $v.newPassword.$params.minLength.min }} characters long.
             </p>
@@ -43,7 +43,7 @@
             type="password"
           />
 
-          <div v-if="$v.repeatPassword.$dirty && $v.repeatPassword.$error" class="form__errors">
+          <div v-if="$v.repeatPassword.$error" class="form__errors">
             <p v-if="!$v.repeatPassword.sameAsPassword" class="form__message">
               Your password does not match.
             </p>

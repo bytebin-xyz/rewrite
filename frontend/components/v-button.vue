@@ -1,7 +1,8 @@
 <template>
   <button
     :class="{
-      'btn--disabled': theme === 'disabled',
+      'btn--disabled': isDisabled,
+
       'btn--fail': status === 'fail',
       'btn--pending': status === 'pending',
       'btn--success': status === 'success',
@@ -11,7 +12,7 @@
       'btn--light': theme === 'light',
       'btn--ok': theme === 'ok'
     }"
-    :disabled="disabled || status !== 'idle'"
+    :disabled="isDisabled"
     :type="type"
     class="btn"
     @click="(event) => $emit('click', event)"
@@ -21,8 +22,8 @@
     <beat-loader
       v-else-if="status === 'pending'"
       class="btn__indicator"
+      color="#A0AEC0"
       size-unit="px"
-      :color="theme === 'danger' ? '#FC8181' : theme === 'ok' ? '#68D391' : '#848BD8'"
       :loading="true"
       :size="10"
     />
@@ -45,7 +46,6 @@
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 
 export enum ButtonStatus {
-  Disabled = "disabled",
   Fail = "fail",
   Idle = "idle",
   Pending = "pending",
@@ -72,22 +72,20 @@ export default class VButton extends Vue {
 
   @Prop({
     default: ButtonTheme.Dark,
-    type: String,
     validator: (theme: any) => Object.values(ButtonTheme).includes(theme)
   })
   private readonly theme!: ButtonTheme;
 
   @Prop({
     default: ButtonType.Button,
-    type: String,
     validator: (type: any) => Object.values(ButtonType).includes(type)
   })
   private readonly type!: ButtonType;
 
   private status = ButtonStatus.Idle;
 
-  disable() {
-    this.status = ButtonStatus.Disabled;
+  get isDisabled() {
+    return this.disabled || this.status !== "idle";
   }
 
   fail() {

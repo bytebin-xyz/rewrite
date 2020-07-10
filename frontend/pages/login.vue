@@ -25,7 +25,7 @@
             type="text"
           />
 
-          <div v-if="$v.username.$dirty && $v.username.$error" class="form__errors">
+          <div v-if="$v.username.$error" class="form__errors">
             <p v-if="!$v.username.required" class="form__message">
               Field is required.
             </p>
@@ -51,7 +51,7 @@
             type="password"
           />
 
-          <div v-if="$v.password.$dirty && $v.password.$error" class="form__errors">
+          <div v-if="$v.password.$error" class="form__errors">
             <p v-if="!$v.password.required" class="form__message">
               Field is required.
             </p>

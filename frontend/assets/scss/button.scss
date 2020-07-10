@@ -15,10 +15,11 @@ $btn-height: 48px;
   @screen sm_max {
     @apply w-full;
   }
-  
-  &__indicator {
-    @apply absolute;
-    @apply flex;
+
+  &:disabled {
+    @apply bg-gray-700 #{!important};
+    @apply cursor-not-allowed;
+    @apply text-white;
   }
 
   &--danger {
@@ -39,13 +40,6 @@ $btn-height: 48px;
     &:hover {
       background-color: lighten(#282a41, 2%);
     }
-  }
-
-  &--disabled,
-  &:disabled {
-    @apply bg-gray-700 #{!important};
-    @apply cursor-not-allowed;
-    @apply text-white;
   }
 
   &--light {
@@ -80,5 +74,10 @@ $btn-height: 48px;
 
   &--success {
     @apply bg-green-700 #{!important};
+  }
+  
+  &__indicator {
+    @apply absolute;
+    @apply flex;
   }
 }

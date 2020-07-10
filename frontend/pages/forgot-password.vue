@@ -33,7 +33,7 @@
               type="email"
             />
 
-            <div v-if="$v.email.$dirty && $v.email.$error" class="form__errors">
+            <div v-if="$v.email.$error" class="form__errors">
               <p v-if="!$v.email.email" class="form__message">
                 You must enter a valid email address.
               </p>

@@ -122,15 +122,19 @@ export default class ProfileSettings extends Vue {
     if (this.email !== this.$accessor.user!.email) {
       tasks.push(
         this.$axios
-          .patch("/settings/change-email", { newEmail: this.email })
+          .post("/settings/change-email", { newEmail: this.email })
           .then(() => this.$toast.success("Please check your new email for an email confirmation!"))
       );
     }
 
     if (tasks.length) {
+      this.button.pending();
+
       await Promise.all(tasks)
         .then(() => this.$accessor.me())
         .catch((error) => this.$toast.error(error.message));
+
+      this.button.idle();
     }
   }
 }

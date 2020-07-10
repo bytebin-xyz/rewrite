@@ -25,7 +25,7 @@
             type="text"
           />
 
-          <div v-if="$v.username.$dirty && $v.username.$error" class="form__errors">
+          <div v-if="$v.username.$error" class="form__errors">
             <p v-if="!$v.username.alphaNum" class="form__message">
               Usernames must be alphanumeric.
             </p>
@@ -53,7 +53,7 @@
             type="email"
           />
 
-          <div v-if="$v.email.$dirty && $v.email.$error" class="form__errors">
+          <div v-if="$v.email.$error" class="form__errors">
             <p v-if="!$v.email.email" class="form__message">
               You must enter a valid email address.
             </p>
@@ -78,7 +78,7 @@
             type="password"
           />
 
-          <div v-if="$v.password.$dirty && $v.password.$error" class="form__errors">
+          <div v-if="$v.password.$error" class="form__errors">
             <p v-if="!$v.password.minLength" class="form__message">
               Passwords must be at least {{ $v.password.$params.minLength.min }} characters long.
             </p>
@@ -102,7 +102,7 @@
             type="password"
           />
 
-          <div v-if="$v.repeatPassword.$dirty && $v.repeatPassword.$error" class="form__errors">
+          <div v-if="$v.repeatPassword.$error" class="form__errors">
             <p v-if="!$v.repeatPassword.sameAsPassword" class="form__message">
               Your passwords do not match.
             </p>

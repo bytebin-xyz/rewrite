@@ -22,7 +22,7 @@
             type="password"
           />
 
-          <div v-if="$v.oldPassword.$dirty && $v.oldPassword.$error" class="form__errors">
+          <div v-if="$v.oldPassword.$error" class="form__errors">
             <p v-if="!$v.oldPassword.required" class="form__message">
               Field is required.
             </p>
@@ -44,7 +44,7 @@
             type="password"
           />
 
-          <div v-if="$v.newPassword.$dirty && $v.newPassword.$error" class="form__errors">
+          <div v-if="$v.newPassword.$error" class="form__errors">
             <p v-if="!$v.newPassword.minLength" class="form__message">
               Passwords must be at least {{ $v.newPassword.$params.minLength.min }} characters long.
             </p>
@@ -70,7 +70,7 @@
             type="password"
           />
 
-          <div v-if="$v.repeatPassword.$dirty && $v.repeatPassword.$error" class="form__errors">
+          <div v-if="$v.repeatPassword.$error" class="form__errors">
             <p v-if="!$v.repeatPassword.sameAsPassword" class="form__message">
               Your passwords do not match.
             </p>
@@ -79,10 +79,6 @@
               Field is required.
             </p>
           </div>
-        </div>
-
-        <div v-if="error" class="form__group form__errors">
-          <p class="form__message">{{ error }}</p>
         </div>
 
         <v-button ref="button" class="mt-3" theme="ok" type="submit">
@@ -105,8 +101,6 @@ import VButton from "@/components/v-button.vue";
 export default class ChangePassword extends Vue {
   @Ref() readonly button!: VButton;
 
-  private error: string | null = null;
-
   @Validate({ minLength: minLength(8), required })
   private newPassword = "";
 
@@ -128,13 +122,11 @@ export default class ChangePassword extends Vue {
       })
       .then(() => {
         this.button.success();
-        this.error = null;
-
         setTimeout(this.button.idle, 5000);
       })
       .catch((error: Error) => {
         this.button.idle();
-        this.error = error.message;
+        this.$toast.error(error.message);
       });
   }
 }
