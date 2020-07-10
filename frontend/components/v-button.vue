@@ -1,6 +1,7 @@
 <template>
   <button
     :class="{
+      'btn--disabled': theme === 'disabled',
       'btn--fail': status === 'fail',
       'btn--pending': status === 'pending',
       'btn--success': status === 'success',
@@ -44,6 +45,7 @@
 import { Component, Prop, Vue } from "nuxt-property-decorator";
 
 export enum ButtonStatus {
+  Disabled = "disabled",
   Fail = "fail",
   Idle = "idle",
   Pending = "pending",
@@ -83,6 +85,10 @@ export default class VButton extends Vue {
   private readonly type!: ButtonType;
 
   private status = ButtonStatus.Idle;
+
+  disable() {
+    this.status = ButtonStatus.Disabled;
+  }
 
   fail() {
     this.status = ButtonStatus.Fail;

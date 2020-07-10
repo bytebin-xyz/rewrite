@@ -26,7 +26,7 @@
             type="text"
           />
 
-          <div v-if="$v.displayName.$dirty && $v.displayName.$error" class="form__errors">
+          <div v-if="$v.displayName.$error" class="form__errors">
             <p v-if="!$v.displayName.alphaNum" class="form__message">
               Display names must be alphanumeric.
             </p>
@@ -56,7 +56,7 @@
             type="email"
           />
 
-          <div v-if="$v.email.$dirty && $v.email.$error" class="form__errors">
+          <div v-if="$v.email.$error" class="form__errors">
             <p v-if="!$v.email.email" class="form__message">
               You must enter a valid email address.
             </p>
@@ -67,7 +67,13 @@
           </div>
         </div>
 
-        <v-button ref="button" class="mt-3" theme="ok" type="submit" :disabled="edited">
+        <v-button
+          ref="button"
+          class="mt-3"
+          theme="ok"
+          type="submit"
+          :disabled="!$v.$anyDirty || $v.$anyError || !edited"
+        >
           Save Profile
         </v-button>
       </form>
@@ -95,11 +101,9 @@ export default class ProfileSettings extends Vue {
   @Validate({ email, required })
   private email = this.$accessor.user!.email;
 
-  private error: string | null = null;
-
   get edited() {
     return (
-      this.displayName !== this.$accessor.user!.displayName &&
+      this.displayName !== this.$accessor.user!.displayName ||
       this.email !== this.$accessor.user!.email
     );
   }
