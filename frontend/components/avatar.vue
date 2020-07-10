@@ -1,5 +1,5 @@
 <template>
-  <div class="avatar" :style="{ width: `${size}px` }">
+  <div class="avatar" :style="{ height: `${size}px`, width: `${size}px` }">
     <img
       alt="Avatar"
       class="avatar__img"
@@ -11,13 +11,15 @@
     />
 
     <div v-if="editable" class="avatar__editable">
-      <input
-        ref="input"
-        accept=".jpg, .jpeg, .png"
-        class="avatar__input"
-        type="file"
-        @change="changeAvatar"
-      />
+      <form ref="form" class="avatar__form">
+        <input
+          ref="input"
+          accept=".jpg, .jpeg, .png"
+          class="avatar__input"
+          type="file"
+          @change="changeAvatar"
+        />
+      </form>
 
       <pen-icon class="avatar__editable-icon" fill="#fff" :size="size / 3" />
     </div>
@@ -35,30 +37,32 @@ export default class Avatar extends Vue {
   @Prop({ default: false }) private readonly editable!: boolean;
   @Prop({ default: 96 }) private readonly size!: number;
 
+  @Ref() private readonly form!: HTMLFormElement;
   @Ref() private readonly input!: HTMLInputElement;
 
   async changeAvatar() {
-    const file = this.input.files ? this.input.files.item(0) : null;
-    if (!file) return;
+    const file = this.input.files && this.input.files.item(0);
+    if (!file) return this.$toast.error("Please select an avatar to upload!");
 
     try {
       const avatar = await readFile(file)
         .then((dataURI) => dataURItoBlob(dataURI.result, file.name, file.type))
         .then((blob) => {
           const data = new FormData();
+
           data.append("avatar", blob, file.name);
+
           return data;
         });
 
-      await this.$axios.patch("/settings/change-avatar", avatar, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      });
-
+      await this.$axios.patch("/settings/change-avatar", avatar);
       await this.$accessor.me(); // Update the user in the store
+
+      this.$toast.success("Avatar successfully changed!");
     } catch (error) {
       this.$toast.error(error.message);
+    } finally {
+      this.form.reset();
     }
   }
 }
@@ -66,7 +70,12 @@ export default class Avatar extends Vue {
 
 <style lang="scss" scoped>
 .avatar {
+  @apply bg-primary-800;
+  @apply flex items-center justify-center;
   @apply relative;
+  @apply rounded-full;
+  @apply shadow-lg;
+  @apply text-primary-300;
 
   &__editable {
     background-color: rgba(0, 0, 0, 0.5);
@@ -79,9 +88,8 @@ export default class Avatar extends Vue {
   }
 
   &__editable,
-  &__input {
+  &__form {
     @apply absolute;
-    @apply cursor-pointer;
     @apply flex items-center justify-center;
     @apply h-full w-full;
     @apply rounded-full;
@@ -93,14 +101,11 @@ export default class Avatar extends Vue {
   }
 
   &__input {
+    @apply cursor-pointer;
+    @apply h-full w-full;
     @apply opacity-0;
+    @apply rounded-full;
     @apply z-10;
-
-    &:focus {
-      & + .avatar__editable-icon {
-        @apply block;
-      }
-    }
   }
 }
 </style>

@@ -1,4 +1,5 @@
 import path from "path";
+import sharp from "sharp";
 
 import {
   Body,
@@ -75,11 +76,17 @@ export class SettingsController {
       },
       limits: {
         files: 1,
-        fileSize: 2 * 1024 * 1024
+        fileSize: 8 * 1024 * 1024
       },
       storage: new DiskStorage({
         directory: AVATAR_PATH,
-        filename: (): Promise<string> => generateId(8)
+        filename: (): Promise<string> => generateId(8),
+        transformers: [
+          (): sharp.Sharp =>
+            sharp()
+              .resize(512, 512)
+              .png()
+        ]
       })
     })
   )
