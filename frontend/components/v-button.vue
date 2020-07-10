@@ -10,7 +10,7 @@
       'btn--light': theme === 'light',
       'btn--ok': theme === 'ok'
     }"
-    :disabled="status !== 'idle'"
+    :disabled="disabled || status !== 'idle'"
     :type="type"
     class="btn"
     @click="(event) => $emit('click', event)"
@@ -66,6 +66,8 @@ export enum ButtonType {
 
 @Component
 export default class VButton extends Vue {
+  @Prop({ default: false }) private readonly disabled!: boolean;
+
   @Prop({
     default: ButtonTheme.Dark,
     type: String,
