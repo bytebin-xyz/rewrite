@@ -1,4 +1,4 @@
-import { FilterQuery, Model } from "mongoose";
+import { CollationOptions, FilterQuery, Model } from "mongoose";
 import { plainToClass } from "class-transformer";
 
 import { Injectable } from "@nestjs/common";
@@ -19,8 +19,13 @@ export class UsersService {
     return this.users.findOne({ ...query, deleted: false });
   }
 
-  exists(query: FilterQuery<User>): Promise<boolean> {
-    return this.users.exists(query);
+  exists(query: FilterQuery<User>, collation?: CollationOptions): Promise<boolean> {
+    if (!collation) return this.users.exists(query);
+
+    return this.users
+      .countDocuments(query)
+      .collation(collation)
+      .then(count => !!count);
   }
 
   async search(query: FilterQuery<PartialUser>): Promise<PartialUser | null> {

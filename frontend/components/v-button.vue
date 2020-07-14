@@ -1,20 +1,15 @@
 <template>
   <button
-    :class="{
-      'btn--disabled': isDisabled,
-
-      'btn--fail': status === 'fail',
-      'btn--pending': status === 'pending',
-      'btn--success': status === 'success',
-
-      'btn--danger': theme === 'danger',
-      'btn--dark': theme === 'dark',
-      'btn--light': theme === 'light',
-      'btn--ok': theme === 'ok'
-    }"
-    :disabled="isDisabled"
-    :type="type"
+    ref="button"
     class="btn"
+    :class="{
+      'btn--danger': status === 'fail' || theme === 'danger',
+      'btn--dark': (status === 'idle' || status === 'pending') && theme === 'dark',
+      'btn--disabled': (status === 'idle' || status === 'pending') && theme === 'disabled',
+      'btn--light': (status === 'idle' || status === 'pending') && theme === 'light',
+      'btn--ok': status === 'success' || theme === 'ok'
+    }"
+    :disabled="disabled || theme === 'disabled'"
     @click="(event) => $emit('click', event)"
   >
     <cross-icon v-if="status === 'fail'" class="btn__indicator" fill="#fff" :size="20" />
@@ -22,8 +17,18 @@
     <beat-loader
       v-else-if="status === 'pending'"
       class="btn__indicator"
-      color="#A0AEC0"
       size-unit="px"
+      :color="
+        theme === 'danger'
+          ? '#FEB2B2'
+          : theme === 'dark' || theme === 'light'
+          ? '#848BD8'
+          : theme === 'disabled'
+          ? '#A0AEC0'
+          : theme === 'ok'
+          ? '#9AE6B4'
+          : ''
+      "
       :loading="true"
       :size="10"
     />
@@ -55,52 +60,39 @@ export enum ButtonStatus {
 export enum ButtonTheme {
   Danger = "danger",
   Dark = "dark",
+  Disabled = "disabled",
   Light = "light",
   Ok = "ok"
 }
 
-export enum ButtonType {
-  Button = "button",
-  Menu = "menu",
-  Reset = "reset",
-  Submit = "submit"
-}
-
 @Component
 export default class VButton extends Vue {
-  @Prop({ default: false }) private readonly disabled!: boolean;
-
   @Prop({
     default: ButtonTheme.Dark,
     validator: (theme: any) => Object.values(ButtonTheme).includes(theme)
   })
   private readonly theme!: ButtonTheme;
 
-  @Prop({
-    default: ButtonType.Button,
-    validator: (type: any) => Object.values(ButtonType).includes(type)
-  })
-  private readonly type!: ButtonType;
-
+  private disabled = false;
   private status = ButtonStatus.Idle;
 
-  get isDisabled() {
-    return this.disabled || this.status !== "idle";
-  }
-
   fail() {
+    this.disabled = true;
     this.status = ButtonStatus.Fail;
   }
 
   idle() {
+    this.disabled = false;
     this.status = ButtonStatus.Idle;
   }
 
   pending() {
+    this.disabled = true;
     this.status = ButtonStatus.Pending;
   }
 
   success() {
+    this.disabled = true;
     this.status = ButtonStatus.Success;
   }
 }
@@ -108,4 +100,11 @@ export default class VButton extends Vue {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/button.scss";
+
+.btn {
+  &__indicator {
+    @apply absolute;
+    @apply flex;
+  }
+}
 </style>

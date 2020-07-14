@@ -2,7 +2,7 @@
   <section id="password" class="section wrapper--dark wrapper--pad-sm">
     <header class="section__header">
       <h2 class="section__heading">Change Password</h2>
-      <h3 class="section__subheading">This will not log you out of devices.</h3>
+      <h3 class="section__subheading">Passwords must be at least 8 characters.</h3>
     </header>
 
     <section class="section__body">
@@ -81,7 +81,12 @@
           </div>
         </div>
 
-        <v-button ref="button" class="mt-3" theme="ok" type="submit">
+        <v-button
+          ref="button"
+          class="mt-3"
+          type="submit"
+          :theme="!$v.$anyDirty || $v.$anyError ? 'disabled' : 'ok'"
+        >
           Change Password
         </v-button>
       </form>
@@ -122,6 +127,8 @@ export default class ChangePassword extends Vue {
       })
       .then(() => {
         this.button.success();
+        this.$toast.success("Your password was successfully changed!");
+
         setTimeout(this.button.idle, 5000);
       })
       .catch((error: Error) => {

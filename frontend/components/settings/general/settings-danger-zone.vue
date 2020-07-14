@@ -15,19 +15,49 @@
           </h3>
         </header>
 
-        <v-button class="mt-5" theme="danger">Delete Account</v-button>
+        <section class="section__body">
+          <v-button ref="button" theme="danger" @click="showPasswordConfirmation">
+            Delete Account
+          </v-button>
+        </section>
       </section>
     </section>
   </section>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator";
+import { Component, Ref, Vue } from "nuxt-property-decorator";
+
+import VButton from "@/components/v-button.vue";
+import PasswordConfirmationModal from "@/components/modals/password-confirmation-modal.vue";
 
 @Component({
   transition: "fade"
 })
-export default class DangerZoneSettings extends Vue {}
+export default class DangerZoneSettings extends Vue {
+  @Ref() private readonly button!: VButton;
+
+  deleteAccount(password: string) {
+    this.button.pending();
+
+    this.$axios
+      .post("/settings/delete-account", { password })
+      .then(() => this.button.success())
+      .then(() => window.location.replace("/"))
+      .catch((error) => {
+        this.button.idle();
+        this.$toast.error(error.message);
+      });
+  }
+
+  showPasswordConfirmation() {
+    this.$modal.show(PasswordConfirmationModal, {
+      callback: (password: string) => this.deleteAccount(password),
+      description: "Please enter your password in order to confirm your account deletion.",
+      title: "Account Deletion"
+    });
+  }
+}
 </script>
 
 <style lang="scss" scoped>

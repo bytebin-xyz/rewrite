@@ -8,9 +8,7 @@
           name: 'Security',
           to: '/settings/security',
           children: ['Password', 'Two Step Authentication', 'Sessions']
-        },
-        { name: 'Privacy', to: '/settings/privacy' },
-        { name: 'Developers', to: '/settings/developers' }
+        }
       ]"
     />
 
@@ -43,7 +41,7 @@ export default class Settings extends Vue {}
     @apply shadow-lg;
     @apply sticky;
 
-    min-width: 300px;
+    min-width: 260px;
     top: 25px;
 
     @screen md_max {

@@ -36,9 +36,7 @@ export class SettingsService {
   }
 
   async changeAvatar(filename: string, user: User): Promise<User> {
-    if (user.avatar && (await fileAccessibile(path.join(AVATAR_PATH, user.avatar)))) {
-      await fs.promises.unlink(path.join(AVATAR_PATH, user.avatar));
-    }
+    await this.deleteAvatar(user);
 
     return user.changeAvatar(filename);
   }
@@ -74,11 +72,23 @@ export class SettingsService {
 
   async deleteAccount(user: User): Promise<void> {
     await settle([
-      this.auth.logoutAllDevices(user),
-      this.nodemailer.deleteAllFor({ uid: user.uid })
+      this.deleteAvatar(user),
+      this.nodemailer.deleteAllFor({ uid: user.uid }),
+      this.auth.logoutAllDevices(user)
     ]);
 
     await user.delete();
+  }
+
+  async deleteAvatar(user: User): Promise<void> {
+    const location = user.avatar ? path.join(AVATAR_PATH, user.avatar) : null;
+    if (!location) return;
+
+    if (await fileAccessibile(location)) {
+      await fs.promises.unlink(location);
+    }
+
+    await user.deleteAvatar();
   }
 
   async resendUserActivationEmail(user: User): Promise<boolean> {

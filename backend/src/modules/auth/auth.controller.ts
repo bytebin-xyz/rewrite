@@ -96,9 +96,13 @@ export class AuthController {
   @Throttle(5, 10 * 60)
   @UseGuards(RecaptchaGuard)
   async register(@Body() { email, password, username }: RegisterDto): Promise<void> {
-    if (await this.users.exists({ email })) throw new ConflictException("Email already taken!");
-    if (await this.users.exists({ username }))
+    if (await this.users.exists({ email })) {
+      throw new ConflictException("Email already taken!");
+    }
+
+    if (await this.users.exists({ username })) {
       throw new ConflictException("Username already taken!");
+    }
 
     await this.auth.register(email, password, username);
   }

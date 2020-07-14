@@ -89,7 +89,8 @@ const config: Configuration = {
    */
   plugins: [
     { src: "./plugins/axios.plugin" },
-    { src: "./plugins/spinners.plugin" },
+    { src: "./plugins/spinners.plugin", mode: "client" },
+    { src: "./plugins/vue-js-modal.plugin", mode: "client" },
     { src: "./plugins/vuelidate.plugin" }
   ],
 

@@ -12,7 +12,7 @@
   &--start {
     @apply items-start justify-start;
   }
-  
+
   &__errors,
   &__success {
     @apply font-normal text-base text-left;
@@ -65,6 +65,11 @@
       @apply bg-primary-800;
       @apply border-primary-900;
     }
+  }
+
+  &__input[type="password"]::after {
+    content: "hello";
+    font-size: 16px;
   }
 
   &__message {

@@ -100,10 +100,6 @@ export class SettingsController {
     @Body() { newDisplayName }: ChangeDisplayNameDto,
     @CurrentUser() user: User
   ): Promise<User> {
-    if (await this.users.exists({ displayName: newDisplayName })) {
-      throw new ConflictException("Display name already taken!");
-    }
-
     return user.changeDisplayName(newDisplayName);
   }
 
@@ -138,7 +134,7 @@ export class SettingsController {
     return { ok: await this.settings.confirmEmail(token) };
   }
 
-  @Delete("delete-account")
+  @Post("delete-account")
   @UseGuards(AuthGuard)
   async deleteAccount(
     @Body() { password }: DeleteAccountDto,

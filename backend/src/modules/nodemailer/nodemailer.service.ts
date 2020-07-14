@@ -98,13 +98,8 @@ export class NodemailerService implements OnApplicationBootstrap {
   }
 
   async sendEmailConfirmation(newEmail: string, user: User): Promise<void> {
-    const confirmation = await new this.emailConfirmations({
-      new_email: newEmail,
-      uid: user.uid
-    }).save();
-
+    const confirmation = await new this.emailConfirmations({ newEmail, uid: user.uid }).save();
     const confirmEmailLink = `${this.baseURL}/confirm-email/${confirmation.token}`;
-
     const html = await renderMJML(path.join(__dirname, "./mjml/email-confirmation.mjml"), {
       confirmEmailLink,
       displayName: user.displayName

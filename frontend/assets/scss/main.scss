@@ -19,3 +19,8 @@ body {
 .fade-leave-active {
   @apply opacity-0;
 }
+
+.modal-container-styles {
+  @apply bg-transparent #{!important};
+  @apply rounded #{!important};
+}

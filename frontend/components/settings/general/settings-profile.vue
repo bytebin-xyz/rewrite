@@ -70,9 +70,8 @@
         <v-button
           ref="button"
           class="mt-3"
-          theme="ok"
           type="submit"
-          :disabled="!$v.$anyDirty || $v.$anyError || !edited"
+          :theme="!$v.$anyDirty || $v.$anyError || !edited ? 'disabled' : 'ok'"
         >
           Save Profile
         </v-button>
@@ -93,7 +92,7 @@ import VButton from "@/components/v-button.vue";
   transition: "fade"
 })
 export default class ProfileSettings extends Vue {
-  @Ref() readonly button!: VButton;
+  @Ref() private readonly button!: VButton;
 
   @Validate({ alphaNum, maxLength: maxLength(32), required })
   private displayName = this.$accessor.user!.displayName;

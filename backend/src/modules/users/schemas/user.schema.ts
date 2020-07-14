@@ -22,7 +22,9 @@ export class User extends Document {
   createdAt!: Date;
   updatedAt!: Date;
 
-  @Prop({ default: false })
+  @Prop({
+    default: false
+  })
   activated!: boolean;
 
   @Prop(
@@ -45,14 +47,15 @@ export class User extends Document {
   )
   avatar!: string | null;
 
-  @Prop({ default: false })
+  @Prop({
+    default: false
+  })
   deleted!: boolean;
 
   @Prop({
     maxlength: 32,
     required: true,
     trim: true,
-    unique: true,
     validate: isAlphanumeric
   })
   displayName!: string;
@@ -108,6 +111,7 @@ export class User extends Document {
   changePassword!: (newPassword: string) => Promise<this>;
   comparePassword!: (password: string) => Promise<boolean>;
   delete!: () => Promise<this>;
+  deleteAvatar!: () => Promise<this>;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -124,7 +128,7 @@ UserSchema.pre<User>("save", function(next) {
 });
 
 UserSchema.pre<User>("save", function(next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password") || this.password == null) return next();
 
   bcrypt.hash(this.password, 10, (error, hashed) => {
     if (error) return next(error);
@@ -188,11 +192,21 @@ UserSchema.methods.comparePassword = function(this: User, password: string) {
 UserSchema.methods.delete = async function(this: any) {
   if (!this.deleted) {
     this.activated = false;
+    this.avatar = null;
     this.deleted = true;
     this.email = null;
     this.password = null;
 
     await this.save({ validateBeforeSave: false });
+  }
+
+  return this;
+};
+
+UserSchema.methods.deleteAvatar = async function(this: User) {
+  if (this.avatar) {
+    this.avatar = null;
+    await this.save();
   }
 
   return this;
