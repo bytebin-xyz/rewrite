@@ -173,15 +173,11 @@ export default class Register extends Vue {
   @Validate({ alphaNum, maxLength: maxLength(32), required })
   private username = "";
 
-  async mounted() {
-    if (this.$accessor.isAuthenticated) {
-      return this.$router.push("/");
-    }
-
+  private async mounted() {
     await this.$recaptcha.init();
   }
 
-  async register() {
+  private async register() {
     if (this.$v.$invalid) return this.$v.$touch();
 
     this.button.pending();

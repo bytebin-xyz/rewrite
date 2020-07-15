@@ -15,7 +15,7 @@
           </h3>
         </header>
 
-        <section class="section__body">
+        <section class="mt-4">
           <v-button ref="button" theme="danger" @click="showPasswordConfirmation">
             Delete Account
           </v-button>
@@ -28,16 +28,14 @@
 <script lang="ts">
 import { Component, Ref, Vue } from "nuxt-property-decorator";
 
-import VButton from "@/components/v-button.vue";
 import PasswordConfirmationModal from "@/components/modals/password-confirmation-modal.vue";
+import VButton from "@/components/v-button.vue";
 
-@Component({
-  transition: "fade"
-})
+@Component
 export default class DangerZoneSettings extends Vue {
   @Ref() private readonly button!: VButton;
 
-  deleteAccount(password: string) {
+  private deleteAccount(password: string) {
     this.button.pending();
 
     this.$axios
@@ -50,8 +48,9 @@ export default class DangerZoneSettings extends Vue {
       });
   }
 
-  showPasswordConfirmation() {
+  private showPasswordConfirmation() {
     this.$modal.show(PasswordConfirmationModal, {
+      action: "Delete Account",
       callback: (password: string) => this.deleteAccount(password),
       description: "Please enter your password in order to confirm your account deletion.",
       title: "Account Deletion"

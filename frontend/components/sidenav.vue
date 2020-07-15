@@ -41,9 +41,7 @@ export interface Items {
 export default class Sidenav extends Vue {
   @Prop() private readonly items!: Items[];
 
-  kebabify(str: string) {
-    return kebabify(str);
-  }
+  private readonly kebabify = kebabify;
 }
 </script>
 

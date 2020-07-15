@@ -6,7 +6,7 @@
     </header>
 
     <section class="section__body">
-      <avatar :editable="true" :size="128" />
+      <avatar class="avatar" :editable="true" :size="160" />
     </section>
 
     <section class="section__body">
@@ -88,9 +88,7 @@ import { alphaNum, email, maxLength, required } from "vuelidate/lib/validators";
 
 import VButton from "@/components/v-button.vue";
 
-@Component({
-  transition: "fade"
-})
+@Component
 export default class ProfileSettings extends Vue {
   @Ref() private readonly button!: VButton;
 
@@ -100,14 +98,14 @@ export default class ProfileSettings extends Vue {
   @Validate({ email, required })
   private email = this.$accessor.user!.email;
 
-  get edited() {
+  private get edited() {
     return (
       this.displayName !== this.$accessor.user!.displayName ||
       this.email !== this.$accessor.user!.email
     );
   }
 
-  async updateProfile() {
+  private async updateProfile() {
     const tasks = [];
 
     if (this.displayName !== this.$accessor.user!.displayName) {
@@ -143,4 +141,12 @@ export default class ProfileSettings extends Vue {
 @import "@/assets/scss/form.scss";
 @import "@/assets/scss/section.scss";
 @import "@/assets/scss/wrapper.scss";
+
+.avatar {
+  @apply p-1;
+
+  @screen md_max {
+    @apply mx-auto;
+  }
+}
 </style>

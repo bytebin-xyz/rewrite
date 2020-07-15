@@ -33,7 +33,7 @@ export default class FileIcon extends Vue {
     return parts[parts.length - 1];
   }
 
-  get styles() {
+  private get styles() {
     return {
       width: `${this.size}px`
     };

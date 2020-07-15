@@ -105,15 +105,11 @@ export default class Login extends Vue {
   @Validate({ required })
   private username = "";
 
-  async mounted() {
-    if (this.$accessor.isAuthenticated) {
-      return this.$router.push("/");
-    }
-
+  private async mounted() {
     await this.$recaptcha.init();
   }
 
-  async login() {
+  private async login() {
     if (this.$v.$invalid) return this.$v.$touch();
 
     this.button.pending();

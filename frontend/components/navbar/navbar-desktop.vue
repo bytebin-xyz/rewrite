@@ -7,9 +7,7 @@
         </li>
 
         <li class="nav-desktop__link">
-          <nuxt-link class="nav-desktop__clickable" to="/docs">
-            API
-          </nuxt-link>
+          <nuxt-link class="nav-desktop__clickable" to="/docs">API</nuxt-link>
         </li>
       </ul>
     </div>
@@ -18,9 +16,7 @@
       <ul class="nav-desktop__links">
         <template v-if="!$accessor.isAuthenticated">
           <li class="nav-desktop__link">
-            <nuxt-link class="nav-desktop__clickable" to="/login">
-              Log In
-            </nuxt-link>
+            <nuxt-link class="nav-desktop__clickable" to="/login">Log In</nuxt-link>
           </li>
 
           <li class="nav-desktop__link">
@@ -109,15 +105,11 @@ export default class NavbarDesktop extends Vue {}
   &__left,
   &__right {
     @apply flex flex-row items-center;
-    @apply h-full;
   }
 
   &__left {
     @apply ml-4 mr-auto;
-  }
-
-  &__right {
-    @apply ml-auto mr-2;
+    @apply pt-1;
   }
 
   &__link {
@@ -140,7 +132,10 @@ export default class NavbarDesktop extends Vue {}
     @apply list-none;
     @apply m-0 mr-auto;
     @apply overflow-hidden;
-    @apply pt-1;
+  }
+
+  &__right {
+    @apply ml-auto mr-2;
   }
 }
 </style>

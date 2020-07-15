@@ -45,13 +45,13 @@ export default class Sessions extends Vue {
 
   @Ref() private readonly button!: VButton;
 
-  revoked(session: Session) {
+  private revoked(session: Session) {
     setTimeout(() => {
       this.$emit("session:revoked", [session]);
     }, 5000);
   }
 
-  async revokeAllSessions() {
+  private async revokeAllSessions() {
     this.button.pending();
 
     await this.$axios

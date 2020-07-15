@@ -1,7 +1,7 @@
 export interface Session {
   current?: boolean;
   identifier?: string;
-  lastUsed?: Date;
+  lastUsed?: string;
   ua?: {
     browser: {
       name?: string;

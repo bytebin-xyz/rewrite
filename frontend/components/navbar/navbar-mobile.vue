@@ -5,6 +5,7 @@
       ref="hamburger"
       aria-controls="nav-dropdown"
       class="nav-mobile__hamburger"
+      :collapsed="!opened"
       @click="toggle"
     />
 
@@ -17,15 +18,11 @@
     >
       <template v-if="!$accessor.isAuthenticated">
         <li class="nav-mobile__link">
-          <nuxt-link class="nav-mobile__clickable" to="/login">
-            Log In
-          </nuxt-link>
+          <nuxt-link class="nav-mobile__clickable" to="/login">Log In</nuxt-link>
         </li>
 
         <li class="nav-mobile__link">
-          <nuxt-link class="nav-mobile__clickable" to="/register">
-            Sign Up
-          </nuxt-link>
+          <nuxt-link class="nav-mobile__clickable" to="/register">Sign Up</nuxt-link>
         </li>
       </template>
 
@@ -37,15 +34,11 @@
         </li>
 
         <li class="nav-mobile__link">
-          <nuxt-link class="nav-mobile__clickable" to="/stream">
-            Stream
-          </nuxt-link>
+          <nuxt-link class="nav-mobile__clickable" to="/stream">Stream</nuxt-link>
         </li>
 
         <li class="nav-mobile__link">
-          <nuxt-link class="nav-mobile__clickable" to="/settings/general">
-            Settings
-          </nuxt-link>
+          <nuxt-link class="nav-mobile__clickable" to="/settings/general">Settings</nuxt-link>
         </li>
       </template>
 
@@ -54,29 +47,21 @@
       </li>
 
       <li class="nav-mobile__link">
-        <nuxt-link class="nav-mobile__clickable" to="/docs">
-          API
-        </nuxt-link>
+        <nuxt-link class="nav-mobile__clickable" to="/docs">API</nuxt-link>
       </li>
 
       <li v-if="$accessor.isAuthenticated" class="nav-mobile__link">
-        <button class="nav-mobile__clickable" @click="$accessor.logout">
-          Log Out
-        </button>
+        <button class="nav-mobile__clickable" @click="$accessor.logout">Log Out</button>
       </li>
     </ul>
   </nav>
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue } from "nuxt-property-decorator";
-
-import Hamburger from "../hamburger.vue";
+import { Component, Vue } from "nuxt-property-decorator";
 
 @Component
 export default class NavbarMobile extends Vue {
-  @Ref() readonly hamburger!: Hamburger;
-
   private opened = false;
 
   close() {
@@ -96,8 +81,7 @@ export default class NavbarMobile extends Vue {
 
 <style lang="scss" scoped>
 .nav-mobile {
-  @apply box-border;
-  @apply flex-row hidden items-center justify-end;
+  @apply hidden items-center justify-end;
   @apply w-full;
 
   height: inherit;
@@ -108,7 +92,9 @@ export default class NavbarMobile extends Vue {
 
   &__clickable {
     @apply cursor-pointer;
+    @apply flex items-center;
     @apply font-medium no-underline;
+    @apply h-full w-full;
   }
 
   &__hamburger {
@@ -135,12 +121,9 @@ export default class NavbarMobile extends Vue {
   &__links {
     @apply absolute;
     @apply bg-primary-900;
-    @apply box-border;
     @apply flex-col hidden;
     @apply left-0 top-0;
-    @apply list-none;
     @apply mt-4 mx-4;
-    @apply overflow-hidden;
     @apply p-0;
     @apply rounded-lg;
     @apply shadow-xl;

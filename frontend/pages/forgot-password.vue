@@ -81,7 +81,7 @@ export default class ForgotPassword extends Vue {
   private error: string | null = null;
   private sent = false;
 
-  sendPasswordResetEmail() {
+  private sendPasswordResetEmail() {
     if (this.$v.$invalid) return this.$v.$touch();
 
     this.button.pending();

@@ -91,7 +91,7 @@ export default class ResetPassword extends Vue {
   @Validate({ required, sameAsPassword: sameAs("newPassword") })
   private repeatPassword = "";
 
-  resetPassword() {
+  private resetPassword() {
     if (this.$v.$invalid) return this.$v.$touch();
 
     this.button.pending();

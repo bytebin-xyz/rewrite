@@ -3,9 +3,9 @@
     ref="hamburger"
     class="hamburger hamburger--collapse"
     type="button"
-    :aria-expanded="collapsed ? 'false' : 'true'"
+    :aria-expanded="String(!collapsed)"
     :class="{ 'is-active': !collapsed }"
-    @click="toggle"
+    @click="(event) => $emit('click', event)"
   >
     <span class="hamburger-box">
       <span class="hamburger-inner"></span>
@@ -14,28 +14,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue } from "nuxt-property-decorator";
+import { Component, Prop, Ref, Vue } from "nuxt-property-decorator";
 
 @Component
 export default class Hamburger extends Vue {
+  @Prop({ default: true, required: true }) private readonly collapsed!: boolean;
+
   @Ref() private readonly hamburger!: HTMLButtonElement;
-
-  private collapsed = true;
-
-  collapse() {
-    this.collapsed = true;
-    this.$emit("click");
-  }
-
-  expand() {
-    this.collapsed = false;
-    this.$emit("click");
-  }
-
-  toggle() {
-    if (this.collapsed) this.expand();
-    else this.collapse();
-  }
 }
 </script>
 

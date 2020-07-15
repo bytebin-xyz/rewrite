@@ -29,7 +29,7 @@
 
         <div class="btn__group btn__group--row">
           <v-button theme="dark" @click="$emit('close')">Cancel</v-button>
-          <v-button theme="danger" type="submit">Delete Account</v-button>
+          <v-button theme="danger" type="submit">{{ action }}</v-button>
         </div>
       </form>
     </div>
@@ -44,20 +44,15 @@ import { required } from "vuelidate/lib/validators";
 
 @Component
 export default class PasswordConfirmationModal extends Vue {
-  // Not the best way by passing function
-  @Prop({
-    required: true,
-    type: Function
-  })
-  private readonly callback!: (password: string) => void;
-
+  @Prop({ required: true }) private readonly action!: string;
+  @Prop({ required: true }) private readonly callback!: (password: string) => void;
   @Prop({ required: true }) private readonly description!: string;
   @Prop({ required: true }) private readonly title!: string;
 
   @Validate({ required })
   private password = "";
 
-  confirm() {
+  private confirm() {
     if (this.$v.$invalid) return this.$v.$touch();
 
     this.$emit("close");

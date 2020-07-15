@@ -40,20 +40,18 @@ export default class Avatar extends Vue {
   @Ref() private readonly form!: HTMLFormElement;
   @Ref() private readonly input!: HTMLInputElement;
 
-  async changeAvatar() {
+  private async changeAvatar() {
     const file = this.input.files && this.input.files.item(0);
     if (!file) return this.$toast.error("Please select an avatar to upload!");
 
     try {
-      const avatar = await readFile(file)
-        .then((dataURI) => dataURItoBlob(dataURI.result, file.name, file.type))
-        .then((blob) => {
-          const data = new FormData();
+      const blob = await readFile(file).then((dataURI) =>
+        dataURItoBlob(dataURI.result, file.name, file.type)
+      );
 
-          data.append("avatar", blob, file.name);
+      const avatar = new FormData();
 
-          return data;
-        });
+      avatar.append("avatar", blob, file.name);
 
       await this.$axios.patch("/settings/change-avatar", avatar);
       await this.$accessor.me(); // Update the user in the store

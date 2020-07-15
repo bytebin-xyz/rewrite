@@ -13,25 +13,9 @@
 
       <div class="session__device">
         <template v-if="session.ua">
-          <strong v-if="session.ua.os.name">
-            {{ session.ua.os.name }} {{ session.ua.os.version || "" }}
-          </strong>
-          <strong v-else>Unknown Operating System</strong>
-
-          <small v-if="session.ua.browser.name">
-            {{ session.ua.browser.name }} {{ session.ua.browser.version || "" }}
-          </small>
-          <small v-else>Unknown Browser</small>
-
-          <small v-if="session.lastUsed">
-            Last accessed on
-            {{
-              new Date(session.lastUsed).toLocaleDateString() +
-              " " +
-              new Date(session.lastUsed).toLocaleTimeString()
-            }}
-          </small>
-          <small v-else>Never Used</small>
+          <strong>{{ os }}</strong>
+          <small>{{ browser }}</small>
+          <small>Last Active: {{ lastUsed }}</small>
         </template>
 
         <strong v-else>Unknown Device</strong>
@@ -44,7 +28,7 @@
         ref="button"
         class="session__action"
         theme="dark"
-        @click="revokeSession(session.identifier)"
+        @click="revoke(session.identifier)"
       >
         Revoke
       </v-button>
@@ -53,6 +37,7 @@
 </template>
 
 <script lang="ts">
+import { formatDistance } from "date-fns";
 import { Component, Prop, Ref, Vue } from "nuxt-property-decorator";
 import { PropType } from "vue";
 
@@ -66,7 +51,34 @@ export default class Session extends Vue {
 
   @Ref() private readonly button!: VButton;
 
-  async revokeSession(sessionId: string) {
+  private lastUsed = this.formatLastUsed();
+
+  get browser() {
+    if (!this.session.ua?.browser.name) return "Unknown Browser";
+    return `${this.session.ua.browser.name} ${this.session.ua.browser.version || ""}`;
+  }
+
+  get os() {
+    if (!this.session.ua?.os.name) return "Unknown Operating System";
+    return `${this.session.ua.os.name} ${this.session.ua.os.version || ""}`;
+  }
+
+  private created() {
+    setInterval(() => {
+      this.lastUsed = this.formatLastUsed();
+    }, 1 * 60 * 1000);
+  }
+
+  private formatLastUsed() {
+    if (!this.session.lastUsed) return "Never Used";
+
+    return formatDistance(new Date(this.session.lastUsed), new Date(), {
+      addSuffix: true,
+      includeSeconds: true
+    });
+  }
+
+  private async revoke(sessionId: string) {
     this.button.pending();
 
     await this.$axios

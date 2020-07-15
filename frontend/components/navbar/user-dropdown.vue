@@ -1,12 +1,7 @@
 <template>
   <div v-click-outside="close" class="user-dropdown">
     <button class="user-dropdown__toggler" @click="toggle">
-      <avatar :size="32" />
-
-      <span class="user-dropdown__username user-dropdown__username--toggler">
-        {{ $accessor.user.displayName }}
-      </span>
-
+      <avatar class="user-dropdown__avatar" :size="32" />
       <chevron-icon direction="down" fill="#848BD8" :size="10" />
     </button>
 
@@ -18,7 +13,7 @@
     >
       <li class="user-dropdown__link user-dropdown__link--profile">
         <nuxt-link class="user-dropdown__clickable" :to="`/files/@${$accessor.user.username}`">
-          <avatar class="mr-3" :size="40" />
+          <avatar class="user-dropdown__avatar" :size="40" />
 
           <div>
             <span class="user-dropdown__username">{{ $accessor.user.displayName }}</span>
@@ -31,14 +26,14 @@
 
       <li class="user-dropdown__link">
         <nuxt-link class="user-dropdown__clickable" to="/settings/general">
-          <edit-icon class="mr-2" fill="#aaa" :size="16" />
+          <edit-icon class="user-dropdown__icon" fill="#aaa" :size="16" />
           <span>Edit Settings</span>
         </nuxt-link>
       </li>
 
       <li class="user-dropdown__link">
         <nuxt-link class="user-dropdown__clickable" to="/developers">
-          <code-icon class="mr-2" fill="#aaa" :size="16" />
+          <code-icon class="user-dropdown__icon" fill="#aaa" :size="16" />
           <span>Developer Panel</span>
         </nuxt-link>
       </li>
@@ -50,7 +45,7 @@
           class="user-dropdown__clickable user-dropdown__clickable--logout"
           @click="$accessor.logout"
         >
-          <logout-icon class="mr-2" fill="#F56565" :size="16" />
+          <logout-icon class="user-dropdown__icon" fill="#F56565" :size="16" />
           <span>Log Out</span>
         </button>
       </li>
@@ -88,15 +83,9 @@ export default class UserDropdown extends Vue {
 </script>
 
 <style lang="scss" scoped>
-$hover-color: #f1f3f6;
-
 .user-dropdown {
   &__avatar {
     @apply mr-3;
-
-    &--toggler {
-      @apply m-0;
-    }
   }
 
   &__clickable {
@@ -106,7 +95,6 @@ $hover-color: #f1f3f6;
     @apply h-full w-full;
     @apply m-0;
     @apply no-underline;
-    @apply outline-none;
     @apply px-4 py-0;
     @apply text-black text-sm;
 
@@ -117,14 +105,13 @@ $hover-color: #f1f3f6;
 
     &--logout {
       @apply bg-transparent;
-      @apply border-none rounded-sm;
+      @apply border-none rounded-none;
       @apply cursor-pointer;
       @apply text-red-600;
 
       &:focus,
       &:hover {
         @apply bg-red-200;
-        @apply outline-none;
       }
     }
   }
@@ -137,21 +124,15 @@ $hover-color: #f1f3f6;
 
   &__icon {
     @apply mr-3;
-
-    width: 16px;
   }
 
   &__link {
-    @apply flex items-center;
     @apply m-0;
 
     height: 50px;
     width: 192px;
 
     &--profile {
-      @apply box-border;
-      @apply flex flex-row;
-
       height: 72px;
     }
   }
@@ -160,17 +141,17 @@ $hover-color: #f1f3f6;
     @apply absolute;
     @apply bg-white;
     @apply flex-col hidden;
-    @apply list-none;
     @apply m-0 mt-3;
     @apply overflow-hidden;
     @apply p-0;
     @apply rounded;
+    @apply shadow-lg;
 
-    transform: translateX(-45px);
+    // width of toggler - width of dropdown
+    transform: translateX(90px - 192px);
 
     &--opened {
       @apply flex;
-      @apply shadow-lg;
     }
   }
 
@@ -185,10 +166,6 @@ $hover-color: #f1f3f6;
     background-color: lighten(#282a41, 5%);
     height: 48px;
 
-    &:focus {
-      @apply rounded #{!important};
-    }
-
     &:focus,
     &:hover {
       @apply bg-primary-800;
@@ -198,10 +175,6 @@ $hover-color: #f1f3f6;
   &__username {
     @apply block;
     @apply font-medium text-base;
-
-    &--toggler {
-      @apply mx-2;
-    }
   }
 }
 </style>

@@ -8,7 +8,8 @@
           name: 'Security',
           to: '/settings/security',
           children: ['Password', 'Two Step Authentication', 'Sessions']
-        }
+        },
+        { name: 'Developers', to: '/developers' }
       ]"
     />
 

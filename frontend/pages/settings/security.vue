@@ -26,7 +26,7 @@ export default class SecuritySettings extends Vue {
       .catch(({ message }: Error) => error({ message, statusCode: 500 }));
   }
 
-  handleSessionRevokes(revoked: Session[]) {
+  private handleSessionRevokes(revoked: Session[]) {
     this.sessions = this.sessions.filter(
       (session) => revoked.findIndex((s) => s.identifier === session.identifier) === -1
     );
