@@ -33,17 +33,13 @@ export default class DefaultLayout extends Vue {}
 
   & #app {
     @apply mt-4;
+    @apply px-4;
   }
 
   & #app__container {
     @apply mx-auto;
 
     max-width: 1600px;
-  }
-
-  & #app__navbar,
-  & #app__view {
-    @apply px-4;
   }
 
   & #app__view {

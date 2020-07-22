@@ -13,6 +13,8 @@ export interface ErrorInterface {
 export default ({ $axios }: Context) => {
   $axios.onError((error: AxiosError<ErrorInterface>) => {
     if (error.response) {
+      // log error
+
       const { message, statusCode } = error.response.data;
 
       if (statusCode >= 500) {

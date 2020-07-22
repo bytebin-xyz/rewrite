@@ -1,14 +1,13 @@
-export interface PartialUser {
+export interface User {
+  avatar: string | null;
   displayName: string;
-
-  readonly createdAt: Date;
-  readonly deleted: boolean;
-  readonly uid: string;
-}
-
-export interface User extends PartialUser {
   email: string;
+  username: string;
 
   readonly activated: boolean;
-  readonly username: string;
+  readonly createdAt: Date;
+  readonly deleted: boolean;
+  readonly expiresAt: Date;
+  readonly id: string;
+  readonly updatedAt: Date;
 }

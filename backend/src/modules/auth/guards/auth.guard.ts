@@ -1,3 +1,5 @@
+import { getClientIp } from "request-ip";
+
 import {
   CanActivate,
   ExecutionContext,
@@ -21,7 +23,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("You are not logged in!");
     }
 
-    const user = await this.users.findOne({ uid: req.session.uid });
+    const user = await this.users.findOne({ id: req.session.uid });
 
     if (!user || user.deleted) {
       req.session.destroy(() => undefined);
@@ -33,7 +35,9 @@ export class AuthGuard implements CanActivate {
       throw new ForbiddenException("Please activate your account first!");
     }
 
+    req.session.ip = getClientIp(req);
     req.session.lastUsed = new Date();
+
     req.user = user;
 
     return true;

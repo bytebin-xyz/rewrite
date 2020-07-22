@@ -1,20 +1,13 @@
-$btn-height: 48px;
-
 .btn {
   @apply cursor-pointer;
   @apply flex items-center justify-center;
   @apply font-semibold;
   @apply outline-none;
-  @apply px-5 py-4;
+  @apply px-5 py-3;
   @apply rounded-sm;
   @apply w-auto;
 
-  height: $btn-height;
   transition: background-color 0.35s ease-in-out, color 0.35s ease-in-out;
-
-  @screen sm_max {
-    @apply w-full;
-  }
 
   &:disabled {
     @apply cursor-not-allowed;
@@ -64,11 +57,16 @@ $btn-height: 48px;
       background-color: darken(#2f855a, 5%);
     }
   }
+
+  &--responsive {
+    @screen sm_max {
+      @apply w-full;
+    }
+  }
 }
 
 .btn__group {
   @apply flex items-center justify-center;
-  @apply my-2;
 
   &--col {
     @apply flex-col;
@@ -89,6 +87,23 @@ $btn-height: 48px;
 
   &--row {
     @apply flex-row;
+    
+    @screen sm_max {
+      @apply flex-col;
+
+      & .btn {
+        @apply mx-0 my-2 #{!important};
+        @apply w-full;
+  
+        &:first-child {
+          @apply mt-0;
+        }
+  
+        &:last-child {
+          @apply mb-0;
+        }
+      }
+    }
 
     & .btn {
       @apply flex-1;

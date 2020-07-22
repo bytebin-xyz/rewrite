@@ -42,8 +42,8 @@ export default class Settings extends Vue {}
     @apply shadow-lg;
     @apply sticky;
 
-    min-width: 260px;
     top: 25px;
+    width: 260px;
 
     @screen md_max {
       @apply static;
@@ -54,8 +54,6 @@ export default class Settings extends Vue {}
   &__view {
     @apply flex flex-col;
     @apply w-5/6;
-
-    min-width: 262px;
 
     @screen md_max {
       @apply w-full;

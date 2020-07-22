@@ -146,6 +146,7 @@ export default class UserDropdown extends Vue {
     @apply p-0;
     @apply rounded;
     @apply shadow-lg;
+    @apply z-50;
 
     // width of toggler - width of dropdown
     transform: translateX(90px - 192px);

@@ -23,7 +23,7 @@ export class EmailConfirmation extends Document {
   updatedAt!: Date;
 
   @Prop({
-    default: () => new Date(Date.now() + ms("3d")),
+    default: () => new Date(Date.now() + ms("3h")),
     expires: 0
   })
   expiresAt!: Date;
@@ -65,5 +65,5 @@ EmailConfirmationSchema.pre<EmailConfirmation>("save", function(next) {
       this.token = token;
       next();
     })
-    .catch(next);
+    .catch(error => next(error));
 });

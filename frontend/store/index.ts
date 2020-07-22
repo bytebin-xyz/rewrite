@@ -1,6 +1,8 @@
 import { actionTree, getterTree, mutationTree } from "nuxt-typed-vuex";
 import { getAccessorType } from "typed-vuex";
 
+import * as sessions from "./sessions";
+
 import { LoginDto } from "@/dto/auth/login.dto";
 import { RegisterDto } from "@/dto/auth/register.dto";
 
@@ -28,7 +30,10 @@ export const actions = actionTree(
   { state, getters, mutations },
   {
     async nuxtServerInit() {
-      await this.app.$accessor.me().catch(() => {});
+      await this.app.$accessor
+        .me()
+        .then(() => this.app.$accessor.sessions.fetchSessions())
+        .catch(() => {});
     },
 
     async login({ commit }, payload: LoginDto) {
@@ -67,5 +72,8 @@ export const accessorType = getAccessorType({
   actions,
   state,
   getters,
+  modules: {
+    sessions
+  },
   mutations
 });

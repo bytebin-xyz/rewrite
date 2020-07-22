@@ -1,10 +1,9 @@
+import ms from "ms";
 import os from "os";
 import path from "path";
+import session from "express-session";
 
 import Joi from "@hapi/joi";
-
-import ms from "ms";
-import session from "express-session";
 
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Module } from "@nestjs/common";
@@ -16,6 +15,8 @@ import { Connection } from "mongoose";
 import { AppController } from "./app.controller";
 
 import { AuthModule } from "./modules/auth/auth.module";
+import { ExplorerModule } from "./modules/explorer/explorer.module";
+import { FilesModule } from "./modules/files/files.module";
 import { HealthModule } from "./modules/health/health.module";
 import { NodemailerModule } from "./modules/nodemailer/nodemailer.module";
 import { SettingsModule } from "./modules/settings/settings.module";
@@ -33,6 +34,8 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
 @Module({
   imports: [
     AuthModule,
+    ExplorerModule,
+    FilesModule,
     HealthModule,
     SettingsModule,
     UsersModule,

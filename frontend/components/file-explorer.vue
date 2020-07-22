@@ -1,37 +1,45 @@
 <template>
-  <div class="explorer" @click="() => unselect()" @keydown.ctrl.83.prevent.stop="selectAll">
-    <table v-if="files.length" class="files">
-      <thead class="files__header">
+  <div class="explorer" @click="unselect()">
+    <table v-if="items.length" class="filesystem">
+      <thead class="filesystem__header">
         <tr>
-          <th class="file__name">Name</th>
-          <th class="file__size">Size</th>
-          <th class="file__type">Type</th>
-          <th class="file__uploaded">Uploaded On</th>
+          <th class="item__name">Name</th>
+          <th class="item__size">Size</th>
+          <th class="item__type">Type</th>
+          <th class="item__uploaded">Uploaded On</th>
         </tr>
       </thead>
 
       <tbody
-        ref="file-list"
-        class="files__body"
+        ref="fileSystemItems"
+        class="filesystem__body"
         @click.exact.stop="(event) => select(event, true)"
         @click.ctrl.exact.stop="(event) => select(event, false)"
-        @dblclick.stop="navigate"
+        @dblclick.stop="open"
       >
         <tr
-          v-for="file of files"
-          :key="file.id"
-          :class="{ 'file--selected': isSelected(file.id) }"
-          :data-file-id="file.id"
-          class="file"
+          v-for="item of items"
+          :key="item.id"
+          :class="{ 'item--selected': isSelected(item.id) }"
+          :data-item-id="item.id"
+          class="item"
         >
-          <td class="file__name">
-            <folder-icon class="inline-block mr-2" fill="#4F5382" :size="16" />
-            <span class="align-text-top">{{ file.name }}</span>
+          <td class="item__name">
+            <span class="align-middle inline-block mr-2">
+              <folder-icon v-if="item.isFolder" fill="#4F5382" :size="16" />
+              <file-icon v-else fill="#4F5382" :size="16" />
+            </span>
+
+            <span class="align-text-top">{{ item.name }}</span>
           </td>
 
-          <td class="file__size">{{ prettyBytes(file.size) }}</td>
-          <td class="file__type">{{ file.type }}</td>
-          <td class="file__uploaded">{{ formatDate(new Date(file.uploadedAt), "PPpp") }}</td>
+          <td class="item__size">{{ prettyBytes(item.size) }}</td>
+
+          <td class="item__type">
+            {{ item.isFolder ? "Folder" : `${item.name.split(".").pop().toUpperCase()} File` }}
+          </td>
+
+          <td class="item__uploaded">{{ formatDate(new Date(item.createdAt), "PPpp") }}</td>
         </tr>
       </tbody>
     </table>
@@ -51,28 +59,28 @@ import { PropType } from "vue";
 
 import prettyBytes from "pretty-bytes";
 
-import { File } from "@/interfaces/file.interface";
+import { FileSystemObject } from "@/interfaces/fs-object.interface";
 
 interface Selection {
   element: HTMLElement;
-  file: File;
+  item: FileSystemObject;
 }
 
 @Component
 export default class FileExplorer extends Vue {
   @Prop({
     default: () => [],
-    type: Array as PropType<File[]>
+    type: Array as PropType<FileSystemObject[]>
   })
-  private readonly files!: File[];
+  private readonly items!: FileSystemObject[];
 
-  @Ref("file-list")
-  private readonly fileList!: HTMLTableSectionElement;
+  @Ref()
+  private readonly fileSystemItems!: HTMLTableSectionElement;
 
   private readonly formatDate = format;
   private readonly prettyBytes = prettyBytes;
 
-  private selected: Selection[] = [];
+  selected: Selection[] = [];
 
   private beforeDestroy() {
     document.removeEventListener("keydown", (event) => {
@@ -86,16 +94,16 @@ export default class FileExplorer extends Vue {
     });
   }
 
-  private isSelected(id: string) {
-    return this.selected.findIndex((s) => s.file.id === id) > -1;
+  private isSelected(id: string): boolean {
+    return this.selected.findIndex((selection) => selection.item.id === id) > -1;
   }
 
-  private navigate(event: MouseEvent): void {
+  private open(event: MouseEvent): void {
     const selection = this.selectionFromClick(event);
     if (!selection) return;
 
     this.selected = [];
-    this.$emit("navigate", selection.file);
+    this.$emit("open", selection.item);
   }
 
   private select(event: MouseEvent, overwrite = true): void {
@@ -105,10 +113,12 @@ export default class FileExplorer extends Vue {
     if (overwrite) {
       this.selected = [selection];
     } else {
-      this.isSelected(selection.file.id)
-        ? this.unselect(selection.file.id)
+      this.isSelected(selection.item.id)
+        ? this.unselect(selection.item.id)
         : this.selected.push(selection);
     }
+
+    this.$emit("selection:update", this.selected);
   }
 
   private selectAll(event: KeyboardEvent): void {
@@ -116,16 +126,15 @@ export default class FileExplorer extends Vue {
 
     event.preventDefault();
 
-    for (let i = 0; i < this.fileList.children.length; i += 1) {
-      const children = this.fileList.children.item(i);
+    for (let i = 0; i < this.fileSystemItems.children.length; i += 1) {
+      const children = this.fileSystemItems.children.item(i);
       if (!(children instanceof HTMLElement)) continue;
 
-      const file = this.files.find((file) => file.id === children.dataset.fileId);
-      if (!file) continue;
+      const item = this.items.find((item) => item.id === children.dataset.itemId);
+      if (!item || this.isSelected(item.id)) continue;
 
-      if (!this.isSelected(file.id)) {
-        this.selected.push({ element: children, file });
-      }
+      this.selected.push({ element: children, item });
+      this.$emit("selection:update", this.selected);
     }
   }
 
@@ -134,44 +143,44 @@ export default class FileExplorer extends Vue {
     if (!(event.target.parentElement instanceof HTMLElement)) return null;
 
     const element = event.target.parentElement;
-    const file = this.files.find((file) => file.id === element.dataset.fileId);
+    const item = this.items.find((item) => item.id === element.dataset.itemId);
 
-    if (!file) return null;
+    if (!item) return null;
 
-    return { element, file };
+    return { element, item };
   }
 
   private unselect(id?: string): void {
-    this.selected = id ? this.selected.filter((selected) => selected.file.id !== id) : [];
+    this.selected = id ? this.selected.filter((selected) => selected.item.id !== id) : [];
+    this.$emit("selection:update", this.selected);
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/scss/button.scss";
+
 .explorer {
   @apply block;
   @apply bg-primary-900;
-  @apply rounded;
   @apply overflow-auto;
 
   &__placeholder {
     @apply flex flex-col justify-center items-center;
     @apply font-semibold text-2xl text-primary-600;
     @apply h-full;
-  }
 
-  &__status-bar {
-    @apply px-6 py-2;
-    @apply text-left text-primary-400;
+    letter-spacing: 0.5px;
   }
 }
 
-.file {
+.item {
   &__name,
   &__size,
   &__type,
   &__uploaded {
     @apply cursor-default;
+    @apply select-none;
     @apply whitespace-no-wrap;
   }
 
@@ -192,7 +201,7 @@ export default class FileExplorer extends Vue {
   }
 }
 
-.files {
+.filesystem {
   @apply w-full;
 
   &__body,
@@ -208,7 +217,10 @@ export default class FileExplorer extends Vue {
 
   &__header {
     & th {
+      @apply bg-primary-900;
+      @apply sticky;
       @apply px-6 py-4;
+      @apply top-0;
     }
   }
 }

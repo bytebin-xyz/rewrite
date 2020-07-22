@@ -55,5 +55,5 @@ PasswordResetSchema.pre<PasswordReset>("save", function(next) {
       this.token = token;
       next();
     })
-    .catch(next);
+    .catch(error => next(error));
 });

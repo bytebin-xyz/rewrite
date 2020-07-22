@@ -9,27 +9,34 @@
 
     <section class="section__body">
       <session
-        v-for="session of sessions"
+        v-for="session of $accessor.sessions.items"
         :key="session.identifier"
         :session="session"
-        @revoked:error="(error) => $toast.error(error.message)"
-        @revoked.once="revoked"
+        @revoke="revoke"
       />
     </section>
 
     <footer class="section__footer">
       <h3 class="section__subheading">Don't recognize any of these sessions?</h3>
 
-      <v-button ref="button" class="mt-4" theme="danger" @click="revokeAllSessions">
-        Revoke All Sessions
+      <v-button
+        ref="button"
+        class="mt-4"
+        :theme="
+          $accessor.sessions.items.length === 1 && $accessor.sessions.items[0].isCurrent
+            ? 'disabled'
+            : 'danger'
+        "
+        @click="revokeAllOtherSessions"
+      >
+        Revoke All Other Sessions
       </v-button>
     </footer>
   </section>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Ref, Vue } from "nuxt-property-decorator";
-import { PropType } from "vue";
+import { Component, Ref, Vue } from "nuxt-property-decorator";
 
 import VButton from "@/components/v-button.vue";
 
@@ -37,33 +44,27 @@ import { Session } from "@/interfaces/session.interface";
 
 @Component
 export default class Sessions extends Vue {
-  @Prop({
-    default: () => [],
-    type: Array as PropType<Session[]>
-  })
-  private readonly sessions!: Session[];
-
   @Ref() private readonly button!: VButton;
 
-  private revoked(session: Session) {
-    setTimeout(() => {
-      this.$emit("session:revoked", [session]);
-    }, 5000);
+  private async fetch() {
+    await this.$accessor.sessions.fetchSessions();
   }
 
-  private async revokeAllSessions() {
+  private async revoke(session: Session) {
+    await this.$accessor.sessions
+      .revokeSession(session)
+      .then(() => this.$toast.success(`Successfully revoked ${session.ip}`))
+      .catch((error: Error) => this.$toast.error(error.message));
+  }
+
+  private async revokeAllOtherSessions() {
     this.button.pending();
 
-    await this.$axios
-      .delete("/settings/revoke-all-sessions")
+    await this.$accessor.sessions
+      .revokeAllOtherSessions()
       .then(() => {
         this.button.success();
         this.$toast.success("All sessions have been succesfully revoked!");
-
-        this.$emit(
-          "session:revoked",
-          this.sessions.filter((session) => !session.current)
-        );
       })
       .catch((error: Error) => {
         this.button.fail();

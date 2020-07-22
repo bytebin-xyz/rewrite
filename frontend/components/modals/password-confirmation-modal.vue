@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <div class="btn__group btn__group--row">
+        <div class="btn__group btn__group--row mt-2">
           <v-button theme="dark" @click="$emit('close')">Cancel</v-button>
           <v-button theme="danger" type="submit">{{ action }}</v-button>
         </div>

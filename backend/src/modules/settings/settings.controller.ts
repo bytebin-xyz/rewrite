@@ -15,7 +15,8 @@ import {
   UseGuards,
   UnauthorizedException,
   UnsupportedMediaTypeException,
-  UseInterceptors
+  UseInterceptors,
+  NotFoundException
 } from "@nestjs/common";
 
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -34,7 +35,6 @@ import { CurrentUser } from "@/decorators/current-user.decorator";
 
 import { IsOkResponse } from "@/interfaces/is-ok.interface";
 import { ISession } from "@/interfaces/session.interface";
-import { ISessions } from "@/interfaces/sessions.interface";
 
 import { AuthGuard } from "@/modules/auth/guards/auth.guard";
 
@@ -57,7 +57,7 @@ export class SettingsController {
     private readonly users: UsersService
   ) {}
 
-  @Get("activate/:token")
+  @Get("activate-account/:token")
   async activate(@Param("token") token: string): Promise<IsOkResponse> {
     return { ok: await this.settings.activate(token) };
   }
@@ -170,7 +170,15 @@ export class SettingsController {
 
   @Get("sessions")
   @UseGuards(AuthGuard)
-  async sessions(@CurrentUser() user: User, @Session() session: ISession): Promise<ISessions[]> {
-    return this.auth.getSessions(session.identifier || "", user.uid);
+  async sessions(
+    @CurrentUser() user: User,
+    @Session() currentSession: ISession
+  ): Promise<(ISession & { isCurrent: boolean })[]> {
+    const sessions = await this.auth.getSessions(user.id);
+
+    return sessions.map(session => ({
+      isCurrent: session.identifier === currentSession.identifier,
+      ...session
+    }));
   }
 }

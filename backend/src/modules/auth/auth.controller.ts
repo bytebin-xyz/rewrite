@@ -7,10 +7,15 @@ import {
   ForbiddenException,
   Headers,
   Post,
+  Req,
   Session,
   UnauthorizedException,
   UseGuards
 } from "@nestjs/common";
+
+import { getClientIp } from "request-ip";
+
+import { Request } from "express";
 
 import { Throttle, ThrottlerGuard } from "nestjs-throttler";
 
@@ -60,6 +65,7 @@ export class AuthController {
   async login(
     @Body() { password, username }: LoginDto,
     @Headers("user-agent") userAgent: string | undefined,
+    @Req() req: Request,
     @Session() session: ISession
   ): Promise<User> {
     const user = await this.auth.login(username, password);
@@ -71,12 +77,13 @@ export class AuthController {
 
     session.identifier = await generateId(8);
     session.lastUsed = new Date();
+    session.ip = getClientIp(req);
     session.ua = {
       browser: ua.getBrowser(),
       device: ua.getDevice(),
       os: ua.getOS()
     };
-    session.uid = user.uid;
+    session.uid = user.id;
 
     return user;
   }

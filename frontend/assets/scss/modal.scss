@@ -1,7 +1,10 @@
 .modal {
   @apply box-border;
+  @apply border border-solid border-primary-700;
   @apply h-full w-full;
   @apply p-5;
+  @apply rounded;
+  @apply shadow-lg;
 
   &--dark {
     @apply bg-primary-900;

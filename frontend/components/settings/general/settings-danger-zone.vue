@@ -9,10 +9,10 @@
       <section class="section wrapper wrapper--light wrapper--pad-sm">
         <header class="section__header">
           <h2 class="section__subheading">Delete your account.</h2>
-          <h3 class="section__text">
+          <p class="section__text">
             Once your account is deleted, all your files and related user data will permanently
             become inaccessible.
-          </h3>
+          </p>
         </header>
 
         <section class="mt-4">

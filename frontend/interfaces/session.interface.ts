@@ -1,8 +1,9 @@
 export interface Session {
-  current?: boolean;
-  identifier?: string;
-  lastUsed?: string;
-  ua?: {
+  identifier: string;
+  ip: string | null;
+  isCurrent: boolean;
+  lastUsed: string;
+  ua: {
     browser: {
       name?: string;
       major?: string;
@@ -18,5 +19,5 @@ export interface Session {
       version?: string;
     };
   };
-  uid?: string;
+  uid: string;
 }

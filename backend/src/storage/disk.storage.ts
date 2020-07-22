@@ -11,6 +11,7 @@ type HandleFileCallback = (error: Error | null, info?: Partial<DiskFile>) => voi
 type RemoveFileCallback = (error: any) => void;
 
 export interface DiskFile extends Express.Multer.File {
+  isFolder: boolean;
   md5: string;
   modifiedMD5: string | null;
   uploadedAt: Date;
@@ -67,6 +68,7 @@ export class DiskStorage implements StorageEngine {
         callback(error || null, {
           destination,
           filename,
+          isFolder: false,
           md5: originalMD5.hash.digest("hex"),
           modifiedMD5: modifiedMD5 ? modifiedMD5.hash.digest("hex") : null,
           path: finalDestination,

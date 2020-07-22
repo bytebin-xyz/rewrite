@@ -1,21 +1,35 @@
 <template>
   <div class="grid">
     <div class="grid__left">
-      <file-tree class="file-tree" />
+      <file-tree class="h-full" />
     </div>
 
     <div class="grid grid__right grid--col">
-      <breadcrumbs class="breadcrumbs" :items="[$accessor.user.displayName, 'my files', 'hello']" />
+      <file-explorer-breadcrumbs ref="breadcrumbs" class="mb-3" @navigate="navigate" />
 
-      <file-explorer class="file-explorer" :files="files" />
+      <file-explorer-toolbar ref="toolbar" class="rounded rounded-b-none" />
+
+      <file-explorer
+        ref="explorer"
+        class="h-full rounded rounded-t-none"
+        :items="items"
+        @open="open"
+      />
+
+      <file-explorer-status-bar ref="statusBar" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator";
+import { Component, Ref, Vue } from "nuxt-property-decorator";
 
-import { File } from "@/interfaces/file.interface";
+import Breadcrumbs from "@/components/file-explorer/file-explorer-breadcrumbs.vue";
+import Explorer from "@/components/file-explorer.vue";
+import StatusBar from "@/components/file-explorer/file-explorer-status-bar.vue";
+import Toolbar from "@/components/file-explorer/file-explorer-toolbar.vue";
+
+import { FileSystemObject } from "@/interfaces/fs-object.interface";
 
 @Component({
   meta: {
@@ -24,22 +38,62 @@ import { File } from "@/interfaces/file.interface";
   transition: "fade"
 })
 export default class Files extends Vue {
-  private readonly files: File[] = [];
+  @Ref() private readonly breadcrumbs!: Breadcrumbs;
+  @Ref() private readonly explorer!: Explorer;
+  @Ref() private readonly statusBar!: StatusBar;
+  @Ref() private readonly toolbar!: Toolbar;
+
+  private items: FileSystemObject[] = [];
 
   asyncData() {
-    const files = [];
+    const items: FileSystemObject[] = [];
 
     for (let i = 1; i < Math.floor(Math.random() * 50); i += 1) {
-      files.push({
+      items.push({
+        createdAt: new Date().toString(),
         id: String(i),
+        isFolder: true,
         name: `Folder ${i}`,
-        size: i * Math.floor(Math.random() * 50000000),
-        type: "Folder",
-        uploadedAt: new Date().toString()
+        size: i * Math.floor(Math.random() * 50000000)
       });
     }
 
-    return { files };
+    return { items };
+  }
+
+  mounted() {
+    this.breadcrumbs.forward({ name: this.$accessor.user!.displayName, path: "~" });
+  }
+
+  navigate() {
+    this.fetchItems();
+  }
+
+  open(item: FileSystemObject) {
+    if (item.isFolder) {
+      this.breadcrumbs.forward({ name: item.name, path: item.id });
+      this.fetchItems();
+    } else {
+      //
+    }
+  }
+
+  fetchItems() {
+    const items: FileSystemObject[] = [];
+
+    for (let i = 1; i < Math.floor(Math.random() * 50); i += 1) {
+      items.push({
+        createdAt: new Date().toString(),
+        id: String(i),
+        isFolder: true,
+        name: `Folder ${i}`,
+        size: i * Math.floor(Math.random() * 50000000)
+      });
+    }
+
+    this.items = items;
+
+    return items;
   }
 }
 </script>
@@ -47,11 +101,6 @@ export default class Files extends Vue {
 <style lang="scss" scoped>
 .breadcrumbs {
   @apply mb-4;
-}
-
-.file-explorer,
-.file-tree {
-  @apply h-full;
 }
 
 .grid {

@@ -1,5 +1,7 @@
 import { Configuration } from "@nuxt/types";
 
+import { ProvidePlugin } from "webpack";
+
 const isDev = process.env.NODE_ENV !== "production";
 
 require("dotenv").config({ path: `.env.${isDev ? "development" : "production"}` });
@@ -15,12 +17,19 @@ const config: Configuration = {
    */
   build: {
     cache: true,
-    transpile: [/typed-vuex/, "vuelidate-property-decorators"]
+    transpile: [/typed-vuex/, "vuelidate-property-decorators"],
 
     /*
      ** You can extend webpack config here
      */
-    // extend(config, ctx) {}
+    extend(config, _ctx) {
+      config.plugins = [
+        ...(config.plugins || []),
+        new ProvidePlugin({
+          mapboxgl: "mapbox-gl"
+        })
+      ];
+    }
   },
 
   /*
@@ -88,6 +97,7 @@ const config: Configuration = {
    ** Plugins to load before mounting the App
    */
   plugins: [
+    { src: "./plugins/content-placeholders.plugin", mode: "client" },
     { src: "./plugins/axios.plugin" },
     { src: "./plugins/spinners.plugin", mode: "client" },
     { src: "./plugins/vue-js-modal.plugin", mode: "client" },

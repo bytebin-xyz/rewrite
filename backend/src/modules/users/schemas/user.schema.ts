@@ -4,12 +4,14 @@ import ms from "ms";
 import { isAlphanumeric, isEmail } from "class-validator";
 
 import { Document } from "mongoose";
+
 import { Prop, Schema, SchemaFactory, raw } from "@nestjs/mongoose";
 
 import { generateId } from "@/utils/generateId";
 import { hideSchemaProperty } from "@/utils/hideSchemaProperty";
 
 @Schema({
+  id: false,
   timestamps: true,
   toJSON: {
     transform: hideSchemaProperty(["_id", "__v", "password"])
@@ -74,6 +76,16 @@ export class User extends Document {
     expires: 0
   })
   expiresAt!: Date;
+  
+  // Automatically generated in pre save hook.
+  @Prop({
+    lowercase: true,
+    maxlength: 16,
+    minlength: 16,
+    trim: true,
+    unique: true
+  })
+  id!: string;
 
   /*
    ** Automatically hashed in pre save hook.
@@ -83,16 +95,6 @@ export class User extends Document {
     required: true
   })
   password!: string;
-
-  // Automatically generated in pre save hook.
-  @Prop({
-    lowercase: true,
-    maxlength: 16,
-    minlength: 16,
-    trim: true,
-    unique: true
-  })
-  uid!: string;
 
   @Prop({
     lowercase: true,
@@ -120,11 +122,11 @@ UserSchema.pre<User>("save", function(next) {
   if (!this.isNew) return next();
 
   generateId(8)
-    .then(uid => {
-      this.uid = uid;
+    .then(id => {
+      this.id = id;
       next();
     })
-    .catch(next);
+    .catch(error => next(error));
 });
 
 UserSchema.pre<User>("save", function(next) {

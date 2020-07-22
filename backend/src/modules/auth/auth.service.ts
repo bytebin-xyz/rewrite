@@ -4,7 +4,6 @@ import { Injectable } from "@nestjs/common";
 import { InjectConnection } from "@nestjs/mongoose";
 
 import { ISession } from "@/interfaces/session.interface";
-import { ISessions } from "@/interfaces/sessions.interface";
 
 import { NodemailerService } from "@/modules/nodemailer/nodemailer.service";
 import { UsersService } from "@/modules/users/users.service";
@@ -33,29 +32,12 @@ export class AuthService {
     return true;
   }
 
-  async getSessions(currentSession: string, uid: string): Promise<ISessions[]> {
-    const sessions = await this.sessions
-      .find(
-        { "session.uid": uid },
-        {
-          projection: {
-            _id: 0,
-            expires: 0,
-            "session.cookie": 0
-          }
-        }
-      )
-      .toArray();
-
-    return (
-      sessions
-        .map<ISessions>(({ session }: { session: ISession }) => ({
-          current: currentSession === session.identifier,
-          ...session
-        }))
-        // Sort the array so that the current session should always be the first element
-        .sort((a, b) => Number(b.current) - Number(a.current))
-    );
+  async getSessions(userId: string): Promise<ISession[]> {
+    return this.sessions
+      .find<{ session: ISession }>({ "session.uid": userId })
+      .project({ _id: 0, expires: 0, "session.cookie": 0 })
+      .toArray()
+      .then(sessions => sessions.map(({ session }) => session));
   }
 
   async login(username: string, password: string): Promise<User | void> {
@@ -66,14 +48,14 @@ export class AuthService {
   async logout(identifier: string, user: User): Promise<void> {
     await this.sessions.deleteOne({
       "session.identifier": identifier,
-      "session.uid": user.uid
+      "session.uid": user.id
     });
   }
 
   async logoutAllDevices(user: User, currentSession?: string): Promise<void> {
     await this.sessions.deleteMany({
       "session.identifier": { $ne: currentSession },
-      "session.uid": user.uid
+      "session.uid": user.id
     });
   }
 
@@ -89,7 +71,7 @@ export class AuthService {
     const passwordReset = await this.nodemailer.findPasswordReset({ token });
     if (!passwordReset) return false;
 
-    const user = await this.users.findOne({ uid: passwordReset.uid });
+    const user = await this.users.findOne({ id: passwordReset.id });
     if (!user) return false;
 
     await settle([this.logoutAllDevices(user), user.changePassword(newPassword)]);

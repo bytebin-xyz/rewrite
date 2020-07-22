@@ -98,7 +98,7 @@ export class NodemailerService implements OnApplicationBootstrap {
   }
 
   async sendEmailConfirmation(newEmail: string, user: User): Promise<void> {
-    const confirmation = await new this.emailConfirmations({ newEmail, uid: user.uid }).save();
+    const confirmation = await new this.emailConfirmations({ newEmail, uid: user.id }).save();
     const confirmEmailLink = `${this.baseURL}/confirm-email/${confirmation.token}`;
     const html = await renderMJML(path.join(__dirname, "./mjml/email-confirmation.mjml"), {
       confirmEmailLink,
@@ -139,7 +139,7 @@ export class NodemailerService implements OnApplicationBootstrap {
   }
 
   async sendPasswordReset(user: User): Promise<void> {
-    const reset = await new this.passwordResets({ uid: user.uid }).save();
+    const reset = await new this.passwordResets({ uid: user.id }).save();
     const resetPasswordLink = `${this.baseURL}/reset-password/${reset.token}`;
     const html = await renderMJML(path.join(__dirname, "./mjml/password-reset.mjml"), {
       displayName: user.displayName,
@@ -160,7 +160,7 @@ export class NodemailerService implements OnApplicationBootstrap {
   }
 
   async sendUserActivation(user: User): Promise<void> {
-    const activation = await new this.userActivations({ uid: user.uid }).save();
+    const activation = await new this.userActivations({ uid: user.id }).save();
     const activationLink = `${this.baseURL}/activate-account/${activation.token}`;
     const html = await renderMJML(path.join(__dirname, "./mjml/user-activation.mjml"), {
       activationLink,

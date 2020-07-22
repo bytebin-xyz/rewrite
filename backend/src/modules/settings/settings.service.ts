@@ -26,7 +26,7 @@ export class SettingsService {
     const activation = await this.nodemailer.findUserActivation({ token });
     if (!activation) return false;
 
-    const user = await this.users.findOne({ uid: activation.uid });
+    const user = await this.users.findOne({ id: activation.uid });
     if (!user) return false;
 
     await user.activate();
@@ -54,7 +54,7 @@ export class SettingsService {
     const confirmation = await this.nodemailer.findEmailConfirmation({ token });
     if (!confirmation) return false;
 
-    const user = await this.users.findOne({ uid: confirmation.uid });
+    const user = await this.users.findOne({ id: confirmation.uid });
     if (!user) return false;
 
     if (await this.users.exists({ email: confirmation.newEmail })) {
@@ -73,7 +73,7 @@ export class SettingsService {
   async deleteAccount(user: User): Promise<void> {
     await settle([
       this.deleteAvatar(user),
-      this.nodemailer.deleteAllFor({ uid: user.uid }),
+      this.nodemailer.deleteAllFor({ uid: user.id }),
       this.auth.logoutAllDevices(user)
     ]);
 
@@ -92,7 +92,7 @@ export class SettingsService {
   }
 
   async resendUserActivationEmail(user: User): Promise<boolean> {
-    const activation = await this.nodemailer.findUserActivation({ uid: user.uid });
+    const activation = await this.nodemailer.findUserActivation({ uid: user.id });
     if (!activation) return false;
 
     await this.nodemailer.sendUserActivation(user);

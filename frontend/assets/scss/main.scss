@@ -22,5 +22,9 @@ body {
 
 .modal-container-styles {
   @apply bg-transparent #{!important};
-  @apply rounded #{!important};
+  @apply px-4;
+}
+
+.vm--modal {
+  @apply shadow-none #{!important};
 }

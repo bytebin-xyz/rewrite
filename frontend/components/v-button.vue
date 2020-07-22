@@ -7,7 +7,8 @@
       'btn--dark': (status === 'idle' || status === 'pending') && theme === 'dark',
       'btn--disabled': (status === 'idle' || status === 'pending') && theme === 'disabled',
       'btn--light': (status === 'idle' || status === 'pending') && theme === 'light',
-      'btn--ok': status === 'success' || theme === 'ok'
+      'btn--ok': status === 'success' || theme === 'ok',
+      'btn--responsive': responsive
     }"
     :disabled="disabled || theme === 'disabled'"
     @click="(event) => $emit('click', event)"
@@ -67,6 +68,8 @@ export enum ButtonTheme {
 
 @Component
 export default class VButton extends Vue {
+  @Prop({ default: true }) private readonly responsive!: boolean;
+
   @Prop({
     default: ButtonTheme.Dark,
     validator: (theme: any) => Object.values(ButtonTheme).includes(theme)
