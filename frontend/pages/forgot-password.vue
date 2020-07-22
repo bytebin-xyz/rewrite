@@ -4,9 +4,11 @@
 
     <div v-if="sent" class="wrapper wrapper--light wrapper--pad-sm">
       <h2>
-        We have sent you an email containing a link to reset your password. If you do not receive it
-        within a few minutes, check your spam folder.
+        If an account exists for {{ email }}, you should receive an email from us shortly with
+        further instructions.
       </h2>
+
+      <h2>If you do not receive it within a few minutes, check your spam folder or try again.</h2>
 
       <nuxt-link class="btn btn--dark mt-4" to="/login">
         Return to Login

@@ -49,12 +49,12 @@ export class AuthController {
 
   @Post("forgot-password")
   @Throttle(10, 10 * 60)
-  async forgotPassword(@Body() { email }: ForgotPasswordDto): Promise<void> {
-    if (!(await this.auth.forgotPassword(email))) {
-      throw new BadRequestException(
-        `Account does not exist for ${email}. Maybe you signed up with a different email address?`
-      );
-    }
+  forgotPassword(@Body() { email }: ForgotPasswordDto): void {
+    /*
+     * Don't await so that if an account with the email does exists,
+     * it will return a response as if the account didn't exist
+     */
+    this.auth.forgotPassword(email);
   }
 
   @Post("login")
