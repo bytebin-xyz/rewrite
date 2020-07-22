@@ -52,7 +52,7 @@ export class AuthController {
   forgotPassword(@Body() { email }: ForgotPasswordDto): void {
     /*
      * Don't await so that if an account with the email does exists,
-     * it will return a response as if the account didn't exist
+     * it will take the same response time as if the account didn't exist
      */
     this.auth.forgotPassword(email);
   }
