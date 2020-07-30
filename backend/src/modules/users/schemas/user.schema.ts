@@ -1,26 +1,24 @@
 import bcrypt from "bcrypt";
 import ms from "ms";
 
+import { ClassTransformOptions, plainToClass } from "class-transformer";
+import { ClassType } from "class-transformer/ClassTransformer";
+
 import { isAlphanumeric, isEmail } from "class-validator";
 
 import { Document } from "mongoose";
 
 import { Prop, Schema, SchemaFactory, raw } from "@nestjs/mongoose";
 
+import { UserDto } from "../dto/user.dto";
+
 import { generateId } from "@/utils/generateId";
-import { hideSchemaProperty } from "@/utils/hideSchemaProperty";
 
 @Schema({
   id: false,
-  timestamps: true,
-  toJSON: {
-    transform: hideSchemaProperty(["_id", "__v", "password"])
-  },
-  toObject: {
-    transform: hideSchemaProperty(["_id", "__v", "password"])
-  }
+  timestamps: true
 })
-export class User extends Document {
+export class User extends Document implements UserDto {
   createdAt!: Date;
   updatedAt!: Date;
 
@@ -28,6 +26,11 @@ export class User extends Document {
     default: false
   })
   activated!: boolean;
+
+  @Prop({
+    default: false
+  })
+  admin!: boolean;
 
   @Prop(
     raw({
@@ -71,12 +74,15 @@ export class User extends Document {
   })
   email!: string;
 
-  @Prop({
-    default: () => new Date(Date.now() + ms("7d")),
-    expires: 0
-  })
-  expiresAt!: Date;
-  
+  @Prop(
+    raw({
+      default: () => new Date(Date.now() + ms("7d")),
+      expires: 0,
+      type: Date
+    })
+  )
+  expiresAt!: Date | null;
+
   // Automatically generated in pre save hook.
   @Prop({
     lowercase: true,
@@ -114,6 +120,8 @@ export class User extends Document {
   comparePassword!: (password: string) => Promise<boolean>;
   delete!: () => Promise<this>;
   deleteAvatar!: () => Promise<this>;
+  makeAdmin!: () => Promise<this>;
+  toDto!: <T = UserDto>(cls?: ClassType<T>) => T;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -140,7 +148,7 @@ UserSchema.pre<User>("save", function(next) {
   });
 });
 
-UserSchema.methods.activate = async function(this: any) {
+UserSchema.methods.activate = async function(this: User): Promise<User> {
   if (!this.activated || this.expiresAt) {
     this.activated = true;
     this.expiresAt = null;
@@ -151,7 +159,7 @@ UserSchema.methods.activate = async function(this: any) {
   return this;
 };
 
-UserSchema.methods.changeAvatar = async function(this: User, filename: string) {
+UserSchema.methods.changeAvatar = async function(this: User, filename: string): Promise<User> {
   if (this.avatar !== filename) {
     this.avatar = filename;
     await this.save();
@@ -160,7 +168,10 @@ UserSchema.methods.changeAvatar = async function(this: User, filename: string) {
   return this;
 };
 
-UserSchema.methods.changeDisplayName = async function(this: User, newDisplayName: string) {
+UserSchema.methods.changeDisplayName = async function(
+  this: User,
+  newDisplayName: string
+): Promise<User> {
   if (this.displayName !== newDisplayName) {
     this.displayName = newDisplayName;
     await this.save();
@@ -169,7 +180,7 @@ UserSchema.methods.changeDisplayName = async function(this: User, newDisplayName
   return this;
 };
 
-UserSchema.methods.changeEmail = async function(this: User, newEmail: string) {
+UserSchema.methods.changeEmail = async function(this: User, newEmail: string): Promise<User> {
   if (this.email !== newEmail) {
     this.email = newEmail;
     await this.save();
@@ -178,12 +189,12 @@ UserSchema.methods.changeEmail = async function(this: User, newEmail: string) {
   return this;
 };
 
-UserSchema.methods.changePassword = async function(this: User, newPassword: string) {
+UserSchema.methods.changePassword = async function(this: User, newPassword: string): Promise<User> {
   this.password = newPassword;
   return this.save();
 };
 
-UserSchema.methods.comparePassword = function(this: User, password: string) {
+UserSchema.methods.comparePassword = function(this: User, password: string): Promise<boolean> {
   return bcrypt.compare(password, this.password);
 };
 
@@ -191,7 +202,7 @@ UserSchema.methods.comparePassword = function(this: User, password: string) {
  ** Don't actually delete the user document to prevent recycling display names + usernames
  ** Overwrite type safety of *this* to set email and password to null
  */
-UserSchema.methods.delete = async function(this: any) {
+UserSchema.methods.delete = async function(this: any): Promise<User> {
   if (!this.deleted) {
     this.activated = false;
     this.avatar = null;
@@ -205,11 +216,29 @@ UserSchema.methods.delete = async function(this: any) {
   return this;
 };
 
-UserSchema.methods.deleteAvatar = async function(this: User) {
+UserSchema.methods.deleteAvatar = async function(this: User): Promise<User> {
   if (this.avatar) {
     this.avatar = null;
     await this.save();
   }
 
   return this;
+};
+
+UserSchema.methods.makeAdmin = async function(this: User): Promise<User> {
+  if (!this.admin) {
+    this.admin = true;
+    await this.save();
+  }
+
+  return this;
+};
+
+UserSchema.methods.toDto = function<T = UserDto>(this: User, cls?: ClassType<T>): T | UserDto {
+  const json = this.toJSON();
+  const options: ClassTransformOptions = {
+    excludePrefixes: ["_"]
+  };
+
+  return cls ? plainToClass(cls, json, options) : plainToClass(UserDto, json, options);
 };

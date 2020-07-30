@@ -2,22 +2,26 @@ import { Document } from "mongoose";
 
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
+import { plainToClass } from "class-transformer";
+
+import { FileDto } from "../dto/file.dto";
+
 import { generateId } from "@/utils/generateId";
-import { hideSchemaProperty } from "@/utils/hideSchemaProperty";
 
 @Schema({
   id: false,
-  timestamps: true,
-  toJSON: {
-    transform: hideSchemaProperty(["_id", "__v"])
-  },
-  toObject: {
-    transform: hideSchemaProperty(["_id", "__v"])
-  }
+  timestamps: true
 })
-export class File extends Document {
+export class File extends Document implements FileDto {
   createdAt!: Date;
   updatedAt!: Date;
+
+  @Prop({
+    maxlength: 255,
+    required: true,
+    trim: true
+  })
+  filename!: string;
 
   // Automatically generated in pre save hook.
   @Prop({
@@ -30,11 +34,10 @@ export class File extends Document {
   id!: string;
 
   @Prop({
-    maxlength: 255,
     required: true,
     trim: true
   })
-  name!: string;
+  partialPath!: string;
 
   @Prop({
     min: 1,
@@ -50,6 +53,9 @@ export class File extends Document {
     trim: true
   })
   uid!: string;
+
+  toDto!: () => FileDto;
+  rename!: (newFilename: string) => Promise<this>;
 }
 
 export const FileSchema = SchemaFactory.createForClass(File);
@@ -64,3 +70,18 @@ FileSchema.pre<File>("save", function(next) {
     })
     .catch(error => next(error));
 });
+
+FileSchema.methods.toDto = function(this: File): FileDto {
+  return plainToClass(FileDto, this.toJSON(), {
+    excludePrefixes: ["_"]
+  });
+};
+
+FileSchema.methods.rename = async function(this: File, newFilename: string): Promise<File> {
+  if (this.filename !== newFilename) {
+    this.filename = newFilename;
+    await this.save();
+  }
+
+  return this;
+};

@@ -6,6 +6,7 @@ import { Injectable } from "@nestjs/common";
 import { AVATAR_PATH } from "./settings.constants";
 
 import { AuthService } from "@/modules/auth/auth.service";
+import { FilesService } from "@/modules/files/files.service";
 import { NodemailerService } from "@/modules/nodemailer/nodemailer.service";
 import { UsersService } from "@/modules/users/users.service";
 
@@ -18,6 +19,7 @@ import { settle } from "@/utils/settle";
 export class SettingsService {
   constructor(
     private readonly auth: AuthService,
+    private readonly files: FilesService,
     private readonly nodemailer: NodemailerService,
     private readonly users: UsersService
   ) {}
@@ -73,8 +75,9 @@ export class SettingsService {
   async deleteAccount(user: User): Promise<void> {
     await settle([
       this.deleteAvatar(user),
-      this.nodemailer.deleteAllFor({ uid: user.id }),
-      this.auth.logoutAllDevices(user)
+      this.auth.logoutAllDevices(user.id),
+      this.files.deleteAllFor(user.id),
+      this.nodemailer.deleteAllFor(user.id)
     ]);
 
     await user.delete();

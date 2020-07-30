@@ -1,29 +1,29 @@
-import qs from "qs";
-import requestIP from "request-ip";
-
 import {
-  BadGatewayException,
   BadRequestException,
   CanActivate,
   ExecutionContext,
   HttpService,
   Injectable,
-  InternalServerErrorException,
-  Logger
+  InternalServerErrorException
 } from "@nestjs/common";
 
-import { ConfigService } from "@nestjs/config";
+import { getClientIp } from "request-ip";
+import { stringify } from "qs";
 
+import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 
 import { Request } from "express";
 
-const API_URL = "https://www.google.com/recaptcha/api/siteverify";
+const RECAPTCHA_FAILED = "reCAPTCHA failed, please try again!";
+const RECAPTCHA_MISSING = "Please complete the reCAPTCHA!";
+const RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify";
+
+export const RECAPTCHA_ACTION_KEY = "RECAPTCHA_ACTION";
+export const RECAPTCHA_SCORE_KEY = "RECAPTCHA_SCORE";
 
 @Injectable()
 export class RecaptchaGuard implements CanActivate {
-  private readonly logger = new Logger("RecaptchaGuard");
-
   constructor(
     private readonly config: ConfigService,
     private readonly http: HttpService,
@@ -31,28 +31,25 @@ export class RecaptchaGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const action = this._getMetadata<string>("recaptcha-action", context);
-    const score = this._getMetadata<number>("recaptcha-score", context);
+    const action = this._getMetadata<string>(RECAPTCHA_ACTION_KEY, context);
+    const score = this._getMetadata<number>(RECAPTCHA_SCORE_KEY, context);
 
     const req = context.switchToHttp().getRequest<Request>();
 
     const { recaptcha } = req.body;
-
-    if (!recaptcha) {
-      throw new BadRequestException("Please complete the reCAPTCHA!");
-    }
+    if (!recaptcha) throw new BadRequestException(RECAPTCHA_MISSING);
 
     const result = await this.http
       .post(
-        API_URL,
-        qs.stringify({
-          remoteip: requestIP.getClientIp(req),
+        RECAPTCHA_URL,
+        stringify({
+          remoteip: getClientIp(req),
           response: recaptcha,
           secret: this.config.get("RECAPTCHA_SECRET")
         })
       )
       .toPromise()
-      .then((res) => {
+      .then(res => {
         const body = res.data;
         const errorCodes = body["error-codes"];
         const filterFn = (errorMessage: string) => errorMessage.endsWith("secret");
@@ -63,37 +60,25 @@ export class RecaptchaGuard implements CanActivate {
 
         return { error: errorCodes.filter(filterFn).join(", ") };
       })
-      .catch((error) => ({ error }));
+      .catch(error => ({ error }));
 
     if (result.error) {
-      this.logger.error(result.error);
-
-      throw new BadGatewayException(
-        "Failed to verify your reCAPTCHA response! Please try again later."
-      );
+      throw new InternalServerErrorException(result.error);
     }
 
-    if (
-      !result.success ||
-      (result.action && result.action !== action) ||
-      (result.score && result.score < score)
-    ) {
-      throw new BadRequestException("reCAPTCHA failed, please try again!");
+    if (!result.success) {
+      throw new BadRequestException(RECAPTCHA_FAILED);
+    }
+
+    // If its successful but wrong recaptcha version response
+    if ((action && result.action !== action) || (score && result.score < score)) {
+      throw new BadRequestException(RECAPTCHA_FAILED);
     }
 
     return true;
   }
 
-  private _getMetadata<T>(key: string, context: ExecutionContext) {
-    const handler = context.getHandler();
-    const metadata = this.reflector.get<T>(key, handler);
-
-    if (!metadata) {
-      throw new InternalServerErrorException(
-        `${key} not provided for ${handler.name} in ${context.getClass().name}`
-      );
-    }
-
-    return metadata;
+  private _getMetadata<T>(key: string, context: ExecutionContext): T | undefined {
+    return this.reflector.get<T | undefined>(key, context.getHandler());
   }
 }

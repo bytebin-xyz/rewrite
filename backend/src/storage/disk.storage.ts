@@ -10,44 +10,41 @@ import { calculateMD5 } from "@/utils/calculateMD5";
 type HandleFileCallback = (error: Error | null, info?: Partial<DiskFile>) => void;
 type RemoveFileCallback = (error: any) => void;
 
+export type IncomingFile = Pick<
+  Express.Multer.File,
+  "encoding" | "fieldname" | "mimetype" | "originalname" | "stream"
+>;
+
 export interface DiskFile extends Express.Multer.File {
-  isFolder: boolean;
   md5: string;
   modifiedMD5: string | null;
   uploadedAt: Date;
 }
 
 export interface DiskStorageOptions {
-  directory: ((req: Request, file: Express.Multer.File) => Promise<string> | string) | string;
-  filename: (req: Request, file: Express.Multer.File) => Promise<string> | string;
-  transformers?: ((req: Request, file: Express.Multer.File) => pump.Stream)[];
+  directory:
+    | ((req: Request, file: IncomingFile, filename: string) => Promise<string> | string)
+    | string;
+  filename: (req: Request, file: IncomingFile) => Promise<string> | string;
+  transformers?: ((req: Request, file: IncomingFile, filename: string) => pump.Stream)[];
 }
-
-export const createDiskStorage = (options: DiskStorageOptions): DiskStorage =>
-  new DiskStorage(options);
 
 export class DiskStorage implements StorageEngine {
   private readonly transformers = this.options.transformers || [];
 
   constructor(private readonly options: DiskStorageOptions) {}
 
-  async _handleFile(
-    req: Request,
-    file: Express.Multer.File,
-    callback: HandleFileCallback
-  ): Promise<void> {
+  async _handleFile(req: Request, file: IncomingFile, callback: HandleFileCallback): Promise<void> {
     try {
-      const [destination, filename] = await Promise.all([
+      const filename = await Promise.resolve(this.options.filename(req, file));
+      const destination =
         typeof this.options.directory === "string"
           ? this.options.directory
-          : this.options.directory(req, file),
-
-        this.options.filename(req, file)
-      ]);
-
-      const finalDestination = path.join(destination, filename);
+          : await this.options.directory(req, file, filename);
 
       await fs.promises.mkdir(destination, { recursive: true });
+
+      const finalDestination = path.join(destination, filename);
 
       const modifiedMD5 = this.transformers.length ? calculateMD5.createPassthrough() : null;
       const originalMD5 = calculateMD5.createPassthrough();
@@ -58,7 +55,7 @@ export class DiskStorage implements StorageEngine {
       const pipeline: pump.Stream[] = [file.stream, originalMD5.passthrough];
 
       if (modifiedMD5) {
-        pipeline.push(...this.transformers.map(transform => transform(req, file)));
+        pipeline.push(...this.transformers.map(transform => transform(req, file, filename)));
         pipeline.push(modifiedMD5.passthrough);
       }
 
@@ -68,7 +65,6 @@ export class DiskStorage implements StorageEngine {
         callback(error || null, {
           destination,
           filename,
-          isFolder: false,
           md5: originalMD5.hash.digest("hex"),
           modifiedMD5: modifiedMD5 ? modifiedMD5.hash.digest("hex") : null,
           path: finalDestination,
@@ -91,3 +87,5 @@ export class DiskStorage implements StorageEngine {
     fs.unlink(destination, callback);
   }
 }
+
+export const diskStorage = (options: DiskStorageOptions): DiskStorage => new DiskStorage(options);

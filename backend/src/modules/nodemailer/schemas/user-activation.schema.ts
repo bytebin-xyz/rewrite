@@ -55,7 +55,7 @@ export class UserActivation extends Document {
   })
   uid!: string;
 
-  resent!: () => Promise<void>;
+  resent!: () => Promise<this>;
 }
 
 export const UserActivationSchema = SchemaFactory.createForClass(UserActivation);
@@ -71,7 +71,12 @@ UserActivationSchema.pre<UserActivation>("save", function(next) {
     .catch(error => next(error));
 });
 
-UserActivationSchema.methods.resent = async function() {
+UserActivationSchema.methods.resent = async function(
+  this: UserActivation
+): Promise<UserActivation> {
   this.times_resent += 1;
+
   await this.save();
+
+  return this;
 };

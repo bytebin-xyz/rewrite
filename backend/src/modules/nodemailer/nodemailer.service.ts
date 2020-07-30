@@ -49,13 +49,11 @@ export class NodemailerService implements OnApplicationBootstrap {
     await this.verify();
   }
 
-  async deleteAllFor(
-    query: FilterQuery<EmailConfirmation | PasswordReset | UserActivation>
-  ): Promise<void> {
+  async deleteAllFor(uid: string): Promise<void> {
     await settle([
-      this.emailConfirmations.deleteMany(query),
-      this.passwordResets.deleteMany(query),
-      this.userActivations.deleteMany(query)
+      this.emailConfirmations.deleteMany({ uid }),
+      this.passwordResets.deleteMany({ uid }),
+      this.userActivations.deleteMany({ uid })
     ]);
   }
 

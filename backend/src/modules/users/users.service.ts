@@ -1,17 +1,20 @@
 import { CollationOptions, FilterQuery, Model } from "mongoose";
-import { plainToClass } from "class-transformer";
 
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { PartialUser } from "./schemas/partial-user.schema";
+import { EmailAlreadyExists, UsernameAlreadyExists } from "./users.errors";
+
 import { User } from "./schemas/user.schema";
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private readonly users: Model<User>) {}
 
-  create(email: string, password: string, username: string): Promise<User> {
+  async create(email: string, password: string, username: string): Promise<User> {
+    if (await this.users.exists({ email })) throw new EmailAlreadyExists(email);
+    if (await this.users.exists({ username })) throw new UsernameAlreadyExists(username);
+
     return new this.users({ displayName: username, email, password, username }).save();
   }
 
@@ -26,12 +29,5 @@ export class UsersService {
       .countDocuments(query)
       .collation(collation)
       .then(count => !!count);
-  }
-
-  async search(query: FilterQuery<PartialUser>): Promise<PartialUser | null> {
-    const user = await this.findOne(query);
-    if (user) return plainToClass(PartialUser, user.toObject());
-
-    return null;
   }
 }

@@ -3,6 +3,7 @@ import sharp from "sharp";
 
 import {
   Body,
+  ClassSerializerInterceptor,
   ConflictException,
   Controller,
   Delete,
@@ -11,16 +12,16 @@ import {
   Patch,
   Post,
   Session,
-  UploadedFile,
-  UseGuards,
   UnauthorizedException,
   UnsupportedMediaTypeException,
+  UploadedFile,
+  UseGuards,
   UseInterceptors
 } from "@nestjs/common";
 
 import { FileInterceptor } from "@nestjs/platform-express";
 
-import { Throttle, ThrottlerGuard } from "nestjs-throttler";
+import { Throttle } from "nestjs-throttler";
 
 import { AVATAR_PATH } from "./settings.constants";
 import { SettingsService } from "./settings.service";
@@ -35,7 +36,7 @@ import { CurrentUser } from "@/decorators/current-user.decorator";
 import { IsOkResponse } from "@/interfaces/is-ok.interface";
 import { ISession } from "@/interfaces/session.interface";
 
-import { AuthGuard } from "@/modules/auth/guards/auth.guard";
+import { AuthGuard } from "@/guards/auth.guard";
 
 import { User } from "@/modules/users/schemas/user.schema";
 
@@ -48,7 +49,6 @@ import { generateId } from "@/utils/generateId";
 
 @Controller("settings")
 @Throttle(30, 60)
-@UseGuards(ThrottlerGuard)
 export class SettingsController {
   constructor(
     private readonly auth: AuthService,
@@ -89,8 +89,8 @@ export class SettingsController {
       })
     })
   )
-  async changeAvatar(@CurrentUser() user: User, @UploadedFile() file: DiskFile): Promise<User> {
-    return this.settings.changeAvatar(file.filename, user);
+  async changeAvatar(@CurrentUser() user: User, @UploadedFile() avatar: DiskFile): Promise<User> {
+    return this.settings.changeAvatar(avatar.filename, user);
   }
 
   @Patch("change-display-name")
@@ -158,17 +158,18 @@ export class SettingsController {
     @CurrentUser() user: User,
     @Param("identifier") identifier: string
   ): Promise<void> {
-    await this.auth.logout(identifier, user);
+    await this.auth.logout(identifier, user.id);
   }
 
   @Delete("revoke-all-sessions")
   @UseGuards(AuthGuard)
   async revokeAllSessions(@CurrentUser() user: User, @Session() session: ISession): Promise<void> {
-    await this.auth.logoutAllDevices(user, session.identifier);
+    await this.auth.logoutAllDevices(user.id, session.identifier);
   }
 
   @Get("sessions")
   @UseGuards(AuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   async sessions(
     @CurrentUser() user: User,
     @Session() currentSession: ISession

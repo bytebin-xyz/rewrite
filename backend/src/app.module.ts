@@ -1,20 +1,20 @@
-import ms from "ms";
 import os from "os";
 import path from "path";
-import session from "express-session";
 
 import Joi from "@hapi/joi";
 
+import { APP_GUARD } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { Module } from "@nestjs/common";
-import { MongooseModule, getConnectionToken } from "@nestjs/mongoose";
-import { SessionModule, NestSessionOptions } from "nestjs-session";
-
-import { Connection } from "mongoose";
+import { Logger, Module, Global } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
+import { ThrottlerGuard, ThrottlerModule } from "nestjs-throttler";
+import { ThrottlerStorageRedisService } from "nestjs-throttler-storage-redis";
 
 import { AppController } from "./app.controller";
 
+import { AdminModule } from "./modules/admin/admin.module";
 import { AuthModule } from "./modules/auth/auth.module";
+import { BullBoardModule } from "./modules/bull-board/bull-board.module";
 import { ExplorerModule } from "./modules/explorer/explorer.module";
 import { FilesModule } from "./modules/files/files.module";
 import { HealthModule } from "./modules/health/health.module";
@@ -22,18 +22,18 @@ import { NodemailerModule } from "./modules/nodemailer/nodemailer.module";
 import { SettingsModule } from "./modules/settings/settings.module";
 import { UsersModule } from "./modules/users/users.module";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const MongoStore = require("connect-mongo")(session);
-
 const MIN_PORT = 1;
 const MAX_PORT = 65535;
 
 const kbToBytes = (kB: number) => kB / 1024;
 const mbToBytes = (mb: number) => mb * 1024 * 1024;
 
+@Global()
 @Module({
   imports: [
+    AdminModule,
     AuthModule,
+    BullBoardModule,
     ExplorerModule,
     FilesModule,
     HealthModule,
@@ -80,6 +80,12 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
 
         RECAPTCHA_SECRET: Joi.string().required(),
 
+        REDIS_HOST: Joi.string().default("localhost"),
+        REDIS_PORT: Joi.number()
+          .min(MIN_PORT)
+          .max(MAX_PORT)
+          .default(6379),
+
         SESSION_SECRET: Joi.string().required(),
 
         SMTP_FROM: Joi.string().required(),
@@ -93,18 +99,31 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
         SMTP_TLS: Joi.boolean().default(true),
         SMTP_USERNAME: Joi.string().required(),
 
+        THROTTLE_LIMIT: Joi.number()
+          .min(0)
+          .default(250),
+        THROTTLE_TTL: Joi.number()
+          .min(0)
+          .default(60),
+
         UPLOAD_DIRECTORY: Joi.string()
           .allow("")
           .default(os.tmpdir())
           .custom(value => {
             if (path.isAbsolute(value)) return value;
             throw new Error("upload directory path is not absolute!");
-          })
+          }),
+
+        UPLOAD_THROTTLE_LIMIT: Joi.number()
+          .min(0)
+          .default(100),
+        UPLOAD_THROTTLE_TTL: Joi.number()
+          .min(0)
+          .default(60)
       })
     }),
 
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         const dbName = config.get("MONGO_DB_NAME");
@@ -127,7 +146,6 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
     }),
 
     NodemailerModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         auth: {
@@ -142,27 +160,26 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
       })
     }),
 
-    SessionModule.forRootAsync({
-      imports: [ConfigModule, MongooseModule],
-      inject: [ConfigService, getConnectionToken()],
-      useFactory: (config: ConfigService, mongooseConnection: Connection): NestSessionOptions => ({
-        session: {
-          cookie: {
-            maxAge: ms("7d"),
-            secure: process.env.NODE_ENV === "production"
-          },
-          resave: false,
-          saveUninitialized: false,
-          secret: config.get("SESSION_SECRET") as string,
-          store: new MongoStore({
-            mongooseConnection,
-            stringify: false
-          })
-        }
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        limit: config.get("THROTTLE_LIMIT"),
+        ttl: config.get("THROTTLE_TTL"),
+        storage: new ThrottlerStorageRedisService({
+          host: config.get("REDIS_HOST"),
+          port: config.get("REDIS_PORT")
+        })
       })
     })
   ],
+  exports: [Logger],
   controllers: [AppController],
-  providers: []
+  providers: [
+    Logger,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
+  ]
 })
 export class AppModule {}

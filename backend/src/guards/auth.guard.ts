@@ -3,12 +3,13 @@ import { getClientIp } from "request-ip";
 import {
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
   Injectable,
-  UnauthorizedException
+  InternalServerErrorException
 } from "@nestjs/common";
 
 import { IRequest } from "@/interfaces/request.interface";
+
+import { UserNotActivated, UserNotLoggedIn } from "@/modules/auth/auth.errors";
 
 import { UsersService } from "@/modules/users/users.service";
 
@@ -18,26 +19,15 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<IRequest>();
+    if (!req.session) throw new InternalServerErrorException("Failed to get session data!");
 
-    if (!req.session || !req.session.uid) {
-      throw new UnauthorizedException("You are not logged in!");
-    }
+    const user = req.session.uid ? await this.users.findOne({ id: req.session.uid }) : null;
 
-    const user = await this.users.findOne({ id: req.session.uid });
-
-    if (!user || user.deleted) {
-      req.session.destroy(() => undefined);
-      throw new UnauthorizedException("You are not logged in!");
-    }
-
-    if (!user.activated) {
-      req.session.destroy(() => undefined);
-      throw new ForbiddenException("Please activate your account first!");
-    }
+    if (!user) throw new UserNotLoggedIn();
+    if (!user.activated) throw new UserNotActivated();
 
     req.session.ip = getClientIp(req);
     req.session.lastUsed = new Date();
-
     req.user = user;
 
     return true;

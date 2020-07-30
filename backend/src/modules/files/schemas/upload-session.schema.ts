@@ -1,25 +1,33 @@
 import ms from "ms";
 
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory, raw } from "@nestjs/mongoose";
+
+import { plainToClass } from "class-transformer";
+
+import { UploadSessionDto } from "../dto/upload-session.dto";
 
 import { generateId } from "@/utils/generateId";
-import { hideSchemaProperty } from "@/utils/hideSchemaProperty";
+import { pathFromString } from "@/utils/pathFromString";
 
 @Schema({
   id: false,
   timestamps: true,
   toJSON: {
-    transform: hideSchemaProperty(["_id", "__v"])
+    virtuals: true
   },
   toObject: {
-    transform: hideSchemaProperty(["_id", "__v"])
+    virtuals: true
   }
 })
-export class UploadSession extends Document {
+export class UploadSession extends Document implements UploadSessionDto {
   createdAt!: Date;
   updatedAt!: Date;
+
+  // Virtuals
+  finished!: boolean;
+  lastChunkSize!: number;
 
   @Prop({
     default: 5 * 1024 * 1024,
@@ -27,22 +35,26 @@ export class UploadSession extends Document {
   })
   chunkSize!: number;
 
+  // Automatically calculated in pre save hook.
   @Prop({
-    min: 1,
-    required: true
+    min: 1
   })
   chunksTotal!: number;
 
   @Prop({
-    default: 0,
-    min: 0
+    default: () => [],
+    min: 0,
+    type: [Number]
   })
-  chunksUploaded!: number;
+  chunksUploaded!: Types.Array<number>;
 
-  @Prop({
-    default: (): Date => new Date()
-  })
-  commitedAt!: Date;
+  @Prop(
+    raw({
+      default: null,
+      type: Date
+    })
+  )
+  commitedAt!: Date | null;
 
   @Prop({
     default: () => new Date(Date.now() + ms("2d")),
@@ -67,6 +79,12 @@ export class UploadSession extends Document {
   })
   id!: string;
 
+  // Automatically determined in pre save hook.
+  @Prop({
+    trim: true
+  })
+  partialPath!: string;
+
   @Prop({
     min: 1,
     required: true
@@ -81,6 +99,9 @@ export class UploadSession extends Document {
     trim: true
   })
   uid!: string;
+
+  toDto!: () => UploadSessionDto;
+  updateChunksUploaded!: () => Promise<this>;
 }
 
 export const UploadSessionSchema = SchemaFactory.createForClass(UploadSession);
@@ -90,8 +111,41 @@ UploadSessionSchema.pre<UploadSession>("save", function(next) {
 
   generateId(8)
     .then(id => {
+      this.chunksTotal = Math.ceil(this.size / this.chunkSize);
       this.id = id;
+      this.partialPath = pathFromString(id);
+
       next();
     })
     .catch(error => next(error));
 });
+
+UploadSessionSchema.virtual("finished").get(function(this: UploadSession): boolean {
+  for (let i = 0; i < this.chunksTotal; i += 1) {
+    if (!this.chunksUploaded.includes(i)) return false;
+  }
+  
+  return true;
+});
+
+UploadSessionSchema.virtual("lastChunkSize").get(function(this: UploadSession): number {
+  return this.size - Math.floor(this.size / this.chunkSize) * this.chunkSize;
+});
+
+UploadSessionSchema.methods.toDto = function(this: UploadSession): UploadSessionDto {
+  return plainToClass(UploadSessionDto, this.toJSON(), {
+    excludePrefixes: ["_"]
+  });
+};
+
+UploadSessionSchema.methods.updateChunksUploaded = async function(
+  this: UploadSession,
+  chunkIndex: number
+): Promise<UploadSession> {
+  if (this.chunksUploaded.length < this.chunksTotal) {
+    this.chunksUploaded.addToSet(chunkIndex);
+    await this.save();
+  }
+
+  return this;
+};
