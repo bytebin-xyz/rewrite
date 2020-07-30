@@ -112,14 +112,7 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
           .custom(value => {
             if (path.isAbsolute(value)) return value;
             throw new Error("upload directory path is not absolute!");
-          }),
-
-        UPLOAD_THROTTLE_LIMIT: Joi.number()
-          .min(0)
-          .default(100),
-        UPLOAD_THROTTLE_TTL: Joi.number()
-          .min(0)
-          .default(60)
+          })
       })
     }),
 
