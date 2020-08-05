@@ -16,7 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
+    - working-directory: backend
+      
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2.1.1
       with:
@@ -34,13 +35,15 @@ jobs:
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-yarn-
-          
-    - if: steps.yarn-cache.outputs.cache-hit != 'true'
-      run: yarn install
-
-    - run: yarn doc
+        
+    - name: Install project dependencies
+      if: steps.yarn-cache.outputs.cache-hit != 'true' # Over here!
+      run: yarn
+  
+    - name: Generate documentation
+      run: yarn doc
     
-    - name: deploy
+    - name: Deploy to Github Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
