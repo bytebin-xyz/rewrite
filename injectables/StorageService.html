@@ -1,0 +1,794 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Bytebin</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/postmark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">Bytebin</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>StorageService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/storage/storage.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#engine">engine</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_createBusboy">_createBusboy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#delete">delete</a>
+                            </li>
+                            <li>
+                                <a href="#onApplicationBootstrap">onApplicationBootstrap</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#read">read</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#write">write</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(options: <a href="../interfaces/StorageOptions.html">StorageOptions</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/modules/storage/storage.service.ts:39</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>options</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/StorageOptions.html" target="_self" >StorageOptions</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_createBusboy"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            _createBusboy
+                        </b>
+                        <a href="#_createBusboy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_createBusboy(req: Request, limits)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="148"
+                            class="link-to-prism">src/modules/storage/storage.service.ts:148</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                            <code>Request</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>limits</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>busboy.Busboy</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="delete"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            delete
+                        </b>
+                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>delete(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="51"
+                            class="link-to-prism">src/modules/storage/storage.service.ts:51</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onApplicationBootstrap"></a>
+                    <span class="name">
+                        <b>
+                            onApplicationBootstrap
+                        </b>
+                        <a href="#onApplicationBootstrap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onApplicationBootstrap()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="44"
+                            class="link-to-prism">src/modules/storage/storage.service.ts:44</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="read"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            read
+                        </b>
+                        <a href="#read"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>read(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">src/modules/storage/storage.service.ts:55</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;Readable&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="write"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            write
+                        </b>
+                        <a href="#write"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>write(req: Request, options: <a href="../interfaces/CreateFileOptions.html">CreateFileOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">src/modules/storage/storage.service.ts:59</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                            <code>Request</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/CreateFileOptions.html" target="_self" >CreateFileOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/UploadedFile.html" target="_self" >Promise&lt;UploadedFile[]&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="engine"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            engine</b>
+                            <a href="#engine"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/StorageEngine.html" target="_self" >StorageEngine</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>new DiskStorage({ directory: os.tmpdir() })</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/modules/storage/storage.service.ts:42</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import os from &quot;os&quot;;
+import pump from &quot;pump&quot;;
+
+import Busboy from &quot;busboy&quot;;
+
+import { Inject, Injectable, OnApplicationBootstrap } from &quot;@nestjs/common&quot;;
+
+import { Readable } from &quot;stream&quot;;
+import { Request } from &quot;express&quot;;
+
+import { STORAGE_MODULE_OPTIONS } from &quot;./storage.constants&quot;;
+
+import {
+  FileTooLarge,
+  NoFilesUploaded,
+  TooManyFields,
+  TooManyFiles,
+  TooManyParts,
+  UnsupportedContentType
+} from &quot;./storage.errors&quot;;
+
+import { DiskStorage } from &quot;./engines/disk.engine&quot;;
+import { GoogleCloudEngine } from &quot;./engines/google-cloud.engine&quot;;
+
+import { CreateFileOptions } from &quot;./interfaces/create-file-options.interface&quot;;
+import { FileFilterCallback } from &quot;./interfaces/file-filter-callback.interface&quot;;
+import { FileMetadata } from &quot;./interfaces/file-metadata.interface&quot;;
+import { StorageEngine } from &quot;./interfaces/storage-engine.interface&quot;;
+import { StorageOptions } from &quot;./interfaces/storage-module-options.interface&quot;;
+import { UploadedFile } from &quot;./interfaces/uploaded-file.interface&quot;;
+
+import { Counter } from &quot;@/utils/counter&quot;;
+import { StreamMeter } from &quot;@/utils/stream-meter&quot;;
+
+import { generateId } from &quot;@/utils/generateId&quot;;
+import { settle } from &quot;@/utils/settle&quot;;
+
+@Injectable()
+export class StorageService implements OnApplicationBootstrap {
+  constructor(@Inject(STORAGE_MODULE_OPTIONS) private readonly options: StorageOptions) {}
+
+  private engine: StorageEngine &#x3D; new DiskStorage({ directory: os.tmpdir() });
+
+  onApplicationBootstrap(): void {
+    const { disk, gcloud } &#x3D; this.options.engine;
+
+    if (disk) this.engine &#x3D; new DiskStorage(disk);
+    else if (gcloud) this.engine &#x3D; new GoogleCloudEngine(gcloud);
+  }
+
+  async delete(id: string): Promise&lt;void&gt; {
+    return this.engine.delete(id);
+  }
+
+  async read(id: string): Promise&lt;Readable&gt; {
+    return this.engine.createReadable(id);
+  }
+
+  async write(req: Request, options: CreateFileOptions): Promise&lt;UploadedFile[]&gt; {
+    const busboy &#x3D; this._createBusboy(req, options.limits);
+
+    const files: UploadedFile[] &#x3D; [];
+
+    const filter &#x3D; (metadata: FileMetadata, callback: FileFilterCallback) &#x3D;&gt; {
+      if (options.filter) options.filter(req, metadata, callback);
+      else callback(null, true);
+    };
+
+    let aborting &#x3D; false;
+    let finished &#x3D; false;
+
+    return new Promise((resolve, reject) &#x3D;&gt; {
+      const writeCounter &#x3D; new Counter();
+
+      const abort &#x3D; (error: Error) &#x3D;&gt; {
+        if (aborting) return;
+
+        aborting &#x3D; true;
+
+        writeCounter.whenItEqualsTo(0, () &#x3D;&gt; {
+          settle(files.map(file &#x3D;&gt; this.delete(file.id)))
+            .then(() &#x3D;&gt; reject(error))
+            .catch(reject);
+        });
+      };
+
+      const done &#x3D; () &#x3D;&gt; {
+        if (!aborting &amp;&amp; finished &amp;&amp; writeCounter.is(0)) {
+          if (!files.length) reject(new NoFilesUploaded());
+          else resolve(files);
+        }
+      };
+
+      busboy.on(&quot;file&quot;, (fieldname, readable, filename, encoding, mimetype) &#x3D;&gt; {
+        if (fieldname !&#x3D;&#x3D; options.field || !filename) return readable.resume();
+
+        const metadata &#x3D; { encoding, fieldname, filename, mimetype };
+
+        filter(metadata, async (error, accept) &#x3D;&gt; {
+          if (error) return abort(error);
+          if (!accept) return readable.resume();
+
+          writeCounter.increment();
+
+          const id &#x3D; await generateId(8);
+          const writable &#x3D; await this.engine.createWritable(id);
+
+          const meter &#x3D; new StreamMeter();
+          const pipeline: pump.Stream[] &#x3D; [readable, meter];
+
+          if (options.transformers) {
+            for (const transformer of options.transformers) {
+              const stream &#x3D; transformer(req, metadata);
+              if (stream) pipeline.push(stream);
+            }
+          }
+
+          pipeline.push(writable);
+
+          readable.on(&quot;limit&quot;, () &#x3D;&gt; abort(new FileTooLarge(filename)));
+
+          pump(pipeline, (err?: Error) &#x3D;&gt; {
+            if (err) abort(err);
+
+            files.push({ ...metadata, id, size: meter.size });
+
+            writeCounter.decrement();
+
+            done();
+          });
+        });
+      });
+
+      busboy
+        .on(&quot;error&quot;, abort)
+        .on(&quot;fieldsLimit&quot;, () &#x3D;&gt; abort(new TooManyFields()))
+        .on(&quot;filesLimit&quot;, () &#x3D;&gt; abort(new TooManyFiles()))
+        .on(&quot;partsLimit&quot;, () &#x3D;&gt; abort(new TooManyParts()))
+        .on(&quot;finish&quot;, () &#x3D;&gt; {
+          finished &#x3D; true;
+          done();
+        });
+
+      req.pipe(busboy);
+    });
+  }
+
+  private _createBusboy(req: Request, limits: busboy.BusboyConfig[&quot;limits&quot;]): busboy.Busboy {
+    try {
+      return new Busboy({ headers: req.headers, limits });
+    } catch (error) {
+      throw new UnsupportedContentType();
+    }
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'StorageService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
