@@ -5,7 +5,7 @@ import { InjectConnection } from "@nestjs/mongoose";
 
 import { ISession } from "@/interfaces/session.interface";
 
-import { NodemailerService } from "@/modules/nodemailer/nodemailer.service";
+import { MailerService } from "@/modules/mailer/mailer.service";
 import { UsersService } from "@/modules/users/users.service";
 
 import { User } from "@/modules/users/schemas/user.schema";
@@ -20,7 +20,7 @@ export class AuthService {
   constructor(
     @InjectConnection()
     private readonly connection: Connection,
-    private readonly nodemailer: NodemailerService,
+    private readonly mailer: MailerService,
     private readonly users: UsersService
   ) {}
 
@@ -28,7 +28,7 @@ export class AuthService {
     const user = await this.users.findOne({ email });
     if (!user) return false;
 
-    await this.nodemailer.sendPasswordReset(user);
+    await this.mailer.sendPasswordReset(user);
 
     return true;
   }
@@ -64,24 +64,19 @@ export class AuthService {
     });
   }
 
-  async register(email: string, password: string, username: string): Promise<User> {
+  async register(email: string, password: string, username: string): Promise<void> {
     const user = await this.users.create(email, password, username);
-
-    await this.nodemailer.sendUserActivation(user);
-
-    return user;
+    await this.mailer.sendUserActivation(user);
   }
 
-  async resetPassword(newPassword: string, token: string): Promise<boolean> {
-    const passwordReset = await this.nodemailer.findPasswordReset({ token });
+  async resetPassword(newPassword: string, token: string): Promise<void> {
+    const passwordReset = await this.mailer.findPasswordReset({ token });
     if (!passwordReset) throw new InvalidPasswordResetLink();
 
     const user = await this.users.findOne({ id: passwordReset.id });
     if (!user) throw new InvalidPasswordResetLink();
 
     await settle([this.logoutAllDevices(user.id), user.changePassword(newPassword)]);
-    await settle([this.nodemailer.sendPasswordChanged(user), passwordReset.deleteOne()]);
-
-    return true;
+    await settle([this.mailer.sendPasswordChanged(user), passwordReset.deleteOne()]);
   }
 }

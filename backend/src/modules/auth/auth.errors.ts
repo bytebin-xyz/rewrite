@@ -1,5 +1,11 @@
 import { BadRequestException, ForbiddenException, UnauthorizedException } from "@nestjs/common";
 
+export class IncorrectPassword extends UnauthorizedException {
+  constructor() {
+    super("Your password is incorrect!");
+  }
+}
+
 export class InvalidCredentials extends UnauthorizedException {
   constructor() {
     super("Invalid login credentials!");

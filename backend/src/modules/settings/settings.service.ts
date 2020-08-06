@@ -1,18 +1,22 @@
-import fs from "fs";
-import path from "path";
-
 import { Injectable } from "@nestjs/common";
-
-import { AVATAR_PATH } from "./settings.constants";
 
 import { AuthService } from "@/modules/auth/auth.service";
 import { FilesService } from "@/modules/files/files.service";
-import { NodemailerService } from "@/modules/nodemailer/nodemailer.service";
+import { MailerService } from "@/modules/mailer/mailer.service";
 import { UsersService } from "@/modules/users/users.service";
+
+import { InvalidEmailConfirmationLink, InvalidUserActivationLink } from "./settings.errors";
+
+import {
+  DisplayNameAlreadyExists,
+  EmailAlreadyExists,
+  UserNotFound
+} from "@/modules/users/users.errors";
+
+import { IncorrectPassword } from "@/modules/auth/auth.errors";
 
 import { User } from "@/modules/users/schemas/user.schema";
 
-import { fileAccessibile } from "@/utils/fileAccessibile";
 import { settle } from "@/utils/settle";
 
 @Injectable()
@@ -20,87 +24,91 @@ export class SettingsService {
   constructor(
     private readonly auth: AuthService,
     private readonly files: FilesService,
-    private readonly nodemailer: NodemailerService,
+    private readonly mailer: MailerService,
     private readonly users: UsersService
   ) {}
 
-  async activate(token: string): Promise<boolean> {
-    const activation = await this.nodemailer.findUserActivation({ token });
-    if (!activation) return false;
+  async activate(token: string): Promise<void> {
+    const activation = await this.mailer.findUserActivation({ token });
+    if (!activation) throw new InvalidUserActivationLink();
 
     const user = await this.users.findOne({ id: activation.uid });
-    if (!user) return false;
+    if (!user) throw new InvalidUserActivationLink();
 
     await user.activate();
     await activation.deleteOne();
-
-    return true;
   }
 
-  async changeAvatar(filename: string, user: User): Promise<User> {
-    await this.deleteAvatar(user);
+  async changeAvatar(newAvatarId: string, user: User): Promise<User> {
+    if (user.avatar) {
+      await this.files.delete(user.avatar, user.id).catch(() => undefined);
+    }
 
-    return user.changeAvatar(filename);
+    await user.changeAvatar(newAvatarId);
+
+    return user;
+  }
+
+  async changeDisplayName(newDisplayName: string, user: User): Promise<User> {
+    if (await this.users.exists({ displayName: newDisplayName })) {
+      throw new DisplayNameAlreadyExists(newDisplayName);
+    }
+
+    return user.changeDisplayName(newDisplayName);
   }
 
   async changeEmail(newEmail: string, user: User): Promise<void> {
-    await this.nodemailer.sendEmailConfirmation(newEmail, user);
+    if (await this.users.exists({ email: newEmail })) {
+      throw new EmailAlreadyExists(newEmail);
+    }
+
+    await this.mailer.sendEmailConfirmation(newEmail, user);
   }
 
-  async changePassword(newPassword: string, user: User): Promise<void> {
+  async changePassword(oldPassword: string, newPassword: string, user: User): Promise<void> {
+    if (!(await user.comparePassword(oldPassword))) {
+      throw new IncorrectPassword();
+    }
+
     await user.changePassword(newPassword);
-    await this.nodemailer.sendPasswordChanged(user);
+    await this.mailer.sendPasswordChanged(user);
   }
 
-  async confirmEmail(token: string): Promise<boolean> {
-    const confirmation = await this.nodemailer.findEmailConfirmation({ token });
-    if (!confirmation) return false;
+  async confirmEmail(token: string): Promise<void> {
+    const confirmation = await this.mailer.findEmailConfirmation({ token });
+    if (!confirmation) throw new InvalidEmailConfirmationLink();
 
     const user = await this.users.findOne({ id: confirmation.uid });
-    if (!user) return false;
+    if (!user) throw new InvalidEmailConfirmationLink();
 
     if (await this.users.exists({ email: confirmation.newEmail })) {
       await confirmation.deleteOne();
-      return false;
+      throw new InvalidEmailConfirmationLink();
     }
 
     const oldUser = user.toObject();
 
     await user.changeEmail(confirmation.newEmail);
-    await settle([confirmation.deleteOne(), this.nodemailer.sendEmailChanged(oldUser)]);
-
-    return true;
+    await settle([confirmation.deleteOne(), this.mailer.sendEmailChanged(oldUser)]);
   }
 
-  async deleteAccount(user: User): Promise<void> {
+  async deleteAccount(password: string, user: User): Promise<void> {
+    if (!(await user.comparePassword(password))) throw new IncorrectPassword();
+
     await settle([
-      this.deleteAvatar(user),
       this.auth.logoutAllDevices(user.id),
       this.files.deleteAllFor(user.id),
-      this.nodemailer.deleteAllFor(user.id)
+      this.mailer.deleteAllFor(user.id)
     ]);
 
     await user.delete();
   }
 
-  async deleteAvatar(user: User): Promise<void> {
-    const location = user.avatar ? path.join(AVATAR_PATH, user.avatar) : null;
-    if (!location) return;
+  async resendUserActivationEmail(user: User): Promise<void> {
+    const activation = await this.mailer.findUserActivation({ uid: user.id });
+    if (!activation) throw new UserNotFound(user.username);
 
-    if (await fileAccessibile(location)) {
-      await fs.promises.unlink(location);
-    }
-
-    await user.deleteAvatar();
-  }
-
-  async resendUserActivationEmail(user: User): Promise<boolean> {
-    const activation = await this.nodemailer.findUserActivation({ uid: user.id });
-    if (!activation) return false;
-
-    await this.nodemailer.sendUserActivation(user);
+    await this.mailer.sendUserActivation(user);
     await activation.resent();
-
-    return true;
   }
 }

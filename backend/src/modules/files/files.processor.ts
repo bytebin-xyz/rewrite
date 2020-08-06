@@ -1,22 +1,19 @@
-import fs from "fs";
-
 import { Inject, Injectable, Logger, LoggerService } from "@nestjs/common";
 import { OnQueueError, OnQueueFailed, OnQueueStalled, Process, Processor } from "@nestjs/bull";
 
 import { Job } from "bull";
 
-import { FilesService } from "./files.service";
-
 import { DeleteFileJob } from "./jobs/delete-file.job";
+
+import { StorageService } from "@/modules/storage/storage.service";
 
 @Injectable()
 @Processor("files")
 export class FilesProcessor {
   constructor(
-    private readonly files: FilesService,
-
     @Inject(Logger)
-    private readonly logger: LoggerService
+    private readonly logger: LoggerService,
+    private readonly storage: StorageService
   ) {}
 
   @OnQueueError()
@@ -36,17 +33,15 @@ export class FilesProcessor {
 
   @Process("delete")
   async handleFileDeletion(job: Job<DeleteFileJob>): Promise<void> {
-    const { filename, id, partialPath } = job.data;
-    const fullPath = this.files.getFullPath(partialPath);
+    this._debug(`[Job ${job.id}] Deleting ${job.data.fileId}`);
 
-    this._debug(`[Job ${job.id}] Deleting ${filename} (${id}) from ${fullPath}`);
+    await this.storage.delete(job.data.fileId);
+    await job.progress(100);
 
-    await fs.promises.unlink(fullPath).then(() => job.progress(100));
-
-    this._debug(`[Job ${job.id}] Successfully deleted ${filename} (${id}) from ${fullPath}`);
+    this._debug(`[Job ${job.id}] Successfully deleted ${job.data.fileId}`);
   }
 
   private _debug(message: string) {
-    this.logger.debug && this.logger.debug(message, "FilesProcessor");
+    this.logger.debug && this.logger.debug(message, FilesProcessor.name);
   }
 }

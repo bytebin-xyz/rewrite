@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Headers,
+  Param,
   Post,
   Req,
   Session,
@@ -23,12 +25,15 @@ import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { ResetPasswordDto } from "./dto/reset-password.dto";
+import { SessionDto } from "./dto/session.dto";
 
+import { CurrentUser } from "@/decorators/current-user.decorator";
 import { RecaptchaAction } from "@/decorators/recaptcha-action.decorator";
 import { RecaptchaScore } from "@/decorators/recaptcha-score.decorator";
 
 import { ISession } from "@/interfaces/session.interface";
 
+import { AuthGuard } from "@/guards/auth.guard";
 import { RecaptchaGuard } from "@/guards/recaptcha.guard";
 
 import { UsersService } from "@/modules/users/users.service";
@@ -87,12 +92,35 @@ export class AuthController {
   @RecaptchaAction("register")
   @RecaptchaScore(0.8)
   @UseGuards(RecaptchaGuard)
-  async register(@Body() { email, password, username }: RegisterDto): Promise<void> {
-    await this.auth.register(email, password, username);
+  register(@Body() { email, password, username }: RegisterDto): Promise<void> {
+    return this.auth.register(email, password, username);
   }
 
   @Post("reset-password")
-  async resetPassword(@Body() { newPassword, token }: ResetPasswordDto): Promise<void> {
-    await this.auth.resetPassword(newPassword, token);
+  resetPassword(@Body() { newPassword, token }: ResetPasswordDto): Promise<void> {
+    return this.auth.resetPassword(newPassword, token);
+  }
+
+  @Delete("revoke-session/:identifier")
+  @UseGuards(AuthGuard)
+  revokeSession(@CurrentUser() user: User, @Param("identifier") identifier: string): Promise<void> {
+    return this.auth.logout(identifier, user.id);
+  }
+
+  @Delete("revoke-all-sessions")
+  @UseGuards(AuthGuard)
+  revokeAllSessions(@CurrentUser() user: User, @Session() session: ISession): Promise<void> {
+    return this.auth.logoutAllDevices(user.id, session.identifier);
+  }
+
+  @Get("sessions")
+  @UseGuards(AuthGuard)
+  sessions(@CurrentUser() user: User, @Session() currentSession: ISession): Promise<SessionDto[]> {
+    return this.auth.getSessions(user.id).then(sessions =>
+      sessions.map(session => ({
+        ...session,
+        isCurrent: session.identifier === currentSession.identifier
+      }))
+    );
   }
 }

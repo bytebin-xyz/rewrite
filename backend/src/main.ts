@@ -2,7 +2,6 @@ import connectMongo from "connect-mongo";
 import helmet from "helmet";
 import morgan from "morgan";
 import ms from "ms";
-import path from "path";
 import session from "express-session";
 import winston from "winston";
 
@@ -20,8 +19,6 @@ import { getConnectionToken } from "@nestjs/mongoose";
 import { AppModule } from "./app.module";
 
 import { InternalServerErrorExceptionFilter } from "./exceptions/internal-server-error.exception";
-
-declare const module: any;
 
 const logger = WinstonModule.createLogger({
   transports: [
@@ -52,11 +49,6 @@ const MongoStore = connectMongo(session);
   const isDev = config.get<string>("NODE_ENV") === "development";
   const port = config.get("PORT") as number;
 
-  if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
-
   app.enableCors({
     credentials: true,
     origin: `${isDev ? "http" : "https"}://${config.get("FRONTEND_DOMAIN")}`
@@ -64,13 +56,7 @@ const MongoStore = connectMongo(session);
 
   app
     .useGlobalFilters(new InternalServerErrorExceptionFilter(logger))
-    .useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        whitelist: true
-      })
-    )
-    .useStaticAssets(path.join(__dirname, "../public"));
+    .useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
   app
     .use(
@@ -95,7 +81,7 @@ const MongoStore = connectMongo(session);
           stringify: false
         })
       })
-    )
+    );
 
   app.listen(port);
 })();

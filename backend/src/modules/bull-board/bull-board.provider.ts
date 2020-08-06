@@ -8,9 +8,13 @@ import { setQueues } from "bull-board";
 @Injectable()
 export class BullBoardProvider {
   constructor(
+    // From nodemailer global module
+    @InjectQueue("emails")
+    private readonly emailsQueue: Queue,
+
     @InjectQueue("files")
     private readonly filesQueue: Queue
   ) {
-    setQueues([this.filesQueue]);
+    setQueues([this.emailsQueue, this.filesQueue]);
   }
 }

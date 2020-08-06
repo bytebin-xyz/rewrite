@@ -1,11 +1,10 @@
-import os from "os";
 import path from "path";
 
 import Joi from "@hapi/joi";
 
 import { APP_GUARD } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { Logger, Module, Global } from "@nestjs/common";
+import { Global, Logger, Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ThrottlerGuard, ThrottlerModule } from "nestjs-throttler";
 import { ThrottlerStorageRedisService } from "nestjs-throttler-storage-redis";
@@ -15,10 +14,9 @@ import { AppController } from "./app.controller";
 import { AdminModule } from "./modules/admin/admin.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { BullBoardModule } from "./modules/bull-board/bull-board.module";
-import { ExplorerModule } from "./modules/explorer/explorer.module";
 import { FilesModule } from "./modules/files/files.module";
 import { HealthModule } from "./modules/health/health.module";
-import { NodemailerModule } from "./modules/nodemailer/nodemailer.module";
+import { MailerModule } from "./modules/mailer/mailer.module";
 import { SettingsModule } from "./modules/settings/settings.module";
 import { UsersModule } from "./modules/users/users.module";
 
@@ -34,7 +32,6 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
     AdminModule,
     AuthModule,
     BullBoardModule,
-    ExplorerModule,
     FilesModule,
     HealthModule,
     SettingsModule,
@@ -42,7 +39,6 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
 
     ConfigModule.forRoot({
       envFilePath: `.env.development`,
-      isGlobal: true,
       validationSchema: Joi.object({
         BACKEND_DOMAIN: Joi.string().required(),
         FRONTEND_DOMAIN: Joi.string().required(),
@@ -106,9 +102,8 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
           .min(0)
           .default(60),
 
-        UPLOAD_DIRECTORY: Joi.string()
-          .allow("")
-          .default(os.tmpdir())
+        UPLOADS_DIRECTORY: Joi.string()
+          .required()
           .custom(value => {
             if (path.isAbsolute(value)) return value;
             throw new Error("upload directory path is not absolute!");
@@ -138,7 +133,7 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
       }
     }),
 
-    NodemailerModule.forRootAsync({
+    MailerModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         auth: {
@@ -165,7 +160,7 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
       })
     })
   ],
-  exports: [Logger],
+  exports: [ConfigModule, Logger, MailerModule],
   controllers: [AppController],
   providers: [
     Logger,

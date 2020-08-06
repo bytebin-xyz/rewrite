@@ -4,11 +4,15 @@ export class FileDto {
   createdAt!: Date;
 
   filename!: string;
+  
+  folder!: string | null;
+
+  @Exclude()
+  hidden!: boolean;
 
   id!: string;
 
-  @Exclude()
-  partialPath!: string;
+  public!: boolean;
 
   size!: number;
 

@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, MinLength } from "class-validator";
 
-import { PasswordReset } from "@/modules/nodemailer/schemas/password-reset.schema";
+import { PasswordReset } from "~/src/modules/mailer/schemas/password-reset.schema";
 import { User } from "@/modules/users/schemas/user.schema";
 
 export class ResetPasswordDto {

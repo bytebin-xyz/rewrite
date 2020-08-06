@@ -12,16 +12,16 @@ export class FileNotFound extends NotFoundException {
   }
 }
 
-export class UploadSessionNotFound extends NotFoundException {
-  constructor(id: string) {
-    super(`Upload session "${id}" does not exists!`);
-  }
-}
-
 export class MaxActiveUploadSessionsError extends ForbiddenException {
   constructor() {
     super(
       "You have exceeded the maximum amount of active upload sessions. Please commit or destroy your existing upload sessions first before creating a new one!"
     );
+  }
+}
+
+export class UploadSessionNotFound extends NotFoundException {
+  constructor(id: string) {
+    super(`Upload session "${id}" does not exists!`);
   }
 }

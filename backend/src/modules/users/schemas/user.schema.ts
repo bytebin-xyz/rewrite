@@ -113,14 +113,13 @@ export class User extends Document implements UserDto {
   username!: string;
 
   activate!: () => Promise<this>;
-  changeAvatar!: (filename: string) => Promise<this>;
+  changeAvatar!: (newAvatarId: string) => Promise<this>;
   changeDisplayName!: (newDisplayName: string) => Promise<this>;
   changeEmail!: (newEmail: string) => Promise<this>;
   changePassword!: (newPassword: string) => Promise<this>;
   comparePassword!: (password: string) => Promise<boolean>;
   delete!: () => Promise<this>;
   deleteAvatar!: () => Promise<this>;
-  makeAdmin!: () => Promise<this>;
   toDto!: <T = UserDto>(cls?: ClassType<T>) => T;
 }
 
@@ -138,7 +137,8 @@ UserSchema.pre<User>("save", function(next) {
 });
 
 UserSchema.pre<User>("save", function(next) {
-  if (!this.isModified("password") || this.password == null) return next();
+  // Password can be null if user is deleted
+  if (!this.password || !this.isModified("password")) return next();
 
   bcrypt.hash(this.password, 10, (error, hashed) => {
     if (error) return next(error);
@@ -159,9 +159,9 @@ UserSchema.methods.activate = async function(this: User): Promise<User> {
   return this;
 };
 
-UserSchema.methods.changeAvatar = async function(this: User, filename: string): Promise<User> {
-  if (this.avatar !== filename) {
-    this.avatar = filename;
+UserSchema.methods.changeAvatar = async function(this: User, newAvatarId: string): Promise<User> {
+  if (this.avatar !== newAvatarId) {
+    this.avatar = newAvatarId;
     await this.save();
   }
 
@@ -219,15 +219,6 @@ UserSchema.methods.delete = async function(this: any): Promise<User> {
 UserSchema.methods.deleteAvatar = async function(this: User): Promise<User> {
   if (this.avatar) {
     this.avatar = null;
-    await this.save();
-  }
-
-  return this;
-};
-
-UserSchema.methods.makeAdmin = async function(this: User): Promise<User> {
-  if (!this.admin) {
-    this.admin = true;
     await this.save();
   }
 

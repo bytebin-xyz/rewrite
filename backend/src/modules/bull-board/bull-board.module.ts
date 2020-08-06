@@ -6,7 +6,6 @@ import { FilesModule } from "@/modules/files/files.module";
 
 @Module({
   imports: [FilesModule],
-  exports: [],
   providers: [BullBoardProvider]
 })
 export class BullBoardModule {}
