@@ -5,7 +5,7 @@
       class="avatar__img"
       :src="
         $accessor.user.avatar
-          ? `${$axios.defaults.baseURL}/avatars/${$accessor.user.avatar}`
+          ? `${$axios.defaults.baseURL}/files/download/${$accessor.user.avatar}`
           : `https://avatars.dicebear.com/api/jdenticon/${$accessor.user.uid}.svg`
       "
     />

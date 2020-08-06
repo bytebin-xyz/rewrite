@@ -167,7 +167,7 @@ export default class Session extends Vue {
     @apply flex justify-center;
     @apply mr-5;
 
-    width: 48px;
+    min-width: 48px;
 
     @screen sm_max {
       @apply hidden;

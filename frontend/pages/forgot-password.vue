@@ -48,11 +48,9 @@
             <p class="form__message">{{ error }}</p>
           </div>
 
-          <div class="form__group">
-            <v-button ref="button" type="submit">
-              Send Password Reset Email
-            </v-button>
-          </div>
+          <v-button ref="button" class="mt-2" type="submit">
+            Send Password Reset Email
+          </v-button>
         </form>
       </div>
     </template>

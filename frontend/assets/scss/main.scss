@@ -2,7 +2,7 @@ body {
   font-family: "Roboto", sans-serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  transition: background 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  transition: background 0.2s ease-in-out;
 }
 
 [data-focus-visible-added]:focus {

@@ -12,9 +12,9 @@ export interface ErrorInterface {
 
 export default ({ $axios }: Context) => {
   $axios.onError((error: AxiosError<ErrorInterface>) => {
-    if (error.response) {
-      // log error
+    // log error
 
+    if (error.response) {
       const { message, statusCode } = error.response.data;
 
       if (statusCode >= 500) {
@@ -29,6 +29,6 @@ export default ({ $axios }: Context) => {
       throw new Error(message);
     }
 
-    throw error;
+    throw new Error("An error has occured, please try again later!");
   });
 };

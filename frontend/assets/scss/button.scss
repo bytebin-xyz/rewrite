@@ -87,23 +87,6 @@
 
   &--row {
     @apply flex-row;
-    
-    @screen sm_max {
-      @apply flex-col;
-
-      & .btn {
-        @apply mx-0 my-2 #{!important};
-        @apply w-full;
-  
-        &:first-child {
-          @apply mt-0;
-        }
-  
-        &:last-child {
-          @apply mb-0;
-        }
-      }
-    }
 
     & .btn {
       @apply flex-1;
@@ -115,6 +98,27 @@
 
       &:last-child {
         @apply mr-0;
+      }
+    }
+  }
+
+  &--responsive {
+    &.btn__group--row {
+      @screen sm_max {
+        @apply flex-col;
+  
+        & .btn {
+          @apply mx-0 my-2 #{!important};
+          @apply w-full;
+    
+          &:first-child {
+            @apply mt-0;
+          }
+    
+          &:last-child {
+            @apply mb-0;
+          }
+        }
       }
     }
   }

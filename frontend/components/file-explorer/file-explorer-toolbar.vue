@@ -59,5 +59,9 @@ export default class FileExplorerToolbar extends Vue {
   @apply overflow-hidden;
   @apply overflow-x-auto;
   @apply p-4;
+
+  &__button {
+    @apply h-full;
+  }
 }
 </style>

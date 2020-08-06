@@ -16,6 +16,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2018",
+    "typeRoots": ["types"],
     "types": ["@types/node", "@nuxt/types", "@nuxtjs/recaptcha", "@nuxtjs/toast", "vue-js-modal"]
   },
   "exclude": ["node_modules", ".nuxt", "dist"]

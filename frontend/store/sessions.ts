@@ -36,7 +36,7 @@ export const actions = actionTree(
   {
     async fetchSessions({ commit }) {
       const sessions = await this.$axios
-        .get<Session[]>("/settings/sessions")
+        .get<Session[]>("/auth/sessions")
         .then((response) => response.data);
 
       sessions.forEach((session) => commit("addSession", session));
@@ -46,13 +46,13 @@ export const actions = actionTree(
 
     async revokeSession({ commit }, session: Session) {
       await this.$axios
-        .delete(`/settings/revoke-session/${session.identifier}`)
+        .delete(`/auth/revoke-session/${session.identifier}`)
         .then(() => commit("removeSession", session));
     },
 
     async revokeAllOtherSessions({ commit }) {
       await this.$axios
-        .delete("/settings/revoke-all-sessions")
+        .delete("/auth/revoke-all-sessions")
         .then(() => commit("removeAllOtherSessions"));
     }
   }

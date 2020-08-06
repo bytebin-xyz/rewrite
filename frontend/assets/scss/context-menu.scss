@@ -1,0 +1,15 @@
+.context-menu {
+  @apply hidden;
+  
+  &--opened {
+    @apply flex;
+  }
+
+  &__divider {
+    height: 1px;
+  }
+
+  &__item {
+  
+  }
+}

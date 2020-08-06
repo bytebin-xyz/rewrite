@@ -4,7 +4,7 @@
   "description": "",
   "author": "alexy4744",
   "private": true,
-  "license": "MIT",
+  "license": "MPL-2.0",
   "scripts": {
     "build": "nest build",
     "doc": "npx compodoc -p tsconfig.json -n \"Bytebin\" --theme postmark",

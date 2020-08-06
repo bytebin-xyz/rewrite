@@ -15,6 +15,7 @@
         class="filesystem__body"
         @click.exact.stop="(event) => select(event, true)"
         @click.ctrl.exact.stop="(event) => select(event, false)"
+        @click.right.exact="openContextMenu"
         @dblclick.stop="open"
       >
         <tr
@@ -48,6 +49,33 @@
       <folder-icon fill="#4F5382" :size="160" />
       <h2>Empty Folder</h2>
     </div>
+
+    <context-menu ref="contextMenu">
+      <li>
+        <a>
+          <cut-icon fill="#A9AEE4" :size="20" />
+          Cut
+        </a>
+      </li>
+      <li>
+        <a>
+          <copy-icon fill="#A9AEE4" :size="20" />
+          Copy
+        </a>
+      </li>
+      <li>
+        <a>
+          <paste-icon fill="#A9AEE4" :size="20" />
+          Paste
+        </a>
+      </li>
+      <li>
+        <a>
+          <delete-icon fill="#A9AEE4" :size="20" />
+          Delete
+        </a>
+      </li>
+    </context-menu>
   </div>
 </template>
 
@@ -58,6 +86,8 @@ import { Component, Prop, Ref, Vue } from "nuxt-property-decorator";
 import { PropType } from "vue";
 
 import prettyBytes from "pretty-bytes";
+
+import ContextMenu from "./context-menu.vue";
 
 import { FileSystemObject } from "@/interfaces/fs-object.interface";
 
@@ -74,8 +104,8 @@ export default class FileExplorer extends Vue {
   })
   private readonly items!: FileSystemObject[];
 
-  @Ref()
-  private readonly fileSystemItems!: HTMLTableSectionElement;
+  @Ref() private readonly contextMenu!: ContextMenu;
+  @Ref() private readonly fileSystemItems!: HTMLTableSectionElement;
 
   private readonly formatDate = format;
   private readonly prettyBytes = prettyBytes;
@@ -148,6 +178,10 @@ export default class FileExplorer extends Vue {
     if (!item) return null;
 
     return { element, item };
+  }
+
+  private openContextMenu(event: MouseEvent) {
+    this.contextMenu.open(event);
   }
 
   private unselect(id?: string): void {
