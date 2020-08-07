@@ -296,7 +296,7 @@
                                     <a href="../interfaces/ISession.html" >ISession</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/IncomingFile.html" >IncomingFile</a>
+                                    <a href="../interfaces/IncomingFile.html"  class="active" >IncomingFile</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/MailerModuleAsyncOptions.html" >MailerModuleAsyncOptions</a>
@@ -326,7 +326,7 @@
                                     <a href="../interfaces/SendUserActivationJob.html" >SendUserActivationJob</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/SessionDto.html"  class="active" >SessionDto</a>
+                                    <a href="../interfaces/SessionDto.html" >SessionDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/StorageEngine.html" >StorageEngine</a>
@@ -647,7 +647,7 @@
                                            <a href="../interfaces/ISession.html" >ISession</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/IncomingFile.html" >IncomingFile</a>
+                                           <a href="../interfaces/IncomingFile.html"  class="active" >IncomingFile</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/MailerModuleAsyncOptions.html" >MailerModuleAsyncOptions</a>
@@ -677,7 +677,7 @@
                                            <a href="../interfaces/SendUserActivationJob.html" >SendUserActivationJob</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/SessionDto.html"  class="active" >SessionDto</a>
+                                           <a href="../interfaces/SessionDto.html" >SessionDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/StorageEngine.html" >StorageEngine</a>
@@ -728,7 +728,7 @@
 
 <ol class="breadcrumb">
   <li>Interfaces</li>
-  <li>SessionDto</li>
+  <li>IncomingFile</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -746,7 +746,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/modules/auth/dto/session.dto.ts</code>
+            <code>src/modules/storage/interfaces/incoming-file.interface.ts</code>
         </p>
 
 
@@ -759,12 +759,12 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <b>isCurrent</b>
+                                        <b>encoding</b>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>isCurrent:     <code>boolean</code>
+                                        <code>encoding:     <code>string</code>
 </bcode>
                                     </td>
                                 </tr>
@@ -772,7 +772,85 @@
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>    <code>boolean</code>
+                                            <i>Type : </i>    <code>string</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>fieldname</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>fieldname:     <code>string</code>
+</bcode>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>filename</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>filename:     <code>string</code>
+</bcode>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>mimetype</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>mimetype:     <code>string</code>
+</bcode>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string</code>
 
                                         </td>
                                     </tr>
@@ -784,10 +862,11 @@
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { ISession } from &quot;@/interfaces/session.interface&quot;;
-
-export interface SessionDto extends ISession {
-  isCurrent: boolean;
+        <pre><code class="hljs javascript">export interface IncomingFile {
+  encoding: string;
+  fieldname: string;
+  filename: string;
+  mimetype: string;
 }
 </code></pre>
     </div>
