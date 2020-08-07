@@ -1,4 +1,4 @@
-export interface FileMetadata {
+export interface IncomingFile {
   encoding: string;
   fieldname: string;
   filename: string;

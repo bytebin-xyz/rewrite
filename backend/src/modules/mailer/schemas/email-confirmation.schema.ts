@@ -7,16 +7,9 @@ import { Document } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import { generateId } from "@/utils/generateId";
-import { hideSchemaProperty } from "@/utils/hideSchemaProperty";
 
 @Schema({
-  timestamps: true,
-  toJSON: {
-    transform: hideSchemaProperty(["_id", "__v"])
-  },
-  toObject: {
-    transform: hideSchemaProperty(["_id", "__v"])
-  }
+  timestamps: true
 })
 export class EmailConfirmation extends Document {
   createdAt!: Date;

@@ -7,18 +7,16 @@ import {
   MinLength
 } from "class-validator";
 
-import { User } from "@/modules/users/schemas/user.schema";
-
 export class RegisterDto {
   @IsEmail({}, { message: "You must enter a valid email!" })
   @IsNotEmpty({ message: "Email cannot be empty!" })
   @IsString()
-  email!: User["email"];
+  email!: string;
 
-  @MinLength(8, { message: "Your password must be at least 8 characters long!" })
+  @MinLength(8, { message: "Your password must be at least $constraint1 characters long!" })
   @IsNotEmpty({ message: "Password cannot be empty!" })
   @IsString()
-  password!: User["password"];
+  password!: string;
 
   @IsNotEmpty()
   @IsString()
@@ -27,6 +25,6 @@ export class RegisterDto {
   @IsAlphanumeric(undefined, { message: "Usernames must be alphanumeric!" })
   @IsNotEmpty({ message: "Username cannot be empty!" })
   @IsString()
-  @MaxLength(32, { message: "Usernames cannot be longer than 32 characters!" })
-  username!: User["username"];
+  @MaxLength(32, { message: "Usernames cannot be longer than $constraint1 characters!" })
+  username!: string;
 }

@@ -3,10 +3,10 @@ import pump from "pump";
 
 import Busboy from "busboy";
 
-import { Inject, Injectable, OnApplicationBootstrap } from "@nestjs/common";
-
+import { IncomingMessage } from "http";
 import { Readable } from "stream";
-import { Request } from "express";
+
+import { Inject, Injectable, OnApplicationBootstrap } from "@nestjs/common";
 
 import { STORAGE_MODULE_OPTIONS } from "./storage.constants";
 
@@ -22,12 +22,11 @@ import {
 import { DiskStorage } from "./engines/disk.engine";
 import { GoogleCloudEngine } from "./engines/google-cloud.engine";
 
-import { CreateFileOptions } from "./interfaces/create-file-options.interface";
-import { FileFilterCallback } from "./interfaces/file-filter-callback.interface";
-import { FileMetadata } from "./interfaces/file-metadata.interface";
+import { IncomingFile } from "./interfaces/incoming-file.interface";
 import { StorageEngine } from "./interfaces/storage-engine.interface";
 import { StorageOptions } from "./interfaces/storage-module-options.interface";
 import { UploadedFile } from "./interfaces/uploaded-file.interface";
+import { WriteOptions } from "./interfaces/write-options.interface";
 
 import { Counter } from "@/utils/counter";
 import { StreamMeter } from "@/utils/stream-meter";
@@ -56,13 +55,16 @@ export class StorageService implements OnApplicationBootstrap {
     return this.engine.createReadable(id);
   }
 
-  async write(req: Request, options: CreateFileOptions): Promise<UploadedFile[]> {
+  async write(req: IncomingMessage, options: WriteOptions): Promise<UploadedFile[]> {
     const busboy = this._createBusboy(req, options.limits);
 
     const files: UploadedFile[] = [];
 
-    const filter = (metadata: FileMetadata, callback: FileFilterCallback) => {
-      if (options.filter) options.filter(req, metadata, callback);
+    const filter = (
+      file: IncomingFile,
+      callback: (error: Error | null, acceptFile: boolean) => void
+    ) => {
+      if (options.filter) options.filter(req, file, callback);
       else callback(null, true);
     };
 
@@ -145,7 +147,10 @@ export class StorageService implements OnApplicationBootstrap {
     });
   }
 
-  private _createBusboy(req: Request, limits: busboy.BusboyConfig["limits"]): busboy.Busboy {
+  private _createBusboy(
+    req: IncomingMessage,
+    limits: busboy.BusboyConfig["limits"]
+  ): busboy.Busboy {
     try {
       return new Busboy({ headers: req.headers, limits });
     } catch (error) {

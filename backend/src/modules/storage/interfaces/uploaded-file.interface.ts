@@ -1,6 +1,6 @@
-import { FileMetadata } from "./file-metadata.interface";
+import { IncomingFile } from "./incoming-file.interface";
 
-export interface UploadedFile extends FileMetadata {
+export interface UploadedFile extends IncomingFile {
   id: string;
   size: number;
 }

@@ -25,8 +25,6 @@ export class DiskStorage implements StorageEngine {
       if (error.code !== "ENOENT") {
         throw error;
       }
-
-      console.log(id);
     }
   }
 

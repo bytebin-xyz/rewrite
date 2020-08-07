@@ -16,9 +16,9 @@ export interface GoogleCloudEngineOptions extends StorageOptions {
 }
 
 export class GoogleCloudEngine implements StorageEngine {
-  private readonly bucket = client.bucket(this.options.bucketName);
-
   constructor(private readonly options: GoogleCloudEngineOptions) {}
+
+  private readonly bucket = client.bucket(this.options.bucketName);
 
   async delete(id: string): Promise<void> {
     await this.bucket.file(id).delete();

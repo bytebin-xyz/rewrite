@@ -5,18 +5,15 @@ import { Document } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import { generateId } from "@/utils/generateId";
-import { hideSchemaProperty } from "@/utils/hideSchemaProperty";
 
 const MAX_RESEND_ATTEMPTS = 5;
 
 @Schema({
   timestamps: true,
   toJSON: {
-    transform: hideSchemaProperty(["_id", "__v"]),
     virtuals: true
   },
   toObject: {
-    transform: hideSchemaProperty(["_id", "__v"]),
     virtuals: true
   }
 })

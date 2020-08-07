@@ -1,5 +1,3 @@
-import path from "path";
-
 import Joi from "@hapi/joi";
 
 import { APP_GUARD } from "@nestjs/core";
@@ -12,6 +10,7 @@ import { ThrottlerStorageRedisService } from "nestjs-throttler-storage-redis";
 import { AppController } from "./app.controller";
 
 import { AdminModule } from "./modules/admin/admin.module";
+import { ApplicationsModule } from "./modules/applications/applications.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { BullBoardModule } from "./modules/bull-board/bull-board.module";
 import { FilesModule } from "./modules/files/files.module";
@@ -23,13 +22,11 @@ import { UsersModule } from "./modules/users/users.module";
 const MIN_PORT = 1;
 const MAX_PORT = 65535;
 
-const kbToBytes = (kB: number) => kB / 1024;
-const mbToBytes = (mb: number) => mb * 1024 * 1024;
-
 @Global()
 @Module({
   imports: [
     AdminModule,
+    ApplicationsModule,
     AuthModule,
     BullBoardModule,
     FilesModule,
@@ -40,18 +37,17 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
     ConfigModule.forRoot({
       envFilePath: `.env.development`,
       validationSchema: Joi.object({
+        API_SECRET: Joi.string().required(),
+
         BACKEND_DOMAIN: Joi.string().required(),
         FRONTEND_DOMAIN: Joi.string().required(),
 
-        MAX_CHUNK_SIZE: Joi.number()
+        MAX_FILE_SIZE: Joi.number()
           .min(1)
-          .default(mbToBytes(1)),
+          .default(25 * 1024 * 1024),
         MAX_FILES_PER_UPLOAD: Joi.number()
           .min(1)
           .default(5),
-        MAX_FILE_SIZE: Joi.number()
-          .min(kbToBytes(8))
-          .default(mbToBytes(25)),
 
         MONGO_DB_NAME: Joi.string().default("bytebin"),
         MONGO_HOST: Joi.string().default("localhost"),
@@ -102,12 +98,7 @@ const mbToBytes = (mb: number) => mb * 1024 * 1024;
           .min(0)
           .default(60),
 
-        UPLOADS_DIRECTORY: Joi.string()
-          .required()
-          .custom(value => {
-            if (path.isAbsolute(value)) return value;
-            throw new Error("upload directory path is not absolute!");
-          })
+        UPLOADS_DIRECTORY: Joi.string().required()
       })
     }),
 

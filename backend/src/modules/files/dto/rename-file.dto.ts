@@ -1,9 +1,8 @@
-import { IsNotEmpty, IsString } from "class-validator";
-
-import { File } from "../schemas/file.schema";
+import { IsNotEmpty, IsString, MaxLength } from "class-validator";
 
 export class RenameFileDto {
   @IsNotEmpty({ message: "New filename cannot be empty!" })
   @IsString()
-  newFilename!: File["filename"];
+  @MaxLength(255, { message: "Filename cannot be greater than $constraint1 characters!" })
+  newFilename!: string;
 }
