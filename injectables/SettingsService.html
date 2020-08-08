@@ -126,12 +126,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(auth: <a href="../injectables/AuthService.html">AuthService</a>, files: <a href="../injectables/FilesService.html">FilesService</a>, mailer: <a href="../injectables/MailerService.html">MailerService</a>, users: <a href="../injectables/UsersService.html">UsersService</a>)</code>
+<code>constructor(applications: <a href="../injectables/ApplicationsService.html">ApplicationsService</a>, auth: <a href="../injectables/AuthService.html">AuthService</a>, files: <a href="../injectables/FilesService.html">FilesService</a>, mailer: <a href="../injectables/MailerService.html">MailerService</a>, users: <a href="../injectables/UsersService.html">UsersService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/modules/settings/settings.service.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/modules/settings/settings.service.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -148,6 +148,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                                <tr>
+                                                        <td>applications</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ApplicationsService.html" target="_self" >ApplicationsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                                 <tr>
                                                         <td>auth</td>
                                                   
@@ -234,8 +246,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="31"
-                            class="link-to-prism">src/modules/settings/settings.service.ts:31</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="28"
+                            class="link-to-prism">src/modules/settings/settings.service.ts:28</a></div>
                 </td>
             </tr>
 
@@ -306,8 +318,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="42"
-                            class="link-to-prism">src/modules/settings/settings.service.ts:42</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="39"
+                            class="link-to-prism">src/modules/settings/settings.service.ts:39</a></div>
                 </td>
             </tr>
 
@@ -390,8 +402,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="52"
-                            class="link-to-prism">src/modules/settings/settings.service.ts:52</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="49"
+                            class="link-to-prism">src/modules/settings/settings.service.ts:49</a></div>
                 </td>
             </tr>
 
@@ -474,8 +486,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="60"
-                            class="link-to-prism">src/modules/settings/settings.service.ts:60</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">src/modules/settings/settings.service.ts:57</a></div>
                 </td>
             </tr>
 
@@ -558,8 +570,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="68"
-                            class="link-to-prism">src/modules/settings/settings.service.ts:68</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="65"
+                            class="link-to-prism">src/modules/settings/settings.service.ts:65</a></div>
                 </td>
             </tr>
 
@@ -654,8 +666,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="77"
-                            class="link-to-prism">src/modules/settings/settings.service.ts:77</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">src/modules/settings/settings.service.ts:74</a></div>
                 </td>
             </tr>
 
@@ -726,8 +738,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="95"
-                            class="link-to-prism">src/modules/settings/settings.service.ts:95</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">src/modules/settings/settings.service.ts:92</a></div>
                 </td>
             </tr>
 
@@ -810,8 +822,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="107"
-                            class="link-to-prism">src/modules/settings/settings.service.ts:107</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="105"
+                            class="link-to-prism">src/modules/settings/settings.service.ts:105</a></div>
                 </td>
             </tr>
 
@@ -866,21 +878,17 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &quot;@nestjs/common&quot;;
 
+import { InvalidEmailConfirmationLink, InvalidUserActivationLink } from &quot;./settings.errors&quot;;
+
+import { ApplicationsService } from &quot;@/modules/applications/applications.service&quot;;
 import { AuthService } from &quot;@/modules/auth/auth.service&quot;;
 import { FilesService } from &quot;@/modules/files/files.service&quot;;
 import { MailerService } from &quot;@/modules/mailer/mailer.service&quot;;
 import { UsersService } from &quot;@/modules/users/users.service&quot;;
 
-import { InvalidEmailConfirmationLink, InvalidUserActivationLink } from &quot;./settings.errors&quot;;
-
-import {
-  DisplayNameAlreadyExists,
-  EmailAlreadyExists,
-  UserNotFound
-} from &quot;@/modules/users/users.errors&quot;;
-
 import { IncorrectPassword } from &quot;@/modules/auth/auth.errors&quot;;
 
+import { DisplayNameAlreadyExists, EmailAlreadyExists } from &quot;@/modules/users/users.errors&quot;;
 import { User } from &quot;@/modules/users/schemas/user.schema&quot;;
 
 import { settle } from &quot;@/utils/settle&quot;;
@@ -888,6 +896,7 @@ import { settle } from &quot;@/utils/settle&quot;;
 @Injectable()
 export class SettingsService {
   constructor(
+    private readonly applications: ApplicationsService,
     private readonly auth: AuthService,
     private readonly files: FilesService,
     private readonly mailer: MailerService,
@@ -962,6 +971,7 @@ export class SettingsService {
     if (!(await user.comparePassword(password))) throw new IncorrectPassword();
 
     await settle([
+      this.applications.deleteAllFor(user.id),
       this.auth.logoutAllDevices(user.id),
       this.files.deleteAllFor(user.id),
       this.mailer.deleteAllFor(user.id)
@@ -972,7 +982,7 @@ export class SettingsService {
 
   async resendUserActivationEmail(user: User): Promise&lt;void&gt; {
     const activation &#x3D; await this.mailer.findUserActivation({ uid: user.id });
-    if (!activation) throw new UserNotFound(user.username);
+    if (!activation) throw new InvalidUserActivationLink();
 
     await this.mailer.sendUserActivation(user);
     await activation.resent();

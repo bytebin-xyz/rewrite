@@ -334,8 +334,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="80"
-                            class="link-to-prism">src/modules/files/files.controller.ts:80</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="82"
+                            class="link-to-prism">src/modules/files/files.controller.ts:82</a></div>
                 </td>
             </tr>
 
@@ -436,8 +436,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="89"
-                            class="link-to-prism">src/modules/files/files.controller.ts:89</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="91"
+                            class="link-to-prism">src/modules/files/files.controller.ts:91</a></div>
                 </td>
             </tr>
 
@@ -519,6 +519,7 @@ import { ConfigService } from &quot;@nestjs/config&quot;;
 
 import { Request, Response } from &quot;express&quot;;
 
+import { FileNotFound } from &quot;./files.errors&quot;;
 import { FilesService } from &quot;./files.service&quot;;
 
 import { FileDto } from &quot;./dto/file.dto&quot;;
@@ -532,7 +533,6 @@ import { AuthGuard } from &quot;@/guards/auth.guard&quot;;
 import { StorageService } from &quot;@/modules/storage/storage.service&quot;;
 
 import { User } from &quot;@/modules/users/schemas/user.schema&quot;;
-import { FileNotFound } from &quot;./files.errors&quot;;
 
 @Controller(&quot;files&quot;)
 @UseGuards(AuthGuard)
@@ -557,6 +557,8 @@ export class FilesController {
     @Res() res: Response
   ): Promise&lt;void&gt; {
     const file &#x3D; user ? await this.files.findOne(id, user.id) : await this.files.findPublicFile(id);
+    if (!file) throw new FileNotFound(id);
+
     const readable &#x3D; await this.storage.read(file.id);
 
     readable.on(&quot;error&quot;, (error: NodeJS.ErrnoException &amp; Error) &#x3D;&gt; {

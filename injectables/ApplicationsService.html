@@ -86,11 +86,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#deleteAllFor">deleteAllFor</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#findOne">findOne</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#generateToken">generateToken</a>
+                                <a href="#generateKey">generateKey</a>
                             </li>
                         </ul>
                     </td>
@@ -115,7 +119,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/modules/applications/applications.service.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/modules/applications/applications.service.ts:12</a></div>
                             </td>
                         </tr>
 
@@ -194,8 +198,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="24"
-                            class="link-to-prism">src/modules/applications/applications.service.ts:24</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="20"
+                            class="link-to-prism">src/modules/applications/applications.service.ts:20</a></div>
                 </td>
             </tr>
 
@@ -278,8 +282,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">src/modules/applications/applications.service.ts:28</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="24"
+                            class="link-to-prism">src/modules/applications/applications.service.ts:24</a></div>
                 </td>
             </tr>
 
@@ -329,6 +333,78 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../classes/Application.html" target="_self" >Promise&lt;Application&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteAllFor"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            deleteAllFor
+                        </b>
+                        <a href="#deleteAllFor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteAllFor(uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="31"
+                            class="link-to-prism">src/modules/applications/applications.service.ts:31</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uid</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -355,15 +431,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, uid?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">src/modules/applications/applications.service.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="35"
+                            class="link-to-prism">src/modules/applications/applications.service.ts:35</a></div>
                 </td>
             </tr>
 
@@ -401,7 +477,7 @@
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
 
@@ -412,7 +488,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Application.html" target="_self" >Promise&lt;Application&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/Application.html" target="_self" >Promise&lt;Application | null&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -426,28 +502,28 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="generateToken"></a>
+                    <a name="generateKey"></a>
                     <span class="name">
                         <b>
                             <span class="modifier">Async</span>
-                            generateToken
+                            generateKey
                         </b>
-                        <a href="#generateToken"><span class="icon ion-ios-link"></span></a>
+                        <a href="#generateKey"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>generateToken(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>generateKey(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="42"
-                            class="link-to-prism">src/modules/applications/applications.service.ts:42</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="39"
+                            class="link-to-prism">src/modules/applications/applications.service.ts:39</a></div>
                 </td>
             </tr>
 
@@ -496,7 +572,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -512,9 +588,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import crypto from &quot;crypto&quot;;
-
-import { ConfigService } from &quot;@nestjs/config&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ConfigService } from &quot;@nestjs/config&quot;;
 import { Injectable } from &quot;@nestjs/common&quot;;
 import { InjectModel } from &quot;@nestjs/mongoose&quot;;
 
@@ -523,8 +597,6 @@ import { Model } from &quot;mongoose&quot;;
 import { ApplicationNotFound } from &quot;./applications.errors&quot;;
 
 import { Application } from &quot;./schemas/application.schema&quot;;
-
-import { generateId } from &quot;@/utils/generateId&quot;;
 
 @Injectable()
 export class ApplicationsService {
@@ -541,30 +613,24 @@ export class ApplicationsService {
 
   async delete(id: string, uid: string): Promise&lt;Application&gt; {
     const application &#x3D; await this.findOne(id, uid);
+    if (!application) throw new ApplicationNotFound(id);
 
     return application.deleteOne();
   }
 
-  async findOne(id: string, uid: string): Promise&lt;Application&gt; {
-    const application &#x3D; await this.applications.findOne({ id, uid });
-    if (!application) throw new ApplicationNotFound(id);
-
-    return application;
+  async deleteAllFor(uid: string): Promise&lt;void&gt; {
+    await this.applications.deleteMany({ uid });
   }
 
-  // TODO: WIP
-  async generateToken(id: string, uid: string): Promise&lt;{ token: string }&gt; {
+  async findOne(id: string, uid?: string): Promise&lt;Application | null&gt; {
+    return this.applications.findOne(uid ? { id, uid } : { id });
+  }
+
+  async generateKey(id: string, uid: string): Promise&lt;string&gt; {
     const application &#x3D; await this.findOne(id, uid);
-    const token &#x3D; await generateId(16);
+    if (!application) throw new ApplicationNotFound(id);
 
-    await application.changeToken(token);
-
-    return {
-      token: crypto
-        .createHmac(&quot;sha256&quot;, this.config.get(&quot;API_SECRET&quot;) as string)
-        .update(token)
-        .digest(&quot;hex&quot;)
-    };
+    return application.generateKey(this.config.get(&quot;API_SECRET&quot;) as string);
   }
 }
 </code></pre>

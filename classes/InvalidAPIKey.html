@@ -43,7 +43,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>GenerateApplicationTokenDto</li>
+  <li>InvalidAPIKey</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -61,71 +61,34 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/modules/applications/dto/generate-application-token.dto.ts</code>
+            <code>src/modules/applications/applications.errors.ts</code>
         </p>
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                    <code>UnauthorizedException</code>
+            </p>
+
 
 
 
             <section>
-    <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>Properties</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                <a href="#token">token</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-
-
-
-
-
-
-        </tbody>
-    </table>
-</section>
-
-
-            <section>
-    
-        <h3 id="inputs">
-            Properties
-        </h3>
+    <h3 id="constructor">Constructor</h3>
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="token"></a>
-                        <span class="name">
-                            <b>
-                            token</b>
-                            <a href="#token"><span class="icon ion-ios-link"></span></a>
-                        </span>
+<code>constructor()</code>
                     </td>
                 </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                        </td>
-                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="2" class="link-to-prism">src/modules/applications/dto/generate-application-token.dto.ts:2</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/modules/applications/applications.errors.ts:9</a></div>
                             </td>
                         </tr>
-
 
             </tbody>
         </table>
@@ -137,12 +100,23 @@
 
 
 
+
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export class GenerateApplicationTokenDto {
-  token!: string;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { NotFoundException, UnauthorizedException } from &quot;@nestjs/common&quot;;
+
+export class ApplicationNotFound extends NotFoundException {
+  constructor(identifier: string) {
+    super(&#x60;Application &quot;${identifier}&quot; does not exist!&#x60;);
+  }
+}
+
+export class InvalidAPIKey extends UnauthorizedException {
+  constructor() {
+    super(&quot;Invalid API Key!&quot;);
+  }
 }
 </code></pre>
     </div>
@@ -172,7 +146,7 @@
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'GenerateApplicationTokenDto.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'InvalidAPIKey.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

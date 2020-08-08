@@ -89,7 +89,8 @@
                                 <a href="#delete">delete</a>
                             </li>
                             <li>
-                                <a href="#generateToken">generateToken</a>
+                                    <span class="modifier">Async</span>
+                                <a href="#generateKey">generateKey</a>
                             </li>
                         </ul>
                     </td>
@@ -290,18 +291,20 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="generateToken"></a>
+                    <a name="generateKey"></a>
                     <span class="name">
                         <b>
-                            generateToken
+                            <span class="modifier">Async</span>
+                            generateKey
                         </b>
-                        <a href="#generateToken"><span class="icon ion-ios-link"></span></a>
+                        <a href="#generateKey"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>generateToken(user: <a href="../classes/User.html">User</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>generateKey(user: <a href="../classes/User.html">User</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -365,7 +368,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Promise&lt;GenerateApplicationTokenDto&gt;</code>
+                        <b>Returns : </b>    <code>Promise&lt;GenerateApplicationKeyDto&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -385,7 +388,7 @@ import { ApplicationsService } from &quot;./applications.service&quot;;
 
 import { ApplicationDto } from &quot;./dto/application.dto&quot;;
 import { CreateApplicationDto } from &quot;./dto/create-application.dto&quot;;
-import { GenerateApplicationTokenDto } from &quot;./dto/generate-application-token.dto&quot;;
+import { GenerateApplicationKeyDto } from &quot;./dto/generate-application-key.dto&quot;;
 
 import { CurrentUser } from &quot;@/decorators/current-user.decorator&quot;;
 
@@ -409,11 +412,11 @@ export class ApplicationsController {
   }
 
   @Post(&quot;/:id/token&quot;)
-  generateToken(
+  async generateKey(
     @CurrentUser() user: User,
     @Param(&quot;id&quot;) id: string
-  ): Promise&lt;GenerateApplicationTokenDto&gt; {
-    return this.applications.generateToken(id, user.id);
+  ): Promise&lt;GenerateApplicationKeyDto&gt; {
+    return { key: await this.applications.generateKey(id, user.id) };
   }
 }
 </code></pre>

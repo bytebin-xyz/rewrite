@@ -65,6 +65,9 @@
                             <a href="#atob" title="src/utils/atob.ts"><b>atob</b>&nbsp;&nbsp;&nbsp;(src/.../atob.ts)</a>
                         </li>
                         <li>
+                            <a href="#AUTH_GUARD_OPTIONAL" title="src/guards/auth.guard.ts"><b>AUTH_GUARD_OPTIONAL</b>&nbsp;&nbsp;&nbsp;(src/.../auth.guard.ts)</a>
+                        </li>
+                        <li>
                             <a href="#btoa" title="src/utils/btoa.ts"><b>btoa</b>&nbsp;&nbsp;&nbsp;(src/.../btoa.ts)</a>
                         </li>
                         <li>
@@ -90,6 +93,9 @@
                         </li>
                         <li>
                             <a href="#generateId" title="src/utils/generateId.ts"><b>generateId</b>&nbsp;&nbsp;&nbsp;(src/.../generateId.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HMAC_SHA256" title="src/modules/applications/schemas/application.schema.ts"><b>HMAC_SHA256</b>&nbsp;&nbsp;&nbsp;(src/.../application.schema.ts)</a>
                         </li>
                         <li>
                             <a href="#logger" title="src/main.ts"><b>logger</b>&nbsp;&nbsp;&nbsp;(src/.../main.ts)</a>
@@ -187,6 +193,31 @@
 
             </tbody>
         </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="HMAC_SHA256"></a>
+                        <span class="name">
+                            <b>
+                            HMAC_SHA256</b>
+                            <a href="#HMAC_SHA256"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>(data: crypto.BinaryLike, secret: string) &#x3D;&gt;
+  crypto
+    .createHmac(&quot;sha256&quot;, secret)
+    .update(data)
+    .digest(&quot;hex&quot;)</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
 </section>
     <h3>src/utils/atob.ts</h3>
     <section>
@@ -205,6 +236,36 @@
                     <tr>
                         <td class="col-md-4">
                             <i>Default value : </i><code>(str: string): string &#x3D;&gt; Buffer.from(str, &quot;base64&quot;).toString(&quot;binary&quot;)</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+</section>
+    <h3>src/guards/auth.guard.ts</h3>
+    <section>
+    <h3></h3>        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="AUTH_GUARD_OPTIONAL"></a>
+                        <span class="name">
+                            <b>
+                            AUTH_GUARD_OPTIONAL</b>
+                            <a href="#AUTH_GUARD_OPTIONAL"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&quot;AUTH_GUARD_OPTIONAL&quot;</code>
                         </td>
                     </tr>
 
@@ -703,7 +764,7 @@
                     <tr>
                         <td class="col-md-4">
                             <i>Default value : </i><code>(optional &#x3D; true): CustomDecorator&lt;string&gt; &#x3D;&gt;
-  SetMetadata(&quot;AUTH_OPTIONAL&quot;, optional)</code>
+  SetMetadata(AUTH_GUARD_OPTIONAL, optional)</code>
                         </td>
                     </tr>
 

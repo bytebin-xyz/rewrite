@@ -338,8 +338,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="37"
-                            class="link-to-prism">src/utils/counter.ts:37</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="30"
+                            class="link-to-prism">src/utils/counter.ts:30</a></div>
                 </td>
             </tr>
 
@@ -413,8 +413,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">src/utils/counter.ts:30</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">src/utils/counter.ts:37</a></div>
                 </td>
             </tr>
 
@@ -595,16 +595,16 @@ export class Counter extends EventEmitter {
     return this.value &#x3D;&#x3D;&#x3D; n;
   }
 
-  set(value: number): this {
-    this._value &#x3D; value;
-    this.emit(String(this.value));
+  onceItEqualsTo(n: number, cb: () &#x3D;&gt; void): this {
+    if (this.value &#x3D;&#x3D;&#x3D; n) cb();
+    else this.once(String(n), cb);
 
     return this;
   }
 
-  onceItEqualsTo(n: number, cb: () &#x3D;&gt; void): this {
-    if (this.value &#x3D;&#x3D;&#x3D; n) cb();
-    else this.once(String(n), cb);
+  set(value: number): this {
+    this._value &#x3D; value;
+    this.emit(String(this.value));
 
     return this;
   }

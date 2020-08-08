@@ -80,6 +80,16 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#_handleAPIKey">_handleAPIKey</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#_handleSession">_handleSession</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Async</span>
                                 <a href="#canActivate">canActivate</a>
                             </li>
@@ -101,12 +111,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(reflector: Reflector, users: <a href="../injectables/UsersService.html">UsersService</a>)</code>
+<code>constructor(applications: <a href="../injectables/ApplicationsService.html">ApplicationsService</a>, config: ConfigService, reflector: Reflector, users: <a href="../injectables/UsersService.html">UsersService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/guards/auth.guard.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/guards/auth.guard.ts:24</a></div>
                             </td>
                         </tr>
 
@@ -123,6 +133,30 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                                <tr>
+                                                        <td>applications</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ApplicationsService.html" target="_self" >ApplicationsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>config</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                                 <tr>
                                                         <td>reflector</td>
                                                   
@@ -165,6 +199,152 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="_handleAPIKey"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            _handleAPIKey
+                        </b>
+                        <a href="#_handleAPIKey"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_handleAPIKey(req: <a href="../interfaces/IRequest.html">IRequest</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">src/guards/auth.guard.ts:50</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="../interfaces/IRequest.html" target="_self" >IRequest</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_handleSession"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            _handleSession
+                        </b>
+                        <a href="#_handleSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_handleSession(req: <a href="../interfaces/IRequest.html">IRequest</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">src/guards/auth.guard.ts:73</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="../interfaces/IRequest.html" target="_self" >IRequest</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="canActivate"></a>
                     <span class="name">
                         <b>
@@ -185,8 +365,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="22"
-                            class="link-to-prism">src/guards/auth.guard.ts:22</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="32"
+                            class="link-to-prism">src/guards/auth.guard.ts:32</a></div>
                 </td>
             </tr>
 
@@ -247,39 +427,76 @@ import {
   InternalServerErrorException
 } from &quot;@nestjs/common&quot;;
 
+import { ConfigService } from &quot;@nestjs/config&quot;;
 import { Reflector } from &quot;@nestjs/core&quot;;
 
 import { IRequest } from &quot;@/interfaces/request.interface&quot;;
 
+import { InvalidAPIKey } from &quot;@/modules/applications/applications.errors&quot;;
 import { UserNotActivated, UserNotLoggedIn } from &quot;@/modules/auth/auth.errors&quot;;
 
+import { ApplicationsService } from &quot;@/modules/applications/applications.service&quot;;
 import { UsersService } from &quot;@/modules/users/users.service&quot;;
+
+export const AUTH_GUARD_OPTIONAL &#x3D; &quot;AUTH_GUARD_OPTIONAL&quot;;
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector, private readonly users: UsersService) {}
+  constructor(
+    private readonly applications: ApplicationsService,
+    private readonly config: ConfigService,
+    private readonly reflector: Reflector,
+    private readonly users: UsersService
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise&lt;boolean&gt; {
     const isOptional &#x3D; this.reflector.get&lt;boolean | undefined&gt;(
-      &quot;AUTH_OPTIONAL&quot;,
+      AUTH_GUARD_OPTIONAL,
       context.getHandler()
     );
 
-    const shouldThrow &#x3D; (error: Error) &#x3D;&gt; {
-      if (!isOptional) throw error;
-      return true;
-    };
-
     const req &#x3D; context.switchToHttp().getRequest&lt;IRequest&gt;();
 
-    if (!req.session) {
-      return shouldThrow(new InternalServerErrorException(&quot;Failed to get session data!&quot;));
+    try {
+      return req.headers.authorization
+        ? await this._handleAPIKey(req)
+        : await this._handleSession(req);
+    } catch (error) {
+      if (!isOptional) throw error;
+      return true;
     }
+  }
+
+  private async _handleAPIKey(req: IRequest) {
+    const key &#x3D; req.headers.authorization;
+    if (!key) throw new InvalidAPIKey();
+
+    const [id, token] &#x3D; key.split(&quot;.&quot;);
+    if (!id || !token) throw new InvalidAPIKey();
+
+    const application &#x3D; await this.applications.findOne(id);
+
+    if (!application || !application.compareKey(key, this.config.get(&quot;API_SECRET&quot;) as string)) {
+      throw new InvalidAPIKey();
+    }
+
+    const user &#x3D; await this.users.findOne({ id: application.uid });
+    if (!user) throw new InvalidAPIKey();
+
+    await application.updateLastUsed();
+
+    req.user &#x3D; user;
+
+    return true;
+  }
+
+  private async _handleSession(req: IRequest) {
+    if (!req.session) throw new InternalServerErrorException(&quot;Failed to get session data!&quot;);
 
     const user &#x3D; req.session.uid ? await this.users.findOne({ id: req.session.uid }) : null;
 
-    if (!user) return shouldThrow(new UserNotLoggedIn());
-    if (!user.activated) return shouldThrow(new UserNotActivated());
+    if (!user) throw new UserNotLoggedIn();
+    if (!user.activated) throw new UserNotActivated();
 
     req.session.ip &#x3D; getClientIp(req);
     req.session.lastUsed &#x3D; new Date();
