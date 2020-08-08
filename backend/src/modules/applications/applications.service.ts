@@ -4,7 +4,7 @@ import { InjectModel } from "@nestjs/mongoose";
 
 import { Model } from "mongoose";
 
-import { ApplicationNotFound } from "./applications.errors";
+import { ApplicationAlreadyExists, ApplicationNotFound } from "./applications.errors";
 
 import { Application } from "./schemas/application.schema";
 
@@ -18,6 +18,10 @@ export class ApplicationsService {
   ) {}
 
   async create(name: string, uid: string): Promise<Application> {
+    if (await this.applications.exists({ name, uid })) {
+      throw new ApplicationAlreadyExists(name);
+    }
+
     return new this.applications({ name, uid }).save();
   }
 

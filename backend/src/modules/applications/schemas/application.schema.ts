@@ -40,6 +40,13 @@ export class Application extends Document implements ApplicationDto {
   @Prop(
     raw({
       default: null,
+      index: {
+        partialFilterExpression: {
+          key: {
+            $type: "string"
+          }
+        }
+      },
       trim: true,
       type: String,
       unique: true
