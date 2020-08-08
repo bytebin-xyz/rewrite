@@ -18,6 +18,8 @@ import { UserNotActivated, UserNotLoggedIn } from "@/modules/auth/auth.errors";
 import { ApplicationsService } from "@/modules/applications/applications.service";
 import { UsersService } from "@/modules/users/users.service";
 
+import { atob } from "@/utils/atob";
+
 export const AUTH_GUARD_OPTIONAL = "AUTH_GUARD_OPTIONAL";
 
 @Injectable()
@@ -51,12 +53,14 @@ export class AuthGuard implements CanActivate {
     const key = req.headers.authorization;
     if (!key) throw new InvalidAPIKey();
 
-    const [id, token] = key.split(".");
+    const decoded = atob(key);
+
+    const [id, token] = decoded.split(".");
     if (!id || !token) throw new InvalidAPIKey();
 
     const application = await this.applications.findOne(id);
 
-    if (!application || !application.compareKey(key, this.config.get("API_SECRET") as string)) {
+    if (!application || !application.compareKey(decoded, this.config.get("API_SECRET") as string)) {
       throw new InvalidAPIKey();
     }
 

@@ -10,6 +10,7 @@ import { Prop, Schema, SchemaFactory, raw } from "@nestjs/mongoose";
 
 import { ApplicationDto } from "../dto/application.dto";
 
+import { btoa } from "@/utils/btoa";
 import { generateId } from "@/utils/generateId";
 
 const HMAC_SHA256 = (data: crypto.BinaryLike, secret: string) =>
@@ -29,8 +30,8 @@ export class Application extends Document implements ApplicationDto {
   // Automatically generated in pre save hook.
   @Prop({
     lowercase: true,
-    maxlength: 16,
-    minlength: 16,
+    maxlength: 18,
+    minlength: 18,
     trim: true,
     unique: true
   })
@@ -84,7 +85,7 @@ export const ApplicationSchema = SchemaFactory.createForClass(Application);
 ApplicationSchema.pre<Application>("save", function(next) {
   if (!this.isNew) return next();
 
-  generateId(8)
+  generateId(9)
     .then(id => {
       this.id = id;
       next();
@@ -125,7 +126,7 @@ ApplicationSchema.methods.generateKey = async function(
 
   await this.save();
 
-  return key;
+  return btoa(key);
 };
 
 ApplicationSchema.methods.toDto = function(this: Application): ApplicationDto {
