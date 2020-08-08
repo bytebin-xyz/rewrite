@@ -7,10 +7,7 @@ import { AdminService } from "./admin.service";
 
 import { AdminMiddleware } from "@/middlewares/admin.middleware";
 
-import { UsersModule } from "@/modules/users/users.module";
-
 @Module({
-  imports: [UsersModule],
   exports: [AdminService],
   controllers: [AdminController],
   providers: [AdminService]

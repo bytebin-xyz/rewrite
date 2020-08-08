@@ -1,5 +1,3 @@
-import crypto from "crypto";
-
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
@@ -9,8 +7,6 @@ import { Model } from "mongoose";
 import { ApplicationNotFound } from "./applications.errors";
 
 import { Application } from "./schemas/application.schema";
-
-import { generateId } from "@/utils/generateId";
 
 @Injectable()
 export class ApplicationsService {
@@ -27,29 +23,23 @@ export class ApplicationsService {
 
   async delete(id: string, uid: string): Promise<Application> {
     const application = await this.findOne(id, uid);
+    if (!application) throw new ApplicationNotFound(id);
 
     return application.deleteOne();
   }
 
-  async findOne(id: string, uid: string): Promise<Application> {
-    const application = await this.applications.findOne({ id, uid });
-    if (!application) throw new ApplicationNotFound(id);
-
-    return application;
+  async deleteAllFor(uid: string): Promise<void> {
+    await this.applications.deleteMany({ uid });
   }
 
-  // TODO: WIP
-  async generateToken(id: string, uid: string): Promise<{ token: string }> {
+  async findOne(id: string, uid?: string): Promise<Application | null> {
+    return this.applications.findOne(uid ? { id, uid } : { id });
+  }
+
+  async generateKey(id: string, uid: string): Promise<string> {
     const application = await this.findOne(id, uid);
-    const token = await generateId(16);
+    if (!application) throw new ApplicationNotFound(id);
 
-    await application.changeToken(token);
-
-    return {
-      token: crypto
-        .createHmac("sha256", this.config.get("API_SECRET") as string)
-        .update(token)
-        .digest("hex")
-    };
+    return application.generateKey(this.config.get("API_SECRET") as string);
   }
 }

@@ -4,7 +4,7 @@ import { ApplicationsService } from "./applications.service";
 
 import { ApplicationDto } from "./dto/application.dto";
 import { CreateApplicationDto } from "./dto/create-application.dto";
-import { GenerateApplicationTokenDto } from "./dto/generate-application-token.dto";
+import { GenerateApplicationKeyDto } from "./dto/generate-application-key.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
 
@@ -28,10 +28,10 @@ export class ApplicationsController {
   }
 
   @Post("/:id/token")
-  generateToken(
+  async generateKey(
     @CurrentUser() user: User,
     @Param("id") id: string
-  ): Promise<GenerateApplicationTokenDto> {
-    return this.applications.generateToken(id, user.id);
+  ): Promise<GenerateApplicationKeyDto> {
+    return { key: await this.applications.generateKey(id, user.id) };
   }
 }

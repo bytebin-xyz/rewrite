@@ -10,10 +10,10 @@ import { FilesService } from "./files.service";
 import { File, FileSchema } from "./schemas/file.schema";
 
 import { StorageModule } from "@/modules/storage/storage.module";
-import { UsersModule } from "@/modules/users/users.module";
 
 @Module({
   imports: [
+
     BullModule.registerQueueAsync({
       inject: [ConfigService],
       name: "files",
@@ -36,9 +36,7 @@ import { UsersModule } from "@/modules/users/users.module";
           }
         }
       })
-    }),
-
-    UsersModule
+    })
   ],
   exports: [BullModule, FilesService],
   controllers: [FilesController],

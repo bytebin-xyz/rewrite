@@ -5,9 +5,11 @@ export class ApplicationDto {
 
   id!: string;
 
-  name!: string;
+  key!: string | null;
 
-  token!: string | null;
+  lastUsed!: Date | null;
+
+  name!: string;
 
   @Exclude()
   updatedAt!: Date;

@@ -17,6 +17,7 @@ import { ConfigService } from "@nestjs/config";
 
 import { Request, Response } from "express";
 
+import { FileNotFound } from "./files.errors";
 import { FilesService } from "./files.service";
 
 import { FileDto } from "./dto/file.dto";
@@ -30,7 +31,6 @@ import { AuthGuard } from "@/guards/auth.guard";
 import { StorageService } from "@/modules/storage/storage.service";
 
 import { User } from "@/modules/users/schemas/user.schema";
-import { FileNotFound } from "./files.errors";
 
 @Controller("files")
 @UseGuards(AuthGuard)
@@ -55,6 +55,8 @@ export class FilesController {
     @Res() res: Response
   ): Promise<void> {
     const file = user ? await this.files.findOne(id, user.id) : await this.files.findPublicFile(id);
+    if (!file) throw new FileNotFound(id);
+
     const readable = await this.storage.read(file.id);
 
     readable.on("error", (error: NodeJS.ErrnoException & Error) => {

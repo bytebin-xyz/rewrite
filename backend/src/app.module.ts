@@ -25,15 +25,6 @@ const MAX_PORT = 65535;
 @Global()
 @Module({
   imports: [
-    AdminModule,
-    ApplicationsModule,
-    AuthModule,
-    BullBoardModule,
-    FilesModule,
-    HealthModule,
-    SettingsModule,
-    UsersModule,
-
     ConfigModule.forRoot({
       envFilePath: `.env.development`,
       validationSchema: Joi.object({
@@ -102,6 +93,21 @@ const MAX_PORT = 65535;
       })
     }),
 
+    MailerModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        auth: {
+          pass: config.get("SMTP_PASSWORD"),
+          user: config.get("SMTP_USERNAME")
+        },
+        from: config.get("SMTP_FROM"),
+        host: config.get("SMTP_HOST"),
+        port: config.get("SMTP_PORT"),
+        secure: config.get("SMTP_SECURE"),
+        tls: config.get("SMTP_TLS")
+      })
+    }),
+
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
@@ -124,21 +130,6 @@ const MAX_PORT = 65535;
       }
     }),
 
-    MailerModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        auth: {
-          pass: config.get("SMTP_PASSWORD"),
-          user: config.get("SMTP_USERNAME")
-        },
-        from: config.get("SMTP_FROM"),
-        host: config.get("SMTP_HOST"),
-        port: config.get("SMTP_PORT"),
-        secure: config.get("SMTP_SECURE"),
-        tls: config.get("SMTP_TLS")
-      })
-    }),
-
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -149,9 +140,18 @@ const MAX_PORT = 65535;
           port: config.get("REDIS_PORT")
         })
       })
-    })
+    }),
+
+    AdminModule,
+    ApplicationsModule,
+    AuthModule,
+    BullBoardModule,
+    FilesModule,
+    HealthModule,
+    SettingsModule,
+    UsersModule
   ],
-  exports: [ConfigModule, Logger, MailerModule],
+  exports: [ApplicationsModule, ConfigModule, Logger, MailerModule, UsersModule],
   controllers: [AppController],
   providers: [
     Logger,

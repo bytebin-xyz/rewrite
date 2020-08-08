@@ -56,7 +56,13 @@ const MongoStore = connectMongo(session);
 
   app
     .useGlobalFilters(new InternalServerErrorExceptionFilter(logger))
-    .useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+    .useGlobalPipes(
+      new ValidationPipe({
+        forbidUnknownValues: true,
+        transform: true,
+        whitelist: true
+      })
+    );
 
   app
     .use(

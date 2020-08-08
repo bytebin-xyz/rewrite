@@ -1,20 +1,16 @@
 import { Injectable } from "@nestjs/common";
 
+import { InvalidEmailConfirmationLink, InvalidUserActivationLink } from "./settings.errors";
+
+import { ApplicationsService } from "@/modules/applications/applications.service";
 import { AuthService } from "@/modules/auth/auth.service";
 import { FilesService } from "@/modules/files/files.service";
 import { MailerService } from "@/modules/mailer/mailer.service";
 import { UsersService } from "@/modules/users/users.service";
 
-import { InvalidEmailConfirmationLink, InvalidUserActivationLink } from "./settings.errors";
-
-import {
-  DisplayNameAlreadyExists,
-  EmailAlreadyExists,
-  UserNotFound
-} from "@/modules/users/users.errors";
-
 import { IncorrectPassword } from "@/modules/auth/auth.errors";
 
+import { DisplayNameAlreadyExists, EmailAlreadyExists } from "@/modules/users/users.errors";
 import { User } from "@/modules/users/schemas/user.schema";
 
 import { settle } from "@/utils/settle";
@@ -22,6 +18,7 @@ import { settle } from "@/utils/settle";
 @Injectable()
 export class SettingsService {
   constructor(
+    private readonly applications: ApplicationsService,
     private readonly auth: AuthService,
     private readonly files: FilesService,
     private readonly mailer: MailerService,
@@ -96,6 +93,7 @@ export class SettingsService {
     if (!(await user.comparePassword(password))) throw new IncorrectPassword();
 
     await settle([
+      this.applications.deleteAllFor(user.id),
       this.auth.logoutAllDevices(user.id),
       this.files.deleteAllFor(user.id),
       this.mailer.deleteAllFor(user.id)
@@ -106,7 +104,7 @@ export class SettingsService {
 
   async resendUserActivationEmail(user: User): Promise<void> {
     const activation = await this.mailer.findUserActivation({ uid: user.id });
-    if (!activation) throw new UserNotFound(user.username);
+    if (!activation) throw new InvalidUserActivationLink();
 
     await this.mailer.sendUserActivation(user);
     await activation.resent();

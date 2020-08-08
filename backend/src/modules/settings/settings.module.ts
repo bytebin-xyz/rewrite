@@ -7,14 +7,11 @@ import { SettingsService } from "./settings.service";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { FilesModule } from "@/modules/files/files.module";
 import { StorageModule } from "@/modules/storage/storage.module";
-import { UsersModule } from "@/modules/users/users.module";
 
 @Module({
   imports: [
     AuthModule,
     FilesModule,
-    UsersModule,
-
     StorageModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

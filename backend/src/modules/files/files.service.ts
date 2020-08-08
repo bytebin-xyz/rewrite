@@ -32,10 +32,11 @@ export class FilesService {
 
   async delete(id: string, uid: string): Promise<File> {
     const file = await this.findOne(id, uid);
+    if (!file) throw new FileNotFound(id);
 
     await this.filesQueue.add("delete", { fileId: file.id });
     await file.deleteOne();
-    
+
     return file;
   }
 
@@ -49,22 +50,17 @@ export class FilesService {
       });
   }
 
-  async findOne(id: string, uid: string): Promise<File> {
-    const file = await this.files.findOne({ id, uid });
-    if (!file) throw new FileNotFound(id);
-
-    return file;
+  async findOne(id: string, uid: string): Promise<File | null> {
+    return this.files.findOne({ id, uid });
   }
 
-  async findPublicFile(id: string): Promise<File> {
-    const file = await this.files.findOne({ id, public: true });
-    if (!file) throw new FileNotFound(id);
-
-    return file;
+  async findPublicFile(id: string): Promise<File | null> {
+    return this.files.findOne({ id, public: true });
   }
 
   async rename(id: string, newFilename: string, uid: string): Promise<File> {
     const file = await this.findOne(id, uid);
+    if (!file) throw new FileNotFound(id);
 
     return file.rename(newFilename);
   }

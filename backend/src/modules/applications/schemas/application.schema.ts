@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 import { plainToClass } from "class-transformer";
 
 import { isAlphanumeric } from "class-validator";
@@ -9,6 +11,12 @@ import { Prop, Schema, SchemaFactory, raw } from "@nestjs/mongoose";
 import { ApplicationDto } from "../dto/application.dto";
 
 import { generateId } from "@/utils/generateId";
+
+const HMAC_SHA256 = (data: crypto.BinaryLike, secret: string) =>
+  crypto
+    .createHmac("sha256", secret)
+    .update(data)
+    .digest("hex");
 
 @Schema({
   id: false,
@@ -28,6 +36,24 @@ export class Application extends Document implements ApplicationDto {
   })
   id!: string;
 
+  @Prop(
+    raw({
+      default: null,
+      trim: true,
+      type: String,
+      unique: true
+    })
+  )
+  key!: string | null;
+
+  @Prop(
+    raw({
+      default: null,
+      type: Date
+    })
+  )
+  lastUsed!: Date | null;
+
   @Prop({
     maxlength: 32,
     required: true,
@@ -36,18 +62,6 @@ export class Application extends Document implements ApplicationDto {
     validate: isAlphanumeric
   })
   name!: string;
-
-  @Prop(
-    raw({
-      default: null,
-      maxlength: 32,
-      minlength: 32,
-      trim: true,
-      type: String,
-      unique: true
-    })
-  )
-  token!: string | null;
 
   @Prop({
     lowercase: true,
@@ -59,8 +73,10 @@ export class Application extends Document implements ApplicationDto {
   uid!: string;
 
   changeName!: (newName: string) => Promise<this>;
-  changeToken!: (newToken: string) => Promise<this>;
+  compareKey!: (key: string, secret: string) => boolean;
+  generateKey!: (secret: string) => Promise<string>;
   toDto!: () => ApplicationDto;
+  updateLastUsed!: () => Promise<this>;
 }
 
 export const ApplicationSchema = SchemaFactory.createForClass(Application);
@@ -88,20 +104,40 @@ ApplicationSchema.methods.changeName = async function(
   return this;
 };
 
-ApplicationSchema.methods.changeToken = async function(
+ApplicationSchema.methods.compareKey = function(
   this: Application,
-  newToken: string
-): Promise<Application> {
-  if (this.token !== newToken) {
-    this.token = newToken;
-    await this.save();
-  }
+  key: string,
+  secret: string
+): boolean {
+  if (!this.key) return false;
 
-  return this;
+  return crypto.timingSafeEqual(Buffer.from(HMAC_SHA256(key, secret)), Buffer.from(this.key));
+};
+
+ApplicationSchema.methods.generateKey = async function(
+  this: Application,
+  secret: string
+): Promise<string> {
+  const token = await generateId(16);
+  const key = `${this.id}.${token}`;
+
+  this.key = HMAC_SHA256(key, secret);
+
+  await this.save();
+
+  return key;
 };
 
 ApplicationSchema.methods.toDto = function(this: Application): ApplicationDto {
   return plainToClass(ApplicationDto, this.toJSON(), {
     excludePrefixes: ["_"]
   });
+};
+
+ApplicationSchema.methods.updateLastUsed = async function(this: Application): Promise<Application> {
+  this.lastUsed = new Date();
+
+  await this.save();
+
+  return this;
 };

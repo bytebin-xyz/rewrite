@@ -27,16 +27,16 @@ export class Counter extends EventEmitter {
     return this.value === n;
   }
 
-  set(value: number): this {
-    this._value = value;
-    this.emit(String(this.value));
+  onceItEqualsTo(n: number, cb: () => void): this {
+    if (this.value === n) cb();
+    else this.once(String(n), cb);
 
     return this;
   }
 
-  onceItEqualsTo(n: number, cb: () => void): this {
-    if (this.value === n) cb();
-    else this.once(String(n), cb);
+  set(value: number): this {
+    this._value = value;
+    this.emit(String(this.value));
 
     return this;
   }
