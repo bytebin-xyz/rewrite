@@ -8,672 +8,764 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-	      <link rel="stylesheet" href="./styles/style.css">
-        <link rel="stylesheet" href="./styles/postmark.css">
+	    <link rel="stylesheet" href="./styles/style.css">
+                 <link rel="stylesheet" href="./styles/postmark.css">
     </head>
     <body>
 
         <div class="navbar navbar-default navbar-fixed-top visible-xs">
             <a href="./" class="navbar-brand">Bytebin</a>
-            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+            <button type="button" class="btn btn-default btn-menu fa fa-bars" id="btn-menu"></button>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+            <div id="book-search-input" role="search">
+                <input type="text" placeholder="Type to search">
+            </div>
+            <nav>
+            
+                <ul class="list">
+            
+                    <li class="title">
+                        <a href="./">Bytebin</a>
+                    </li>
+            
+                    <li class="divider"></li>
+            
+            
+                    <li class="chapter">
+                        <a data-type="chapter-link" href="./"><span class="fa fa-home"></span>Getting started</a>
+                        <ul class="links">
+                                <li class="link">
+                                    <a href="./" ><span class="fa fa-file-text-o"></span>README</a>
+                                </li>
+                                <li class="link">
+                                    <a 
+                                         href="./overview.html" 
+                                        
+                                         href="./overview.html" 
+                                         class="active" >
+                                        <span class="fa fa-th"></span>Overview
+                                    </a>
+                                </li>
+                        </ul>
+                    </li>
+            
+            
+            
+            
+                    <li class="chapter">
+                        <div class="simple">
+                            <span class="fa fa-file-code-o"></span>
+                            <span>Classes</span>
+                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
+                                    data-target="#xs-classes-links"
+                                ></span>
+                        </div>
+                        <ul class="links collapse in"
+                                id="xs-classes-links"
+                            >
+                                <li class="link">
+                                    <a href="classes/ApplicationDto.html" >ApplicationDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/ApplicationNotFound.html" >ApplicationNotFound</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/ChangeDisplayNameDto.html" >ChangeDisplayNameDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/ChangeEmailDto.html" >ChangeEmailDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/ChangePasswordDto.html" >ChangePasswordDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/ChunkAlreadyUploaded.html" >ChunkAlreadyUploaded</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/Counter.html" >Counter</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/CreateApplicationDto.html" >CreateApplicationDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/DeleteAccountDto.html" >DeleteAccountDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/DiskStorage.html" >DiskStorage</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/DisplayNameAlreadyExists.html" >DisplayNameAlreadyExists</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/EmailAlreadyExists.html" >EmailAlreadyExists</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/EmailChangedEmail.html" >EmailChangedEmail</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/EmailConfirmationEmail.html" >EmailConfirmationEmail</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/FileDto.html" >FileDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/FileNotFound.html" >FileNotFound</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/FileTooLarge.html" >FileTooLarge</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/ForgotPasswordDto.html" >ForgotPasswordDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/GenerateApplicationKeyDto.html" >GenerateApplicationKeyDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/GoogleCloudEngine.html" >GoogleCloudEngine</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/IncorrectPassword.html" >IncorrectPassword</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/InvalidAPIKey.html" >InvalidAPIKey</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/InvalidCredentials.html" >InvalidCredentials</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/InvalidEmailConfirmationLink.html" >InvalidEmailConfirmationLink</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/InvalidPasswordResetLink.html" >InvalidPasswordResetLink</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/InvalidUserActivationLink.html" >InvalidUserActivationLink</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/LoginDto.html" >LoginDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/MaxActiveUploadSessionsError.html" >MaxActiveUploadSessionsError</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/NoFilesUploaded.html" >NoFilesUploaded</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/PartialUserDto.html" >PartialUserDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/PasswordChangedEmail.html" >PasswordChangedEmail</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/PasswordResetEmail.html" >PasswordResetEmail</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/RegisterDto.html" >RegisterDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/RenameFileDto.html" >RenameFileDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/ResetPasswordDto.html" >ResetPasswordDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/StreamMeter.html" >StreamMeter</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/TooManyFields.html" >TooManyFields</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/TooManyFiles.html" >TooManyFiles</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/TooManyParts.html" >TooManyParts</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UserActivationEmail.html" >UserActivationEmail</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UserDto.html" >UserDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UserNotActivated.html" >UserNotActivated</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UserNotFound.html" >UserNotFound</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UserNotLoggedIn.html" >UserNotLoggedIn</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UsernameAlreadyExists.html" >UsernameAlreadyExists</a>
+                                </li>
+                        </ul>
+                    </li>
+            
+            
+                    <li class="chapter">
+                        <div class="simple">
+                            <span class="fa fa-long-arrow-down"></span>
+                            <span>Injectables</span>
+                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
+                                    data-target="#xs-injectables-links"
+                                ></span>
+                        </div>
+                        <ul class="links collapse in"
+                                id="xs-injectables-links"
+                            >
+                                <li class="link">
+                                    <a href="injectables/AdminGuard.html" >AdminGuard</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/AdminMiddleware.html" >AdminMiddleware</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/AdminService.html" >AdminService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/ApplicationsService.html" >ApplicationsService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/AuthGuard.html" >AuthGuard</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/AuthMiddleware.html" >AuthMiddleware</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/AuthService.html" >AuthService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/BullBoardProvider.html" >BullBoardProvider</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/FilesService.html" >FilesService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/MailerService.html" >MailerService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/RecaptchaGuard.html" >RecaptchaGuard</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/SettingsService.html" >SettingsService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/StorageService.html" >StorageService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/UsersService.html" >UsersService</a>
+                                </li>
+                        </ul>
+                    </li>
+            
+                    <li class="chapter">
+                        <div class="simple">
+                            <span class="fa fa-info"></span>
+                            <span>Interfaces</span>
+                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
+                                    data-target="#xs-interfaces-links"
+                                ></span>
+                        </div>
+                        <ul class="links collapse in"
+                                id="xs-interfaces-links"
+                            >
+                                <li class="link">
+                                    <a href="interfaces/AsyncStorageOptions.html" >AsyncStorageOptions</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/DeleteFileJob.html" >DeleteFileJob</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/DiskStorageEngineOptions.html" >DiskStorageEngineOptions</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/Email.html" >Email</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/GoogleCloudEngineOptions.html" >GoogleCloudEngineOptions</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/IRequest.html" >IRequest</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/ISession.html" >ISession</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/IncomingFile.html" >IncomingFile</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/MailerModuleAsyncOptions.html" >MailerModuleAsyncOptions</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/MailerOptions.html" >MailerOptions</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/MailerOptionsFactory.html" >MailerOptionsFactory</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/SendEmailChangedJob.html" >SendEmailChangedJob</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/SendEmailConfirmationJob.html" >SendEmailConfirmationJob</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/SendEmailJob.html" >SendEmailJob</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/SendPasswordChangedJob.html" >SendPasswordChangedJob</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/SendPasswordResetJob.html" >SendPasswordResetJob</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/SendUserActivationJob.html" >SendUserActivationJob</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/SessionDto.html" >SessionDto</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/StorageEngine.html" >StorageEngine</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/StorageOptions.html" >StorageOptions</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/StorageOptionsFactory.html" >StorageOptionsFactory</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/UploadedFile.html" >UploadedFile</a>
+                                </li>
+                                <li class="link">
+                                    <a href="interfaces/WriteOptions.html" >WriteOptions</a>
+                                </li>
+                        </ul>
+                    </li>
+            
+            
+                    <li class="chapter">
+                        <a data-type="chapter-link" href="./miscellaneous.html" ><span class="fa fa-cubes"></span>Miscellaneous</a>
+                    </li>
+            
+                    <li class="chapter">
+                        <a data-type="chapter-link" href="./coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
+                    </li>
+            
+                    <li class="divider"></li>
+                    <li class="copyright">
+                            Documentation generated using <a href="https://compodoc.github.io/compodoc/" target="_blank">
+                                        <img src=".//images/compodoc-vectorise.svg" class="img-responsive">
+                            </a>
+                    </li>
+            
+                </ul>
+            
+            </nav>
         </div>
 
         <div class="container-fluid main">
            <div class="row main">
                <div class="hidden-xs menu">
-                   <compodoc-menu mode="normal"></compodoc-menu>
+                   <nav>
+                   
+                       <ul class="list">
+                   
+                           <li class="title">
+                               <a href="./">Bytebin</a>
+                           </li>
+                   
+                           <li class="divider"></li>
+                   
+                               <div id="book-search-input" role="search">
+                                   <input type="text" placeholder="Type to search">
+                               </div>
+                   
+                           <li class="chapter">
+                               <a data-type="chapter-link" href="./"><span class="fa fa-home"></span>Getting started</a>
+                               <ul class="links">
+                                       <li class="link">
+                                           <a href="./" ><span class="fa fa-file-text-o"></span>README</a>
+                                       </li>
+                                       <li class="link">
+                                           <a 
+                                                href="./overview.html" 
+                                               
+                                                href="./overview.html" 
+                                                class="active" >
+                                               <span class="fa fa-th"></span>Overview
+                                           </a>
+                                       </li>
+                               </ul>
+                           </li>
+                   
+                   
+                   
+                   
+                           <li class="chapter">
+                               <div class="simple">
+                                   <span class="fa fa-file-code-o"></span>
+                                   <span>Classes</span>
+                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
+                                           data-target="#classes-links"
+                   ></span>
+                               </div>
+                               <ul class="links collapse in"
+                                       id="classes-links"
+                   >
+                                       <li class="link">
+                                           <a href="classes/ApplicationDto.html" >ApplicationDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/ApplicationNotFound.html" >ApplicationNotFound</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/ChangeDisplayNameDto.html" >ChangeDisplayNameDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/ChangeEmailDto.html" >ChangeEmailDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/ChangePasswordDto.html" >ChangePasswordDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/ChunkAlreadyUploaded.html" >ChunkAlreadyUploaded</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/Counter.html" >Counter</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/CreateApplicationDto.html" >CreateApplicationDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/DeleteAccountDto.html" >DeleteAccountDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/DiskStorage.html" >DiskStorage</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/DisplayNameAlreadyExists.html" >DisplayNameAlreadyExists</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/EmailAlreadyExists.html" >EmailAlreadyExists</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/EmailChangedEmail.html" >EmailChangedEmail</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/EmailConfirmationEmail.html" >EmailConfirmationEmail</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/FileDto.html" >FileDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/FileNotFound.html" >FileNotFound</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/FileTooLarge.html" >FileTooLarge</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/ForgotPasswordDto.html" >ForgotPasswordDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/GenerateApplicationKeyDto.html" >GenerateApplicationKeyDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/GoogleCloudEngine.html" >GoogleCloudEngine</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/IncorrectPassword.html" >IncorrectPassword</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/InvalidAPIKey.html" >InvalidAPIKey</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/InvalidCredentials.html" >InvalidCredentials</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/InvalidEmailConfirmationLink.html" >InvalidEmailConfirmationLink</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/InvalidPasswordResetLink.html" >InvalidPasswordResetLink</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/InvalidUserActivationLink.html" >InvalidUserActivationLink</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/LoginDto.html" >LoginDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/MaxActiveUploadSessionsError.html" >MaxActiveUploadSessionsError</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/NoFilesUploaded.html" >NoFilesUploaded</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/PartialUserDto.html" >PartialUserDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/PasswordChangedEmail.html" >PasswordChangedEmail</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/PasswordResetEmail.html" >PasswordResetEmail</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/RegisterDto.html" >RegisterDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/RenameFileDto.html" >RenameFileDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/ResetPasswordDto.html" >ResetPasswordDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/StreamMeter.html" >StreamMeter</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/TooManyFields.html" >TooManyFields</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/TooManyFiles.html" >TooManyFiles</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/TooManyParts.html" >TooManyParts</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UserActivationEmail.html" >UserActivationEmail</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UserDto.html" >UserDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UserNotActivated.html" >UserNotActivated</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UserNotFound.html" >UserNotFound</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UserNotLoggedIn.html" >UserNotLoggedIn</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UsernameAlreadyExists.html" >UsernameAlreadyExists</a>
+                                       </li>
+                               </ul>
+                           </li>
+                   
+                   
+                           <li class="chapter">
+                               <div class="simple">
+                                   <span class="fa fa-long-arrow-down"></span>
+                                   <span>Injectables</span>
+                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
+                                           data-target="#injectables-links"
+                   ></span>
+                               </div>
+                               <ul class="links collapse in"
+                                       id="injectables-links"
+                   >
+                                       <li class="link">
+                                           <a href="injectables/AdminGuard.html" >AdminGuard</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/AdminMiddleware.html" >AdminMiddleware</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/AdminService.html" >AdminService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/ApplicationsService.html" >ApplicationsService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/AuthGuard.html" >AuthGuard</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/AuthMiddleware.html" >AuthMiddleware</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/AuthService.html" >AuthService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/BullBoardProvider.html" >BullBoardProvider</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/FilesService.html" >FilesService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/MailerService.html" >MailerService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/RecaptchaGuard.html" >RecaptchaGuard</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/SettingsService.html" >SettingsService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/StorageService.html" >StorageService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="injectables/UsersService.html" >UsersService</a>
+                                       </li>
+                               </ul>
+                           </li>
+                   
+                           <li class="chapter">
+                               <div class="simple">
+                                   <span class="fa fa-info"></span>
+                                   <span>Interfaces</span>
+                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
+                                           data-target="#interfaces-links"
+                   ></span>
+                               </div>
+                               <ul class="links collapse in"
+                                       id="interfaces-links"
+                   >
+                                       <li class="link">
+                                           <a href="interfaces/AsyncStorageOptions.html" >AsyncStorageOptions</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/DeleteFileJob.html" >DeleteFileJob</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/DiskStorageEngineOptions.html" >DiskStorageEngineOptions</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/Email.html" >Email</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/GoogleCloudEngineOptions.html" >GoogleCloudEngineOptions</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/IRequest.html" >IRequest</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/ISession.html" >ISession</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/IncomingFile.html" >IncomingFile</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/MailerModuleAsyncOptions.html" >MailerModuleAsyncOptions</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/MailerOptions.html" >MailerOptions</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/MailerOptionsFactory.html" >MailerOptionsFactory</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/SendEmailChangedJob.html" >SendEmailChangedJob</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/SendEmailConfirmationJob.html" >SendEmailConfirmationJob</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/SendEmailJob.html" >SendEmailJob</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/SendPasswordChangedJob.html" >SendPasswordChangedJob</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/SendPasswordResetJob.html" >SendPasswordResetJob</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/SendUserActivationJob.html" >SendUserActivationJob</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/SessionDto.html" >SessionDto</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/StorageEngine.html" >StorageEngine</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/StorageOptions.html" >StorageOptions</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/StorageOptionsFactory.html" >StorageOptionsFactory</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/UploadedFile.html" >UploadedFile</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="interfaces/WriteOptions.html" >WriteOptions</a>
+                                       </li>
+                               </ul>
+                           </li>
+                   
+                   
+                           <li class="chapter">
+                               <a data-type="chapter-link" href="./miscellaneous.html" ><span class="fa fa-cubes"></span>Miscellaneous</a>
+                           </li>
+                   
+                           <li class="chapter">
+                               <a data-type="chapter-link" href="./coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
+                           </li>
+                   
+                           <li class="divider"></li>
+                           <li class="copyright">
+                                   Documentation generated using <a href="https://compodoc.github.io/compodoc/" target="_blank">
+                                               <img src=".//images/compodoc-vectorise.svg" class="img-responsive">
+                                   </a>
+                           </li>
+                   
+                       </ul>
+                   
+                   </nav>
                </div>
-               <!-- START CONTENT -->
                <div class="content overview">
                    <div class="content-data">
-
-
-<ol class="breadcrumb">
-    <li>Overview</li>
-</ol>
-  
-<div class="text-center module-graph-container">
-    <div id="module-graph-svg">
-        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
- "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Generated by graphviz version 2.40.1 (20161225.0304)
- -->
-<!-- Title: dependencies Pages: 1 -->
-<svg width="2077pt" height="450pt"
- viewBox="0.00 0.00 2077.00 450.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 446)">
-<title>dependencies</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-446 2073,-446 2073,4 -4,4"/>
-<text text-anchor="start" x="1013.5091" y="-42.4" font-family="sans-serif" font-weight="bold" font-size="14.00" fill="#000000">Legend</text>
-<polygon fill="#ffffb3" stroke="transparent" points="800.5,-10 800.5,-30 820.5,-30 820.5,-10 800.5,-10"/>
-<text text-anchor="start" x="824.129" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Declarations</text>
-<polygon fill="#8dd3c7" stroke="transparent" points="913.5,-10 913.5,-30 933.5,-30 933.5,-10 913.5,-10"/>
-<text text-anchor="start" x="937.2251" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Module</text>
-<polygon fill="#80b1d3" stroke="transparent" points="999.5,-10 999.5,-30 1019.5,-30 1019.5,-10 999.5,-10"/>
-<text text-anchor="start" x="1023.2812" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Bootstrap</text>
-<polygon fill="#fdb462" stroke="transparent" points="1096.5,-10 1096.5,-30 1116.5,-30 1116.5,-10 1096.5,-10"/>
-<text text-anchor="start" x="1120.1732" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Providers</text>
-<polygon fill="#fb8072" stroke="transparent" points="1192.5,-10 1192.5,-30 1212.5,-30 1212.5,-10 1192.5,-10"/>
-<text text-anchor="start" x="1216.2258" y="-15.4" font-family="sans-serif" font-size="14.00" fill="#000000"> &#160;Exports</text>
-<g id="clust1" class="cluster">
-<title>cluster_AdminModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="8,-146 8,-366 174,-366 174,-146 8,-146"/>
-</g>
-<g id="clust4" class="cluster">
-<title>cluster_AdminModule_exports</title>
-<polygon fill="none" stroke="#000000" points="41,-306 41,-358 157,-358 157,-306 41,-306"/>
-</g>
-<g id="clust6" class="cluster">
-<title>cluster_AdminModule_providers</title>
-<polygon fill="none" stroke="#000000" points="16,-154 16,-206 166,-206 166,-154 16,-154"/>
-</g>
-<g id="clust7" class="cluster">
-<title>cluster_ApplicationsModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="1545,-146 1545,-366 1755,-366 1755,-146 1545,-146"/>
-</g>
-<g id="clust10" class="cluster">
-<title>cluster_ApplicationsModule_exports</title>
-<polygon fill="none" stroke="#000000" points="1564,-306 1564,-358 1714,-358 1714,-306 1564,-306"/>
-</g>
-<g id="clust12" class="cluster">
-<title>cluster_ApplicationsModule_providers</title>
-<polygon fill="none" stroke="#000000" points="1553,-154 1553,-206 1747,-206 1747,-154 1553,-154"/>
-</g>
-<g id="clust13" class="cluster">
-<title>cluster_AppModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="736,-146 736,-434 1299,-434 1299,-146 736,-146"/>
-</g>
-<g id="clust15" class="cluster">
-<title>cluster_AppModule_imports</title>
-<polygon fill="none" stroke="#000000" points="744,-154 744,-282 1291,-282 1291,-154 744,-154"/>
-</g>
-<g id="clust16" class="cluster">
-<title>cluster_AppModule_exports</title>
-<polygon fill="none" stroke="#000000" points="788,-374 788,-426 1247,-426 1247,-374 788,-374"/>
-</g>
-<g id="clust19" class="cluster">
-<title>cluster_AuthModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="464,-222 464,-290 728,-290 728,-222 464,-222"/>
-</g>
-<g id="clust22" class="cluster">
-<title>cluster_AuthModule_exports</title>
-<polygon fill="none" stroke="#000000" points="614,-230 614,-282 720,-282 720,-230 614,-230"/>
-</g>
-<g id="clust24" class="cluster">
-<title>cluster_AuthModule_providers</title>
-<polygon fill="none" stroke="#000000" points="472,-230 472,-282 606,-282 606,-230 472,-230"/>
-</g>
-<g id="clust25" class="cluster">
-<title>cluster_BullBoardModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="1307,-146 1307,-214 1509,-214 1509,-146 1307,-146"/>
-</g>
-<g id="clust30" class="cluster">
-<title>cluster_BullBoardModule_providers</title>
-<polygon fill="none" stroke="#000000" points="1315,-154 1315,-206 1501,-206 1501,-154 1315,-154"/>
-</g>
-<g id="clust31" class="cluster">
-<title>cluster_FilesModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="1184,-70 1184,-138 1724,-138 1724,-70 1184,-70"/>
-</g>
-<g id="clust33" class="cluster">
-<title>cluster_FilesModule_imports</title>
-<polygon fill="none" stroke="#000000" points="1598,-78 1598,-130 1716,-130 1716,-78 1598,-78"/>
-</g>
-<g id="clust34" class="cluster">
-<title>cluster_FilesModule_exports</title>
-<polygon fill="none" stroke="#000000" points="1486,-78 1486,-130 1590,-130 1590,-78 1486,-78"/>
-</g>
-<g id="clust36" class="cluster">
-<title>cluster_FilesModule_providers</title>
-<polygon fill="none" stroke="#000000" points="1192,-78 1192,-130 1478,-130 1478,-78 1192,-78"/>
-</g>
-<g id="clust43" class="cluster">
-<title>cluster_MailerModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="724,-70 724,-138 1176,-138 1176,-70 724,-70"/>
-</g>
-<g id="clust46" class="cluster">
-<title>cluster_MailerModule_exports</title>
-<polygon fill="none" stroke="#000000" points="1054,-78 1054,-130 1168,-130 1168,-78 1054,-78"/>
-</g>
-<g id="clust48" class="cluster">
-<title>cluster_MailerModule_providers</title>
-<polygon fill="none" stroke="#000000" points="732,-78 732,-130 1046,-130 1046,-78 732,-78"/>
-</g>
-<g id="clust49" class="cluster">
-<title>cluster_SettingsModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="424,-298 424,-366 728,-366 728,-298 424,-298"/>
-</g>
-<g id="clust52" class="cluster">
-<title>cluster_SettingsModule_exports</title>
-<polygon fill="none" stroke="#000000" points="598,-306 598,-358 720,-358 720,-306 598,-306"/>
-</g>
-<g id="clust54" class="cluster">
-<title>cluster_SettingsModule_providers</title>
-<polygon fill="none" stroke="#000000" points="432,-306 432,-358 590,-358 590,-306 432,-306"/>
-</g>
-<g id="clust55" class="cluster">
-<title>cluster_StorageModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="1763,-146 1763,-214 2061,-214 2061,-146 1763,-146"/>
-</g>
-<g id="clust58" class="cluster">
-<title>cluster_StorageModule_exports</title>
-<polygon fill="none" stroke="#000000" points="1933,-154 1933,-206 2053,-206 2053,-154 1933,-154"/>
-</g>
-<g id="clust60" class="cluster">
-<title>cluster_StorageModule_providers</title>
-<polygon fill="none" stroke="#000000" points="1771,-154 1771,-206 1925,-206 1925,-154 1771,-154"/>
-</g>
-<g id="clust61" class="cluster">
-<title>cluster_UsersModule</title>
-<polygon fill="none" stroke="#000000" stroke-dasharray="1,5" points="182,-222 182,-290 456,-290 456,-222 182,-222"/>
-</g>
-<g id="clust64" class="cluster">
-<title>cluster_UsersModule_exports</title>
-<polygon fill="none" stroke="#000000" points="338,-230 338,-282 448,-282 448,-230 338,-230"/>
-</g>
-<g id="clust66" class="cluster">
-<title>cluster_UsersModule_providers</title>
-<polygon fill="none" stroke="#000000" points="190,-230 190,-282 330,-282 330,-230 190,-230"/>
-</g>
-<!-- AdminService  -->
-<g id="node1" class="node">
-<title>AdminService </title>
-<polygon fill="#fb8072" stroke="#000000" points="149.3661,-350 48.6339,-350 48.6339,-314 149.3661,-314 149.3661,-350"/>
-<text text-anchor="middle" x="99" y="-327.8" font-family="Times,serif" font-size="14.00" fill="#000000">AdminService </text>
-</g>
-<!-- AdminModule -->
-<g id="node2" class="node">
-<title>AdminModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="148.4386,-274 145.4386,-278 124.4386,-278 121.4386,-274 49.5614,-274 49.5614,-238 148.4386,-238 148.4386,-274"/>
-<text text-anchor="middle" x="99" y="-251.8" font-family="Times,serif" font-size="14.00" fill="#000000">AdminModule</text>
-</g>
-<!-- AdminModule&#45;&gt;AdminService  -->
-<g id="edge1" class="edge">
-<title>AdminModule&#45;&gt;AdminService </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M82.5937,-274.0109C82.5937,-274.0109 82.5937,-303.855 82.5937,-303.855"/>
-<polygon fill="#000000" stroke="#000000" points="79.0938,-303.8549 82.5937,-313.855 86.0938,-303.855 79.0938,-303.8549"/>
-</g>
-<!-- AppModule -->
-<g id="node14" class="node">
-<title>AppModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="1045.6571,-350 1042.6571,-354 1021.6571,-354 1018.6571,-350 962.3429,-350 962.3429,-314 1045.6571,-314 1045.6571,-350"/>
-<text text-anchor="middle" x="1004" y="-327.8" font-family="Times,serif" font-size="14.00" fill="#000000">AppModule</text>
-</g>
-<!-- AdminModule&#45;&gt;AppModule -->
-<g id="edge5" class="edge">
-<title>AdminModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M115.4063,-274.2434C115.4063,-281.4297 115.4063,-288 115.4063,-288 115.4063,-288 985.592,-288 985.592,-288 985.592,-288 985.592,-303.8495 985.592,-303.8495"/>
-<polygon fill="#000000" stroke="#000000" points="982.0921,-303.8494 985.592,-313.8495 989.0921,-303.8495 982.0921,-303.8494"/>
-</g>
-<!-- AdminService -->
-<g id="node3" class="node">
-<title>AdminService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="91" cy="-180" rx="66.6325" ry="18"/>
-<text text-anchor="middle" x="91" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">AdminService</text>
-</g>
-<!-- AdminService&#45;&gt;AdminModule -->
-<g id="edge2" class="edge">
-<title>AdminService&#45;&gt;AdminModule</title>
-<path fill="none" stroke="#000000" d="M99,-198.0109C99,-198.0109 99,-227.855 99,-227.855"/>
-<polygon fill="#000000" stroke="#000000" points="95.5001,-227.8549 99,-237.855 102.5001,-227.855 95.5001,-227.8549"/>
-</g>
-<!-- ApplicationsService  -->
-<g id="node4" class="node">
-<title>ApplicationsService </title>
-<polygon fill="#fb8072" stroke="#000000" points="1705.5204,-350 1572.4796,-350 1572.4796,-314 1705.5204,-314 1705.5204,-350"/>
-<text text-anchor="middle" x="1639" y="-327.8" font-family="Times,serif" font-size="14.00" fill="#000000">ApplicationsService </text>
-</g>
-<!-- ApplicationsModule -->
-<g id="node5" class="node">
-<title>ApplicationsModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="1704.5926,-274 1701.5926,-278 1680.5926,-278 1677.5926,-274 1573.4074,-274 1573.4074,-238 1704.5926,-238 1704.5926,-274"/>
-<text text-anchor="middle" x="1639" y="-251.8" font-family="Times,serif" font-size="14.00" fill="#000000">ApplicationsModule</text>
-</g>
-<!-- ApplicationsModule&#45;&gt;ApplicationsService  -->
-<g id="edge3" class="edge">
-<title>ApplicationsModule&#45;&gt;ApplicationsService </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1639,-274.0109C1639,-274.0109 1639,-303.855 1639,-303.855"/>
-<polygon fill="#000000" stroke="#000000" points="1635.5001,-303.8549 1639,-313.855 1642.5001,-303.855 1635.5001,-303.8549"/>
-</g>
-<!-- ApplicationsModule&#45;&gt;AppModule -->
-<g id="edge6" class="edge">
-<title>ApplicationsModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1573.2583,-250C1569.1207,-250 1566.5745,-250 1566.5745,-250 1566.5745,-250 1566.5745,-338 1566.5745,-338 1566.5745,-338 1055.8249,-338 1055.8249,-338"/>
-<polygon fill="#000000" stroke="#000000" points="1055.8249,-334.5001 1045.8249,-338 1055.8249,-341.5001 1055.8249,-334.5001"/>
-</g>
-<!-- ApplicationsService -->
-<g id="node6" class="node">
-<title>ApplicationsService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1650" cy="-180" rx="89.1819" ry="18"/>
-<text text-anchor="middle" x="1650" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">ApplicationsService</text>
-</g>
-<!-- ApplicationsService&#45;&gt;ApplicationsModule -->
-<g id="edge4" class="edge">
-<title>ApplicationsService&#45;&gt;ApplicationsModule</title>
-<path fill="none" stroke="#000000" d="M1639,-198.0109C1639,-198.0109 1639,-227.855 1639,-227.855"/>
-<polygon fill="#000000" stroke="#000000" points="1635.5001,-227.8549 1639,-237.855 1642.5001,-227.855 1635.5001,-227.8549"/>
-</g>
-<!-- AuthModule -->
-<g id="node7" class="node">
-<title>AuthModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="948.5482,-198 945.5482,-202 924.5482,-202 921.5482,-198 861.4518,-198 861.4518,-162 948.5482,-162 948.5482,-198"/>
-<text text-anchor="middle" x="905" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">AuthModule</text>
-</g>
-<!-- SettingsModule -->
-<g id="node12" class="node">
-<title>SettingsModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="1147.1639,-274 1144.1639,-278 1123.1639,-278 1120.1639,-274 1042.8361,-274 1042.8361,-238 1147.1639,-238 1147.1639,-274"/>
-<text text-anchor="middle" x="1095" y="-251.8" font-family="Times,serif" font-size="14.00" fill="#000000">SettingsModule</text>
-</g>
-<!-- AuthModule&#45;&gt;SettingsModule -->
-<g id="edge29" class="edge">
-<title>AuthModule&#45;&gt;SettingsModule</title>
-<path fill="none" stroke="#000000" d="M935.4548,-198.0109C935.4548,-220.4852 935.4548,-256 935.4548,-256 935.4548,-256 1032.7589,-256 1032.7589,-256"/>
-<polygon fill="#000000" stroke="#000000" points="1032.759,-259.5001 1042.7589,-256 1032.7589,-252.5001 1032.759,-259.5001"/>
-</g>
-<!-- AuthModule&#45;&gt;AppModule -->
-<g id="edge7" class="edge">
-<title>AuthModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M922.136,-198.2733C922.136,-236.6253 922.136,-322 922.136,-322 922.136,-322 952.1088,-322 952.1088,-322"/>
-<polygon fill="#000000" stroke="#000000" points="952.1088,-325.5001 962.1088,-322 952.1087,-318.5001 952.1088,-325.5001"/>
-</g>
-<!-- AuthService  -->
-<g id="node19" class="node">
-<title>AuthService </title>
-<polygon fill="#fb8072" stroke="#000000" points="711.9761,-274 622.0239,-274 622.0239,-238 711.9761,-238 711.9761,-274"/>
-<text text-anchor="middle" x="667" y="-251.8" font-family="Times,serif" font-size="14.00" fill="#000000">AuthService </text>
-</g>
-<!-- AuthModule&#45;&gt;AuthService  -->
-<g id="edge18" class="edge">
-<title>AuthModule&#45;&gt;AuthService </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M875.8435,-198.308C875.8435,-218.1455 875.8435,-247 875.8435,-247 875.8435,-247 721.8022,-247 721.8022,-247"/>
-<polygon fill="#000000" stroke="#000000" points="721.8022,-243.5001 711.8022,-247 721.8021,-250.5001 721.8022,-243.5001"/>
-</g>
-<!-- BullBoardModule -->
-<g id="node8" class="node">
-<title>BullBoardModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="1282.8795,-274 1279.8795,-278 1258.8795,-278 1255.8795,-274 1165.1205,-274 1165.1205,-238 1282.8795,-238 1282.8795,-274"/>
-<text text-anchor="middle" x="1224" y="-251.8" font-family="Times,serif" font-size="14.00" fill="#000000">BullBoardModule</text>
-</g>
-<!-- BullBoardModule&#45;&gt;AppModule -->
-<g id="edge8" class="edge">
-<title>BullBoardModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1202.1783,-274.0109C1202.1783,-296.4852 1202.1783,-332 1202.1783,-332 1202.1783,-332 1056.0285,-332 1056.0285,-332"/>
-<polygon fill="#000000" stroke="#000000" points="1056.0286,-328.5001 1046.0285,-332 1056.0285,-335.5001 1056.0286,-328.5001"/>
-</g>
-<!-- FilesModule -->
-<g id="node9" class="node">
-<title>FilesModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="1283.2731,-198 1280.2731,-202 1259.2731,-202 1256.2731,-198 1196.7269,-198 1196.7269,-162 1283.2731,-162 1283.2731,-198"/>
-<text text-anchor="middle" x="1240" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">FilesModule</text>
-</g>
-<!-- FilesModule&#45;&gt;BullBoardModule -->
-<g id="edge20" class="edge">
-<title>FilesModule&#45;&gt;BullBoardModule</title>
-<path fill="none" stroke="#000000" d="M1261.3582,-198.0109C1261.3582,-198.0109 1261.3582,-227.855 1261.3582,-227.855"/>
-<polygon fill="#000000" stroke="#000000" points="1257.8583,-227.8549 1261.3582,-237.855 1264.8583,-227.855 1257.8583,-227.8549"/>
-</g>
-<!-- FilesModule&#45;&gt;SettingsModule -->
-<g id="edge30" class="edge">
-<title>FilesModule&#45;&gt;SettingsModule</title>
-<path fill="none" stroke="#000000" d="M1239.7767,-198.1467C1239.7767,-211.7395 1239.7767,-228 1239.7767,-228 1239.7767,-228 1114.4495,-228 1114.4495,-228 1114.4495,-228 1114.4495,-228.9793 1114.4495,-228.9793"/>
-<polygon fill="#000000" stroke="#000000" points="1110.9496,-227.793 1114.4495,-237.793 1117.9496,-227.7931 1110.9496,-227.793"/>
-</g>
-<!-- FilesModule&#45;&gt;AppModule -->
-<g id="edge9" class="edge">
-<title>FilesModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1218.1951,-198.1097C1218.1951,-207.897 1218.1951,-218 1218.1951,-218 1218.1951,-218 1023.6429,-218 1023.6429,-218 1023.6429,-218 1023.6429,-303.9364 1023.6429,-303.9364"/>
-<polygon fill="#000000" stroke="#000000" points="1020.143,-303.9363 1023.6429,-313.9364 1027.143,-303.9364 1020.143,-303.9363"/>
-</g>
-<!-- FilesService  -->
-<g id="node23" class="node">
-<title>FilesService </title>
-<polygon fill="#fb8072" stroke="#000000" points="1582.2011,-122 1493.7989,-122 1493.7989,-86 1582.2011,-86 1582.2011,-122"/>
-<text text-anchor="middle" x="1538" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">FilesService </text>
-</g>
-<!-- FilesModule&#45;&gt;FilesService  -->
-<g id="edge23" class="edge">
-<title>FilesModule&#45;&gt;FilesService </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1233.4927,-161.7985C1233.4927,-155.972 1233.4927,-151 1233.4927,-151 1233.4927,-151 1527.1544,-151 1527.1544,-151 1527.1544,-151 1527.1544,-132.037 1527.1544,-132.037"/>
-<polygon fill="#000000" stroke="#000000" points="1530.6545,-132.037 1527.1544,-122.037 1523.6545,-132.037 1530.6545,-132.037"/>
-</g>
-<!-- HealthModule -->
-<g id="node10" class="node">
-<title>HealthModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="1063.3669,-198 1060.3669,-202 1039.3669,-202 1036.3669,-198 966.6331,-198 966.6331,-162 1063.3669,-162 1063.3669,-198"/>
-<text text-anchor="middle" x="1015" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">HealthModule</text>
-</g>
-<!-- HealthModule&#45;&gt;AppModule -->
-<g id="edge10" class="edge">
-<title>HealthModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1004.6175,-198.0333C1004.6175,-198.0333 1004.6175,-303.9902 1004.6175,-303.9902"/>
-<polygon fill="#000000" stroke="#000000" points="1001.1175,-303.9901 1004.6175,-313.9902 1008.1175,-303.9902 1001.1175,-303.9901"/>
-</g>
-<!-- MailerModule -->
-<g id="node11" class="node">
-<title>MailerModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="1178.3655,-198 1175.3655,-202 1154.3655,-202 1151.3655,-198 1081.6345,-198 1081.6345,-162 1178.3655,-162 1178.3655,-198"/>
-<text text-anchor="middle" x="1130" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">MailerModule</text>
-</g>
-<!-- MailerModule&#45;&gt;AppModule -->
-<g id="edge11" class="edge">
-<title>MailerModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1156.196,-198.1958C1156.196,-237.3337 1156.196,-326 1156.196,-326 1156.196,-326 1055.9911,-326 1055.9911,-326"/>
-<polygon fill="#000000" stroke="#000000" points="1055.9911,-322.5001 1045.9911,-326 1055.9911,-329.5001 1055.9911,-322.5001"/>
-</g>
-<!-- MailerService  -->
-<g id="node26" class="node">
-<title>MailerService </title>
-<polygon fill="#fb8072" stroke="#000000" points="1160.2934,-122 1061.7066,-122 1061.7066,-86 1160.2934,-86 1160.2934,-122"/>
-<text text-anchor="middle" x="1111" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">MailerService </text>
-</g>
-<!-- MailerModule&#45;&gt;MailerService  -->
-<g id="edge26" class="edge">
-<title>MailerModule&#45;&gt;MailerService </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1140.6893,-161.9891C1140.6893,-161.9891 1140.6893,-132.145 1140.6893,-132.145"/>
-<polygon fill="#000000" stroke="#000000" points="1144.1894,-132.145 1140.6893,-122.145 1137.1894,-132.1451 1144.1894,-132.145"/>
-</g>
-<!-- SettingsModule&#45;&gt;AppModule -->
-<g id="edge12" class="edge">
-<title>SettingsModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M1073.252,-274.1686C1073.252,-293.0898 1073.252,-320 1073.252,-320 1073.252,-320 1055.8818,-320 1055.8818,-320"/>
-<polygon fill="#000000" stroke="#000000" points="1055.8818,-316.5001 1045.8818,-320 1055.8817,-323.5001 1055.8818,-316.5001"/>
-</g>
-<!-- SettingsService  -->
-<g id="node29" class="node">
-<title>SettingsService </title>
-<polygon fill="#fb8072" stroke="#000000" points="712.092,-350 605.908,-350 605.908,-314 712.092,-314 712.092,-350"/>
-<text text-anchor="middle" x="659" y="-327.8" font-family="Times,serif" font-size="14.00" fill="#000000">SettingsService </text>
-</g>
-<!-- SettingsModule&#45;&gt;SettingsService  -->
-<g id="edge32" class="edge">
-<title>SettingsModule&#45;&gt;SettingsService </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1042.6482,-265C1003.0567,-265 955.4727,-265 955.4727,-265 955.4727,-265 955.4727,-336 955.4727,-336 955.4727,-336 722.3458,-336 722.3458,-336"/>
-<polygon fill="#000000" stroke="#000000" points="722.3458,-332.5001 712.3458,-336 722.3457,-339.5001 722.3458,-332.5001"/>
-</g>
-<!-- UsersModule -->
-<g id="node13" class="node">
-<title>UsersModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="843.9218,-198 840.9218,-202 819.9218,-202 816.9218,-198 752.0782,-198 752.0782,-162 843.9218,-162 843.9218,-198"/>
-<text text-anchor="middle" x="798" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">UsersModule</text>
-</g>
-<!-- UsersModule&#45;&gt;AppModule -->
-<g id="edge13" class="edge">
-<title>UsersModule&#45;&gt;AppModule</title>
-<path fill="none" stroke="#000000" d="M819.625,-198.2703C819.625,-238.0576 819.625,-329 819.625,-329 819.625,-329 952.1625,-329 952.1625,-329"/>
-<polygon fill="#000000" stroke="#000000" points="952.1625,-332.5001 962.1625,-329 952.1624,-325.5001 952.1625,-332.5001"/>
-</g>
-<!-- UsersService  -->
-<g id="node33" class="node">
-<title>UsersService </title>
-<polygon fill="#fb8072" stroke="#000000" points="439.8493,-274 346.1507,-274 346.1507,-238 439.8493,-238 439.8493,-274"/>
-<text text-anchor="middle" x="393" y="-251.8" font-family="Times,serif" font-size="14.00" fill="#000000">UsersService </text>
-</g>
-<!-- UsersModule&#45;&gt;UsersService  -->
-<g id="edge36" class="edge">
-<title>UsersModule&#45;&gt;UsersService </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M751.9357,-186C645.7855,-186 393,-186 393,-186 393,-186 393,-227.9733 393,-227.9733"/>
-<polygon fill="#000000" stroke="#000000" points="389.5001,-227.9732 393,-237.9733 396.5001,-227.9733 389.5001,-227.9732"/>
-</g>
-<!-- ApplicationsModule  -->
-<g id="node15" class="node">
-<title>ApplicationsModule </title>
-<polygon fill="#fb8072" stroke="#000000" points="1239.0932,-418 1104.9068,-418 1104.9068,-382 1239.0932,-382 1239.0932,-418"/>
-<text text-anchor="middle" x="1172" y="-395.8" font-family="Times,serif" font-size="14.00" fill="#000000">ApplicationsModule </text>
-</g>
-<!-- AppModule&#45;&gt;ApplicationsModule  -->
-<g id="edge14" class="edge">
-<title>AppModule&#45;&gt;ApplicationsModule </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1045.9916,-344C1081.2869,-344 1126.0177,-344 1126.0177,-344 1126.0177,-344 1126.0177,-371.973 1126.0177,-371.973"/>
-<polygon fill="#000000" stroke="#000000" points="1122.5178,-371.973 1126.0177,-381.973 1129.5178,-371.973 1122.5178,-371.973"/>
-</g>
-<!-- Logger  -->
-<g id="node16" class="node">
-<title>Logger </title>
-<polygon fill="#fb8072" stroke="#000000" points="1086.9278,-418 1027.0722,-418 1027.0722,-382 1086.9278,-382 1086.9278,-418"/>
-<text text-anchor="middle" x="1057" y="-395.8" font-family="Times,serif" font-size="14.00" fill="#000000">Logger </text>
-</g>
-<!-- AppModule&#45;&gt;Logger  -->
-<g id="edge15" class="edge">
-<title>AppModule&#45;&gt;Logger </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1036.4322,-350.2228C1036.4322,-350.2228 1036.4322,-371.7269 1036.4322,-371.7269"/>
-<polygon fill="#000000" stroke="#000000" points="1032.9322,-371.7269 1036.4322,-381.7269 1039.9322,-371.727 1032.9322,-371.7269"/>
-</g>
-<!-- MailerModule  -->
-<g id="node17" class="node">
-<title>MailerModule </title>
-<polygon fill="#fb8072" stroke="#000000" points="1009.3661,-418 908.6339,-418 908.6339,-382 1009.3661,-382 1009.3661,-418"/>
-<text text-anchor="middle" x="959" y="-395.8" font-family="Times,serif" font-size="14.00" fill="#000000">MailerModule </text>
-</g>
-<!-- AppModule&#45;&gt;MailerModule  -->
-<g id="edge16" class="edge">
-<title>AppModule&#45;&gt;MailerModule </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M985.6773,-350.2228C985.6773,-350.2228 985.6773,-371.7269 985.6773,-371.7269"/>
-<polygon fill="#000000" stroke="#000000" points="982.1773,-371.7269 985.6773,-381.7269 989.1773,-371.727 982.1773,-371.7269"/>
-</g>
-<!-- UsersModule  -->
-<g id="node18" class="node">
-<title>UsersModule </title>
-<polygon fill="#fb8072" stroke="#000000" points="890.4208,-418 795.5792,-418 795.5792,-382 890.4208,-382 890.4208,-418"/>
-<text text-anchor="middle" x="843" y="-395.8" font-family="Times,serif" font-size="14.00" fill="#000000">UsersModule </text>
-</g>
-<!-- AppModule&#45;&gt;UsersModule  -->
-<g id="edge17" class="edge">
-<title>AppModule&#45;&gt;UsersModule </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M962.0724,-343C927.1686,-343 883.1519,-343 883.1519,-343 883.1519,-343 883.1519,-371.9648 883.1519,-371.9648"/>
-<polygon fill="#000000" stroke="#000000" points="879.652,-371.9648 883.1519,-381.9648 886.652,-371.9649 879.652,-371.9648"/>
-</g>
-<!-- AuthService -->
-<g id="node20" class="node">
-<title>AuthService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="539" cy="-256" rx="59.1083" ry="18"/>
-<text text-anchor="middle" x="539" y="-251.8" font-family="Times,serif" font-size="14.00" fill="#000000">AuthService</text>
-</g>
-<!-- AuthService&#45;&gt;AuthModule -->
-<g id="edge19" class="edge">
-<title>AuthService&#45;&gt;AuthModule</title>
-<path fill="none" stroke="#000000" d="M539,-237.8533C539,-224.2605 539,-208 539,-208 539,-208 868.535,-208 868.535,-208 868.535,-208 868.535,-207.0207 868.535,-207.0207"/>
-<polygon fill="#000000" stroke="#000000" points="872.0351,-208.2069 868.535,-198.207 865.0351,-208.207 872.0351,-208.2069"/>
-</g>
-<!-- BullBoardProvider -->
-<g id="node21" class="node">
-<title>BullBoardProvider</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1408" cy="-180" rx="84.5498" ry="18"/>
-<text text-anchor="middle" x="1408" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">BullBoardProvider</text>
-</g>
-<!-- BullBoardProvider&#45;&gt;BullBoardModule -->
-<g id="edge21" class="edge">
-<title>BullBoardProvider&#45;&gt;BullBoardModule</title>
-<path fill="none" stroke="#000000" d="M1408,-198.1985C1408,-222.3563 1408,-262 1408,-262 1408,-262 1292.978,-262 1292.978,-262"/>
-<polygon fill="#000000" stroke="#000000" points="1292.978,-258.5001 1282.978,-262 1292.9779,-265.5001 1292.978,-258.5001"/>
-</g>
-<!-- StorageModule -->
-<g id="node22" class="node">
-<title>StorageModule</title>
-<polygon fill="#8dd3c7" stroke="#000000" points="1708.3133,-122 1705.3133,-126 1684.3133,-126 1681.3133,-122 1605.6867,-122 1605.6867,-86 1708.3133,-86 1708.3133,-122"/>
-<text text-anchor="middle" x="1657" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">StorageModule</text>
-</g>
-<!-- StorageModule&#45;&gt;FilesModule -->
-<g id="edge22" class="edge">
-<title>StorageModule&#45;&gt;FilesModule</title>
-<path fill="none" stroke="#000000" d="M1674.0521,-122.2396C1674.0521,-137.5706 1674.0521,-157 1674.0521,-157 1674.0521,-157 1266.7552,-157 1266.7552,-157 1266.7552,-157 1266.7552,-157.4878 1266.7552,-157.4878"/>
-<polygon fill="#000000" stroke="#000000" points="1263.2554,-151.8776 1266.7552,-161.8777 1270.2554,-151.8778 1263.2554,-151.8776"/>
-</g>
-<!-- StorageModule&#45;&gt;SettingsModule -->
-<g id="edge31" class="edge">
-<title>StorageModule&#45;&gt;SettingsModule</title>
-<path fill="none" stroke="#000000" d="M1639.9479,-122.1903C1639.9479,-125.5376 1639.9479,-128 1639.9479,-128 1639.9479,-128 1072.5004,-128 1072.5004,-128 1072.5004,-128 1072.5004,-227.9322 1072.5004,-227.9322"/>
-<polygon fill="#000000" stroke="#000000" points="1069.0004,-227.9322 1072.5004,-237.9322 1076.0004,-227.9322 1069.0004,-227.9322"/>
-</g>
-<!-- StorageService  -->
-<g id="node31" class="node">
-<title>StorageService </title>
-<polygon fill="#fb8072" stroke="#000000" points="2045.2409,-198 1940.7591,-198 1940.7591,-162 2045.2409,-162 2045.2409,-198"/>
-<text text-anchor="middle" x="1993" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">StorageService </text>
-</g>
-<!-- StorageModule&#45;&gt;StorageService  -->
-<g id="edge34" class="edge">
-<title>StorageModule&#45;&gt;StorageService </title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1708.3969,-98C1802.5206,-98 1993,-98 1993,-98 1993,-98 1993,-151.8015 1993,-151.8015"/>
-<polygon fill="#000000" stroke="#000000" points="1989.5001,-151.8015 1993,-161.8015 1996.5001,-151.8016 1989.5001,-151.8015"/>
-</g>
-<!-- FilesProcessor -->
-<g id="node24" class="node">
-<title>FilesProcessor</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1403" cy="-104" rx="67.2081" ry="18"/>
-<text text-anchor="middle" x="1403" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">FilesProcessor</text>
-</g>
-<!-- FilesProcessor&#45;&gt;FilesModule -->
-<g id="edge24" class="edge">
-<title>FilesProcessor&#45;&gt;FilesModule</title>
-<path fill="none" stroke="#000000" d="M1403,-122.1025C1403,-133.0859 1403,-145 1403,-145 1403,-145 1250.1239,-145 1250.1239,-145 1250.1239,-145 1250.1239,-151.68 1250.1239,-151.68"/>
-<polygon fill="#000000" stroke="#000000" points="1246.624,-151.6799 1250.1239,-161.68 1253.624,-151.68 1246.624,-151.6799"/>
-</g>
-<!-- FilesService -->
-<g id="node25" class="node">
-<title>FilesService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1259" cy="-104" rx="58.5405" ry="18"/>
-<text text-anchor="middle" x="1259" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">FilesService</text>
-</g>
-<!-- FilesService&#45;&gt;FilesModule -->
-<g id="edge25" class="edge">
-<title>FilesService&#45;&gt;FilesModule</title>
-<path fill="none" stroke="#000000" d="M1216.8614,-116.5499C1216.8614,-116.5499 1216.8614,-151.7417 1216.8614,-151.7417"/>
-<polygon fill="#000000" stroke="#000000" points="1213.3615,-151.7417 1216.8614,-161.7417 1220.3615,-151.7418 1213.3615,-151.7417"/>
-</g>
-<!-- MailerProcessor -->
-<g id="node27" class="node">
-<title>MailerProcessor</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="964" cy="-104" rx="74.1316" ry="18"/>
-<text text-anchor="middle" x="964" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">MailerProcessor</text>
-</g>
-<!-- MailerProcessor&#45;&gt;MailerModule -->
-<g id="edge27" class="edge">
-<title>MailerProcessor&#45;&gt;MailerModule</title>
-<path fill="none" stroke="#000000" d="M1002.4411,-119.7029C1002.4411,-126.9614 1002.4411,-134 1002.4411,-134 1002.4411,-134 1120.9819,-134 1120.9819,-134 1120.9819,-134 1120.9819,-151.8196 1120.9819,-151.8196"/>
-<polygon fill="#000000" stroke="#000000" points="1117.482,-151.8195 1120.9819,-161.8196 1124.482,-151.8196 1117.482,-151.8195"/>
-</g>
-<!-- MailerService -->
-<g id="node28" class="node">
-<title>MailerService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="806" cy="-104" rx="65.9638" ry="18"/>
-<text text-anchor="middle" x="806" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">MailerService</text>
-</g>
-<!-- MailerService&#45;&gt;MailerModule -->
-<g id="edge28" class="edge">
-<title>MailerService&#45;&gt;MailerModule</title>
-<path fill="none" stroke="#000000" d="M866.479,-111.2851C866.479,-121.8044 866.479,-140 866.479,-140 866.479,-140 1101.2746,-140 1101.2746,-140 1101.2746,-140 1101.2746,-151.8726 1101.2746,-151.8726"/>
-<polygon fill="#000000" stroke="#000000" points="1097.7747,-151.8725 1101.2746,-161.8726 1104.7747,-151.8726 1097.7747,-151.8725"/>
-</g>
-<!-- SettingsService -->
-<g id="node30" class="node">
-<title>SettingsService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="511" cy="-332" rx="71.221" ry="18"/>
-<text text-anchor="middle" x="511" y="-327.8" font-family="Times,serif" font-size="14.00" fill="#000000">SettingsService</text>
-</g>
-<!-- SettingsService&#45;&gt;SettingsModule -->
-<g id="edge33" class="edge">
-<title>SettingsService&#45;&gt;SettingsModule</title>
-<path fill="none" stroke="#000000" d="M530.9033,-314.6873C530.9033,-307.5864 530.9033,-301 530.9033,-301 530.9033,-301 1059.5401,-301 1059.5401,-301 1059.5401,-301 1059.5401,-284.0439 1059.5401,-284.0439"/>
-<polygon fill="#000000" stroke="#000000" points="1063.0402,-284.0439 1059.5401,-274.0439 1056.0402,-284.044 1063.0402,-284.0439"/>
-</g>
-<!-- StorageService -->
-<g id="node32" class="node">
-<title>StorageService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="1848" cy="-180" rx="69.4781" ry="18"/>
-<text text-anchor="middle" x="1848" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">StorageService</text>
-</g>
-<!-- StorageService&#45;&gt;StorageModule -->
-<g id="edge35" class="edge">
-<title>StorageService&#45;&gt;StorageModule</title>
-<path fill="none" stroke="#000000" d="M1848,-161.9733C1848,-141.2328 1848,-110 1848,-110 1848,-110 1718.1845,-110 1718.1845,-110"/>
-<polygon fill="#000000" stroke="#000000" points="1718.1845,-106.5001 1708.1845,-110 1718.1845,-113.5001 1718.1845,-106.5001"/>
-</g>
-<!-- UsersService -->
-<g id="node34" class="node">
-<title>UsersService</title>
-<ellipse fill="#fdb462" stroke="#000000" cx="260" cy="-256" rx="61.9519" ry="18"/>
-<text text-anchor="middle" x="260" y="-251.8" font-family="Times,serif" font-size="14.00" fill="#000000">UsersService</text>
-</g>
-<!-- UsersService&#45;&gt;UsersModule -->
-<g id="edge37" class="edge">
-<title>UsersService&#45;&gt;UsersModule</title>
-<path fill="none" stroke="#000000" d="M260,-237.8015C260,-213.6437 260,-174 260,-174 260,-174 742.1304,-174 742.1304,-174"/>
-<polygon fill="#000000" stroke="#000000" points="742.1305,-177.5001 752.1304,-174 742.1304,-170.5001 742.1305,-177.5001"/>
-</g>
-</g>
-</svg>
-
-    </div>
-    <i id="fullscreen" class="icon ion-ios-resize module-graph-fullscreen-btn" aria-hidden="true"></i>
+<h3>Overview</h3>
+<div class="text-center">
+    <object id="demo-svg" type="image/svg+xml" data="graph/dependencies.svg" style="width: 100%; height: 250px;">
+            Your browser does not support SVG
+    </object>
     <div class="btn-group">
         <button id="zoom-in" class="btn btn-default btn-sm">Zoom in</button>
         <button id="reset" class="btn btn-default btn-sm">Reset</button>
         <button id="zoom-out" class="btn btn-default btn-sm">Zoom out</button>
     </div>
 </div>
-  
 <div class="container-fluid overview">
     <div class="row">
-        <div class="col-sm-3">
-            <div class="card text-center">
-                <div class="card-block">
-                    <h4 class="card-title"><span class="icon ion-ios-archive"></span></h4>
-                    <p class="card-text">
-                        <a href="./modules.html">11 Modules</a>
-                    </p>
+            <div class="col-sm-3">
+                <div class="card text-center">
+                    <div class="card-block">
+                        <h4 class="card-title"><span class="fa fa-code-fork"></span></h4>
+                        <p class="card-text">14 injectables</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card text-center">
-                <div class="card-block">
-                    <h4 class="card-title"><span class="icon ion-md-swap"></span></h4>
-                    <p class="card-text">8 Controllers</p>
+            <div class="col-sm-3">
+                <div class="card text-center">
+                    <div class="card-block">
+                        <h4 class="card-title"><span class="fa fa-file-code-o"></span></h4>
+                        <p class="card-text">47 classes</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card text-center">
-                <div class="card-block">
-                    <h4 class="card-title"><span class="icon ion-md-arrow-round-down"></span></h4>
-                    <p class="card-text">14 Injectables</p>
+            <div class="col-sm-3">
+                <div class="card text-center">
+                    <div class="card-block">
+                        <h4 class="card-title"><span class="fa fa-info"></span></h4>
+                        <p class="card-text">23 interfaces</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card text-center">
-                <div class="card-block">
-                    <h4 class="card-title"><span class="icon ion-ios-paper"></span></h4>
-                    <p class="card-text">54 Classes</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card text-center">
-                <div class="card-block">
-                    <h4 class="card-title"><span class="icon ion-ios-lock"></span></h4>
-                    <p class="card-text">2 Guards</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card text-center">
-                <div class="card-block">
-                    <h4 class="card-title"><span class="icon ion-md-information-circle-outline"></span></h4>
-                    <p class="card-text">23 Interfaces</p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <script src="js/libs/svg-pan-zoom.min.js"></script>
-<script src="js/svg-pan-zoom.controls.js"></script> 
+<script src="js/svg-pan-zoom.controls.js"></script>
 
 
 
@@ -681,18 +773,13 @@
 
 
 
-
-
-
-
-                   
 
 
 
 
                    </div><div class="search-results">
     <div class="has-results">
-        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
         <ul class="search-results-list"></ul>
     </div>
     <div class="no-results">
@@ -700,22 +787,8 @@
     </div>
 </div>
 </div>
-               <!-- END CONTENT -->
            </div>
        </div>
-
-       <script>
-            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'overview';
-            var COMPODOC_CURRENT_PAGE_URL = 'overview.html';
-            var MAX_SEARCH_RESULTS = 15;
-       </script>
-
-       <script src="./js/libs/custom-elements.min.js"></script>
-       <script src="./js/libs/lit-html.js"></script>
-       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
-       <script src="./js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
-       <script src="./js/menu-wc.js" defer></script>
 
        <script src="./js/libs/bootstrap-native.js"></script>
 
@@ -726,17 +799,20 @@
 
        <script src="./js/compodoc.js"></script>
 
-       <script src="./js/tabs.js"></script>
-       <script src="./js/menu.js"></script>
-       <script src="./js/libs/clipboard.min.js"></script>
-       <script src="./js/libs/prism.js"></script>
-       <script src="./js/sourceCode.js"></script>
-          <script src="./js/search/search.js"></script>
-          <script src="./js/search/lunr.min.js"></script>
-          <script src="./js/search/search-lunr.js"></script>
-          <script src="./js/search/search_index.js"></script>
-       <script src="./js/lazy-load-graphs.js"></script>
+       <script src="./js/search/search.js"></script>
+       <script src="./js/search/lunr.min.js"></script>
+       <script src="./js/search/search-lunr.js"></script>
 
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/highlight.pack.js"></script>
+       <script src="./js/libs/highlightjs-line-numbers.min.js"></script>
+       <script src="./js/search/search_index.js"></script>
+       <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                hljs.initHighlightingOnLoad();
+                hljs.initLineNumbersOnLoad();
+            });
+       </script>
 
     </body>
 </html>
