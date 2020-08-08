@@ -66,6 +66,9 @@
                                 id="xs-classes-links"
                             >
                                 <li class="link">
+                                    <a href="../classes/ApplicationAlreadyExists.html" >ApplicationAlreadyExists</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/ApplicationDto.html" >ApplicationDto</a>
                                 </li>
                                 <li class="link">
@@ -420,6 +423,9 @@
                                        id="classes-links"
                    >
                                        <li class="link">
+                                           <a href="../classes/ApplicationAlreadyExists.html" >ApplicationAlreadyExists</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/ApplicationDto.html" >ApplicationDto</a>
                                        </li>
                                        <li class="link">
@@ -761,7 +767,7 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>constructor(identifier: string)</code>
+                                    <code>constructor(name: string)</code>
                                 </td>
                             </tr>
             
@@ -773,7 +779,13 @@
 
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { NotFoundException, UnauthorizedException } from &quot;@nestjs/common&quot;;
+        <pre><code class="hljs javascript">import { NotFoundException, UnauthorizedException, ConflictException } from &quot;@nestjs/common&quot;;
+
+export class ApplicationAlreadyExists extends ConflictException {
+  constructor(name: string) {
+    super(&#x60;Application &quot;${name}&quot; already exists on your account!&#x60;);
+  }
+}
 
 export class ApplicationNotFound extends NotFoundException {
   constructor(identifier: string) {

@@ -66,6 +66,9 @@
                                 id="xs-classes-links"
                             >
                                 <li class="link">
+                                    <a href="../classes/ApplicationAlreadyExists.html" >ApplicationAlreadyExists</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/ApplicationDto.html" >ApplicationDto</a>
                                 </li>
                                 <li class="link">
@@ -419,6 +422,9 @@
                                <ul class="links collapse in"
                                        id="classes-links"
                    >
+                                       <li class="link">
+                                           <a href="../classes/ApplicationAlreadyExists.html" >ApplicationAlreadyExists</a>
+                                       </li>
                                        <li class="link">
                                            <a href="../classes/ApplicationDto.html" >ApplicationDto</a>
                                        </li>
@@ -914,7 +920,7 @@ import { InjectModel } from &quot;@nestjs/mongoose&quot;;
 
 import { Model } from &quot;mongoose&quot;;
 
-import { ApplicationNotFound } from &quot;./applications.errors&quot;;
+import { ApplicationAlreadyExists, ApplicationNotFound } from &quot;./applications.errors&quot;;
 
 import { Application } from &quot;./schemas/application.schema&quot;;
 
@@ -928,6 +934,10 @@ export class ApplicationsService {
   ) {}
 
   async create(name: string, uid: string): Promise&lt;Application&gt; {
+    if (await this.applications.exists({ name, uid })) {
+      throw new ApplicationAlreadyExists(name);
+    }
+
     return new this.applications({ name, uid }).save();
   }
 
