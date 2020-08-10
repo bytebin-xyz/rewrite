@@ -4,11 +4,13 @@ import { plainToClass } from "class-transformer";
 
 import { isAlphanumeric } from "class-validator";
 
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 import { Prop, Schema, SchemaFactory, raw } from "@nestjs/mongoose";
 
 import { ApplicationDto } from "../dto/application.dto";
+
+import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
 
 import { btoa } from "@/utils/btoa";
 import { generateId } from "@/utils/generateId";
@@ -72,6 +74,12 @@ export class Application extends Document implements ApplicationDto {
   name!: string;
 
   @Prop({
+    enum: Object.values(ApplicationScopes),
+    type: [String]
+  })
+  scopes!: Types.Array<ApplicationScopes>;
+
+  @Prop({
     lowercase: true,
     maxlength: 16,
     minlength: 16,
@@ -83,8 +91,10 @@ export class Application extends Document implements ApplicationDto {
   changeName!: (newName: string) => Promise<this>;
   compareKey!: (key: string, secret: string) => boolean;
   generateKey!: (secret: string) => Promise<string>;
+  hasSufficientScopes!: (scopes: ApplicationScopes[]) => boolean;
   toDto!: () => ApplicationDto;
   updateLastUsed!: () => Promise<this>;
+  updateScopes!: (scopes: ApplicationScopes[]) => Promise<this>;
 }
 
 export const ApplicationSchema = SchemaFactory.createForClass(Application);
@@ -136,6 +146,13 @@ ApplicationSchema.methods.generateKey = async function(
   return btoa(key);
 };
 
+ApplicationSchema.methods.hasSufficientScopes = function(
+  this: Application,
+  scopes: ApplicationScopes[]
+) {
+  return scopes.every(scope => this.scopes.includes(scope));
+};
+
 ApplicationSchema.methods.toDto = function(this: Application): ApplicationDto {
   return plainToClass(ApplicationDto, this.toJSON(), {
     excludePrefixes: ["_"]
@@ -144,6 +161,21 @@ ApplicationSchema.methods.toDto = function(this: Application): ApplicationDto {
 
 ApplicationSchema.methods.updateLastUsed = async function(this: Application): Promise<Application> {
   this.lastUsed = new Date();
+
+  await this.save();
+
+  return this;
+};
+
+ApplicationSchema.methods.updateScopes = async function(
+  this: Application,
+  scopes: ApplicationScopes[]
+) {
+  this.scopes = new Types.Array();
+
+  for (const scope of scopes) {
+    this.scopes.addToSet(scope);
+  }
 
   await this.save();
 

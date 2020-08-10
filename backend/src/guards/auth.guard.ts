@@ -12,8 +12,10 @@ import { Reflector } from "@nestjs/core";
 
 import { IRequest } from "@/interfaces/request.interface";
 
-import { InvalidAPIKey } from "@/modules/applications/applications.errors";
+import { InsufficientScopes, InvalidAPIKey } from "@/modules/applications/applications.errors";
 import { UserNotActivated, UserNotLoggedIn } from "@/modules/auth/auth.errors";
+
+import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
 
 import { ApplicationsService } from "@/modules/applications/applications.service";
 import { UsersService } from "@/modules/users/users.service";
@@ -21,6 +23,7 @@ import { UsersService } from "@/modules/users/users.service";
 import { atob } from "@/utils/atob";
 
 export const AUTH_GUARD_OPTIONAL = "AUTH_GUARD_OPTIONAL";
+export const AUTH_GUARD_SCOPES = "AUTH_GUARD_SCOPES";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -32,36 +35,37 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isOptional = this.reflector.get<boolean | undefined>(
-      AUTH_GUARD_OPTIONAL,
-      context.getHandler()
-    );
+    const optional = this._getMetadata<boolean>(AUTH_GUARD_OPTIONAL, context);
+    const scopes = this._getMetadata<ApplicationScopes[]>(AUTH_GUARD_SCOPES, context);
 
     const req = context.switchToHttp().getRequest<IRequest>();
 
     try {
       return req.headers.authorization
-        ? await this._handleAPIKey(req)
+        ? await this._handleAPIKey(req, scopes)
         : await this._handleSession(req);
     } catch (error) {
-      if (!isOptional) throw error;
+      if (!optional) throw error;
       return true;
     }
   }
 
-  private async _handleAPIKey(req: IRequest) {
-    const key = req.headers.authorization;
+  private async _handleAPIKey(req: IRequest, scopes?: ApplicationScopes[]) {
+    const key = req.headers.authorization && atob(req.headers.authorization);
     if (!key) throw new InvalidAPIKey();
 
-    const decoded = atob(key);
-
-    const [id, token] = decoded.split(".");
+    const [id, token] = key.split(".");
     if (!id || !token) throw new InvalidAPIKey();
 
     const application = await this.applications.findOne(id);
 
-    if (!application || !application.compareKey(decoded, this.config.get("API_SECRET") as string)) {
+    if (!application || !application.compareKey(key, this.config.get("API_SECRET") as string)) {
       throw new InvalidAPIKey();
+    }
+
+    // Only allow routes that specify scopes to allow the usage of an API key.
+    if (!scopes || !scopes.length || !application.hasSufficientScopes(scopes)) {
+      throw new InsufficientScopes();
     }
 
     const user = await this.users.findOne({ id: application.uid });
@@ -87,5 +91,9 @@ export class AuthGuard implements CanActivate {
     req.user = user;
 
     return true;
+  }
+
+  private _getMetadata<T>(key: string, context: ExecutionContext): T | undefined {
+    return this.reflector.get<T | undefined>(key, context.getHandler());
   }
 }

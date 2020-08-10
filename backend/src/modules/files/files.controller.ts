@@ -24,9 +24,12 @@ import { FileDto } from "./dto/file.dto";
 import { RenameFileDto } from "./dto/rename-file.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
-import { OptionalAuth } from "@/decorators/auth-optional.decorator";
+import { OptionalAuth } from "@/decorators/optional-auth";
+import { UseScopes } from "@/decorators/scopes.decorator";
 
 import { AuthGuard } from "@/guards/auth.guard";
+
+import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
 
 import { StorageService } from "@/modules/storage/storage.service";
 
@@ -43,12 +46,14 @@ export class FilesController {
   ) {}
 
   @Delete("delete/:id")
+  @UseScopes(ApplicationScopes.FILES_WRITE)
   delete(@CurrentUser() user: User, @Param("id") id: string): Promise<FileDto> {
     return this.files.delete(id, user.id).then(deleted => deleted.toDto());
   }
 
   @Get("download/:id")
   @OptionalAuth()
+  @UseScopes(ApplicationScopes.FILES_READ)
   async download(
     @CurrentUser() user: User | undefined,
     @Param("id") id: string,
@@ -79,6 +84,7 @@ export class FilesController {
   }
 
   @Patch("rename/:id")
+  @UseScopes(ApplicationScopes.FILES_WRITE)
   rename(
     @Body() { newFilename }: RenameFileDto,
     @CurrentUser() user: User,
@@ -88,6 +94,7 @@ export class FilesController {
   }
 
   @Post("upload")
+  @UseScopes(ApplicationScopes.FILES_WRITE)
   async upload(@CurrentUser() user: User, @Req() req: Request): Promise<FileDto[]> {
     const files = await this.storage.write(req, {
       field: "file",

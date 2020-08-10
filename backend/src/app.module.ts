@@ -28,7 +28,7 @@ const MAX_PORT = 65535;
     ConfigModule.forRoot({
       envFilePath: `.env.development`,
       validationSchema: Joi.object({
-        API_SECRET: Joi.string().required(),
+        API_KEY_SECRET: Joi.string().required(),
 
         BACKEND_DOMAIN: Joi.string().required(),
         FRONTEND_DOMAIN: Joi.string().required(),
