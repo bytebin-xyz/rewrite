@@ -138,7 +138,7 @@
                                     <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../classes/InvalidAvatarFileType.html" >InvalidAvatarFileType</a>
+                                    <a href="../classes/InvalidAvatarFileType.html"  class="active" >InvalidAvatarFileType</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/InvalidCredentials.html" >InvalidCredentials</a>
@@ -353,7 +353,7 @@
                                     <a href="../interfaces/StorageOptions.html" >StorageOptions</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/StorageOptionsFactory.html"  class="active" >StorageOptionsFactory</a>
+                                    <a href="../interfaces/StorageOptionsFactory.html" >StorageOptionsFactory</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/UploadedFile.html" >UploadedFile</a>
@@ -507,7 +507,7 @@
                                            <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../classes/InvalidAvatarFileType.html" >InvalidAvatarFileType</a>
+                                           <a href="../classes/InvalidAvatarFileType.html"  class="active" >InvalidAvatarFileType</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/InvalidCredentials.html" >InvalidCredentials</a>
@@ -722,7 +722,7 @@
                                            <a href="../interfaces/StorageOptions.html" >StorageOptions</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/StorageOptionsFactory.html"  class="active" >StorageOptionsFactory</a>
+                                           <a href="../interfaces/StorageOptionsFactory.html" >StorageOptionsFactory</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/UploadedFile.html" >UploadedFile</a>
@@ -753,7 +753,7 @@
                    
                    </nav>
                </div>
-               <div class="content interface">
+               <div class="content class">
                    <div class="content-data">
 
 
@@ -761,10 +761,9 @@
 
 
 
-
 <ol class="breadcrumb">
-  <li>Interfaces</li>
-  <li>StorageOptionsFactory</li>
+  <li>Classes</li>
+  <li>InvalidAvatarFileType</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -782,49 +781,51 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/modules/storage/interfaces/storage-module-options-factory.interface.ts</code>
+            <code>src/modules/settings/settings.errors.ts</code>
         </p>
 
 
             <section>
-                <h3 id="methods">Methods</h3>
+                <h3 id="constructor">Constructor</h3>
                     <table class="table table-sm table-bordered">
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b> createStorageOptions</b>
+                                    <code>constructor()</code>
                                 </td>
                             </tr>
             
-                            <tr>
-                                <td class="col-md-4">
-            <code>createStorageOptions()</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>any</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
             </section>
 
 
+
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { StorageOptions } from &quot;./storage-module-options.interface&quot;;
+        <pre><code class="hljs javascript">import { BadRequestException, UnprocessableEntityException } from &quot;@nestjs/common&quot;;
 
-export interface StorageOptionsFactory {
-  createStorageOptions(): Promise&lt;StorageOptions&gt; | StorageOptions;
+export class InvalidAvatarFileType extends UnprocessableEntityException {
+  constructor() {
+    super(&quot;Invalid file type! Avatars must be a JPEG or PNG!&quot;);
+  }
+}
+
+export class InvalidEmailConfirmationLink extends BadRequestException {
+  constructor() {
+    super(&quot;Invalid email confirmation link, please ensure that the link is correct!&quot;);
+  }
+}
+
+export class InvalidUserActivationLink extends BadRequestException {
+  constructor() {
+    super(&quot;Invalid user activation link, please ensure that the link is correct!&quot;);
+  }
 }
 </code></pre>
     </div>
 </div>
+
 
 
 

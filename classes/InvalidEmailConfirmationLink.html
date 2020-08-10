@@ -138,6 +138,9 @@
                                     <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/InvalidAvatarFileType.html" >InvalidAvatarFileType</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/InvalidCredentials.html" >InvalidCredentials</a>
                                 </li>
                                 <li class="link">
@@ -504,6 +507,9 @@
                                            <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/InvalidAvatarFileType.html" >InvalidAvatarFileType</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/InvalidCredentials.html" >InvalidCredentials</a>
                                        </li>
                                        <li class="link">
@@ -797,17 +803,23 @@
 
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { BadRequestException } from &quot;@nestjs/common&quot;;
+        <pre><code class="hljs javascript">import { BadRequestException, UnprocessableEntityException } from &quot;@nestjs/common&quot;;
 
-export class InvalidUserActivationLink extends BadRequestException {
+export class InvalidAvatarFileType extends UnprocessableEntityException {
   constructor() {
-    super(&quot;Invalid user activation link, please ensure that the link is correct!&quot;);
+    super(&quot;Invalid file type! Avatars must be a JPEG or PNG!&quot;);
   }
 }
 
 export class InvalidEmailConfirmationLink extends BadRequestException {
   constructor() {
     super(&quot;Invalid email confirmation link, please ensure that the link is correct!&quot;);
+  }
+}
+
+export class InvalidUserActivationLink extends BadRequestException {
+  constructor() {
+    super(&quot;Invalid user activation link, please ensure that the link is correct!&quot;);
   }
 }
 </code></pre>
