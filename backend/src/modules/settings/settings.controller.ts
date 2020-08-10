@@ -1,22 +1,13 @@
 import path from "path";
 import sharp from "sharp";
 
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Req,
-  UnsupportedMediaTypeException,
-  UseGuards
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
 
 import { Request } from "express";
 
 import { Throttle } from "nestjs-throttler";
 
+import { InvalidAvatarFileType } from "./settings.errors";
 import { SettingsService } from "./settings.service";
 
 import { ChangeDisplayNameDto } from "./dto/change-display-name.dto";
@@ -58,7 +49,7 @@ export class SettingsController {
         const mimetype = fileTypes.test(file.mimetype);
 
         if (mimetype && extname) callback(null, true);
-        else callback(new UnsupportedMediaTypeException("Invalid file type!"), false);
+        else callback(new InvalidAvatarFileType(), false);
       },
       limits: {
         files: 1,

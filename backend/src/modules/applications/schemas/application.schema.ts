@@ -1,8 +1,8 @@
 import crypto from "crypto";
 
-import { plainToClass } from "class-transformer";
-
 import { isAlphanumeric } from "class-validator";
+
+import { plainToClass } from "class-transformer";
 
 import { Document, Types } from "mongoose";
 

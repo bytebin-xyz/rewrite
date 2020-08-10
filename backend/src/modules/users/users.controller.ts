@@ -1,5 +1,6 @@
-import { Controller, Get, NotFoundException, Param, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, UseGuards } from "@nestjs/common";
 
+import { UserNotFound } from "./users.errors";
 import { UsersService } from "./users.service";
 
 import { PartialUserDto } from "./dto/partial-user.dto";
@@ -24,7 +25,7 @@ export class UsersController {
   @Get("search/@:username")
   async search(@Param("username") username: string): Promise<UserDto> {
     const user = await this.users.findOne({ username });
-    if (!user) throw new NotFoundException("User not found!");
+    if (!user) throw new UserNotFound(username);
 
     return user.toDto(PartialUserDto);
   }

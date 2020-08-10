@@ -1,4 +1,6 @@
-import { Controller, Post, UseGuards, Body, Delete, Param, Patch, Get } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+
+import { Throttle } from "nestjs-throttler";
 
 import { ApplicationsService } from "./applications.service";
 
@@ -26,6 +28,7 @@ export class ApplicationsController {
   }
 
   @Post()
+  @Throttle(25, 60)
   create(@Body() dto: CreateApplicationDto, @CurrentUser() user: User): Promise<ApplicationDto> {
     return this.applications
       .create(dto.name, dto.scopes || [], user.id)
@@ -38,6 +41,7 @@ export class ApplicationsController {
   }
 
   @Post("/:id/key")
+  @Throttle(25, 60)
   async generateKey(
     @CurrentUser() user: User,
     @Param("id") id: string
