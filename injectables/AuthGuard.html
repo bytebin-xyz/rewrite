@@ -132,6 +132,9 @@
                                     <a href="../classes/IncorrectPassword.html" >IncorrectPassword</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/InsufficientScopes.html" >InsufficientScopes</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                 </li>
                                 <li class="link">
@@ -177,6 +180,9 @@
                                     <a href="../classes/StreamMeter.html" >StreamMeter</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/TooManyApplications.html" >TooManyApplications</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/TooManyFields.html" >TooManyFields</a>
                                 </li>
                                 <li class="link">
@@ -187,6 +193,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -489,6 +498,9 @@
                                            <a href="../classes/IncorrectPassword.html" >IncorrectPassword</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/InsufficientScopes.html" >InsufficientScopes</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                        </li>
                                        <li class="link">
@@ -534,6 +546,9 @@
                                            <a href="../classes/StreamMeter.html" >StreamMeter</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/TooManyApplications.html" >TooManyApplications</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/TooManyFields.html" >TooManyFields</a>
                                        </li>
                                        <li class="link">
@@ -544,6 +559,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -815,7 +833,7 @@
                                         <span class="modifier-icon method fa fa-play lock">
                                             <span class="fa fa-lock"></span>
                                         </span>
-                                    <code>_handleAPIKey(req: any)</code>
+                                    <code>_handleAPIKey(req: any, scopes: any[])</code>
                                 </td>
                             </tr>
             
@@ -856,6 +874,33 @@
                             </tr>
                         </tbody>
                     </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier">Private</span> _getMetadata</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <span class="modifier-icon method fa fa-play lock">
+                                            <span class="fa fa-lock"></span>
+                                        </span>
+                                    <code>_getMetadata(key: string, context: any)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>T</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
             </section>
 
     </div>
@@ -874,8 +919,10 @@ import { Reflector } from &quot;@nestjs/core&quot;;
 
 import { IRequest } from &quot;@/interfaces/request.interface&quot;;
 
-import { InvalidAPIKey } from &quot;@/modules/applications/applications.errors&quot;;
+import { InsufficientScopes, InvalidAPIKey } from &quot;@/modules/applications/applications.errors&quot;;
 import { UserNotActivated, UserNotLoggedIn } from &quot;@/modules/auth/auth.errors&quot;;
+
+import { ApplicationScopes } from &quot;@/modules/applications/enums/application-scopes.enum&quot;;
 
 import { ApplicationsService } from &quot;@/modules/applications/applications.service&quot;;
 import { UsersService } from &quot;@/modules/users/users.service&quot;;
@@ -883,6 +930,7 @@ import { UsersService } from &quot;@/modules/users/users.service&quot;;
 import { atob } from &quot;@/utils/atob&quot;;
 
 export const AUTH_GUARD_OPTIONAL &#x3D; &quot;AUTH_GUARD_OPTIONAL&quot;;
+export const AUTH_GUARD_SCOPES &#x3D; &quot;AUTH_GUARD_SCOPES&quot;;
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -894,36 +942,37 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise&lt;boolean&gt; {
-    const isOptional &#x3D; this.reflector.get&lt;boolean | undefined&gt;(
-      AUTH_GUARD_OPTIONAL,
-      context.getHandler()
-    );
+    const optional &#x3D; this._getMetadata&lt;boolean&gt;(AUTH_GUARD_OPTIONAL, context);
+    const scopes &#x3D; this._getMetadata&lt;ApplicationScopes[]&gt;(AUTH_GUARD_SCOPES, context);
 
     const req &#x3D; context.switchToHttp().getRequest&lt;IRequest&gt;();
 
     try {
       return req.headers.authorization
-        ? await this._handleAPIKey(req)
+        ? await this._handleAPIKey(req, scopes)
         : await this._handleSession(req);
     } catch (error) {
-      if (!isOptional) throw error;
+      if (!optional) throw error;
       return true;
     }
   }
 
-  private async _handleAPIKey(req: IRequest) {
-    const key &#x3D; req.headers.authorization;
+  private async _handleAPIKey(req: IRequest, scopes?: ApplicationScopes[]) {
+    const key &#x3D; req.headers.authorization &amp;&amp; atob(req.headers.authorization);
     if (!key) throw new InvalidAPIKey();
 
-    const decoded &#x3D; atob(key);
-
-    const [id, token] &#x3D; decoded.split(&quot;.&quot;);
+    const [id, token] &#x3D; key.split(&quot;.&quot;);
     if (!id || !token) throw new InvalidAPIKey();
 
     const application &#x3D; await this.applications.findOne(id);
 
-    if (!application || !application.compareKey(decoded, this.config.get(&quot;API_SECRET&quot;) as string)) {
+    if (!application || !application.compareKey(key, this.config.get(&quot;API_SECRET&quot;) as string)) {
       throw new InvalidAPIKey();
+    }
+
+    // Only allow routes that specify scopes to allow the usage of an API key.
+    if (!scopes || !scopes.length || !application.hasSufficientScopes(scopes)) {
+      throw new InsufficientScopes();
     }
 
     const user &#x3D; await this.users.findOne({ id: application.uid });
@@ -949,6 +998,10 @@ export class AuthGuard implements CanActivate {
     req.user &#x3D; user;
 
     return true;
+  }
+
+  private _getMetadata&lt;T&gt;(key: string, context: ExecutionContext): T | undefined {
+    return this.reflector.get&lt;T | undefined&gt;(key, context.getHandler());
   }
 }
 </code></pre>

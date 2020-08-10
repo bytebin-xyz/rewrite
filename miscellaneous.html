@@ -132,6 +132,9 @@
                                     <a href="classes/IncorrectPassword.html" >IncorrectPassword</a>
                                 </li>
                                 <li class="link">
+                                    <a href="classes/InsufficientScopes.html" >InsufficientScopes</a>
+                                </li>
+                                <li class="link">
                                     <a href="classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                 </li>
                                 <li class="link">
@@ -177,6 +180,9 @@
                                     <a href="classes/StreamMeter.html" >StreamMeter</a>
                                 </li>
                                 <li class="link">
+                                    <a href="classes/TooManyApplications.html" >TooManyApplications</a>
+                                </li>
+                                <li class="link">
                                     <a href="classes/TooManyFields.html" >TooManyFields</a>
                                 </li>
                                 <li class="link">
@@ -187,6 +193,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                </li>
+                                <li class="link">
+                                    <a href="classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -489,6 +498,9 @@
                                            <a href="classes/IncorrectPassword.html" >IncorrectPassword</a>
                                        </li>
                                        <li class="link">
+                                           <a href="classes/InsufficientScopes.html" >InsufficientScopes</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                        </li>
                                        <li class="link">
@@ -534,6 +546,9 @@
                                            <a href="classes/StreamMeter.html" >StreamMeter</a>
                                        </li>
                                        <li class="link">
+                                           <a href="classes/TooManyApplications.html" >TooManyApplications</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="classes/TooManyFields.html" >TooManyFields</a>
                                        </li>
                                        <li class="link">
@@ -544,6 +559,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -790,12 +808,12 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <b> OptionalAuth</b>
+                            <b> CurrentUser</b>
                         </td>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                            <code>OptionalAuth:     <code></code>
+                            <code>CurrentUser:     <code></code>
     </bcode>
                         </td>
                     </tr>
@@ -805,12 +823,12 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <b> CurrentUser</b>
+                            <b> OptionalAuth</b>
                         </td>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                            <code>CurrentUser:     <code></code>
+                            <code>OptionalAuth:     <code></code>
     </bcode>
                         </td>
                     </tr>
@@ -850,6 +868,21 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <b> UseScopes</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>UseScopes:     <code></code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <b> AUTH_GUARD_OPTIONAL</b>
                         </td>
                     </tr>
@@ -862,6 +895,26 @@
                         <tr>
                             <td class="col-md-4">
                                 <i>Default value: </i><code>AUTH_GUARD_OPTIONAL</code>
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> AUTH_GUARD_SCOPES</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>AUTH_GUARD_SCOPES:     <code></code>
+    </bcode>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Default value: </i><code>AUTH_GUARD_SCOPES</code>
                             </td>
                         </tr>
                 </tbody>

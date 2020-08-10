@@ -132,6 +132,9 @@
                                     <a href="../classes/IncorrectPassword.html" >IncorrectPassword</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/InsufficientScopes.html" >InsufficientScopes</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                 </li>
                                 <li class="link">
@@ -177,6 +180,9 @@
                                     <a href="../classes/StreamMeter.html" >StreamMeter</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/TooManyApplications.html" >TooManyApplications</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/TooManyFields.html" >TooManyFields</a>
                                 </li>
                                 <li class="link">
@@ -187,6 +193,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -489,6 +498,9 @@
                                            <a href="../classes/IncorrectPassword.html" >IncorrectPassword</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/InsufficientScopes.html" >InsufficientScopes</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                        </li>
                                        <li class="link">
@@ -534,6 +546,9 @@
                                            <a href="../classes/StreamMeter.html" >StreamMeter</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/TooManyApplications.html" >TooManyApplications</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/TooManyFields.html" >TooManyFields</a>
                                        </li>
                                        <li class="link">
@@ -544,6 +559,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -788,7 +806,7 @@
                                         <span class="modifier-icon method fa fa-play ">
                                             <span class="fa fa-"></span>
                                         </span>
-                                    <code>create(name: string, uid: string)</code>
+                                    <code>create(name: string, scopes: ApplicationScopes[], uid: string)</code>
                                 </td>
                             </tr>
             
@@ -860,6 +878,33 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b><span class="modifier"></span> find</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <span class="modifier-icon method fa fa-play ">
+                                            <span class="fa fa-"></span>
+                                        </span>
+                                    <code>find(uid: string)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>any</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b><span class="modifier"></span> findOne</b>
                                 </td>
                             </tr>
@@ -910,6 +955,33 @@
                             </tr>
                         </tbody>
                     </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier"></span> updateScopes</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <span class="modifier-icon method fa fa-play ">
+                                            <span class="fa fa-"></span>
+                                        </span>
+                                    <code>updateScopes(id: string, scopes: ApplicationScopes[], uid: string)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>any</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
             </section>
 
     </div>
@@ -920,7 +992,13 @@ import { InjectModel } from &quot;@nestjs/mongoose&quot;;
 
 import { Model } from &quot;mongoose&quot;;
 
-import { ApplicationAlreadyExists, ApplicationNotFound } from &quot;./applications.errors&quot;;
+import {
+  ApplicationAlreadyExists,
+  ApplicationNotFound,
+  TooManyApplications
+} from &quot;./applications.errors&quot;;
+
+import { ApplicationScopes } from &quot;./enums/application-scopes.enum&quot;;
 
 import { Application } from &quot;./schemas/application.schema&quot;;
 
@@ -933,12 +1011,16 @@ export class ApplicationsService {
     private readonly applications: Model&lt;Application&gt;
   ) {}
 
-  async create(name: string, uid: string): Promise&lt;Application&gt; {
+  async create(name: string, scopes: ApplicationScopes[], uid: string): Promise&lt;Application&gt; {
+    if ((await this.applications.countDocuments({ uid })) &gt; 50) {
+      throw new TooManyApplications();
+    }
+
     if (await this.applications.exists({ name, uid })) {
       throw new ApplicationAlreadyExists(name);
     }
 
-    return new this.applications({ name, uid }).save();
+    return new this.applications({ name, scopes, uid }).save();
   }
 
   async delete(id: string, uid: string): Promise&lt;Application&gt; {
@@ -952,6 +1034,10 @@ export class ApplicationsService {
     await this.applications.deleteMany({ uid });
   }
 
+  async find(uid: string): Promise&lt;Application[]&gt; {
+    return this.applications.find({ uid }).sort(&quot;-lastUsed&quot;);
+  }
+
   async findOne(id: string, uid?: string): Promise&lt;Application | null&gt; {
     return this.applications.findOne(uid ? { id, uid } : { id });
   }
@@ -960,7 +1046,14 @@ export class ApplicationsService {
     const application &#x3D; await this.findOne(id, uid);
     if (!application) throw new ApplicationNotFound(id);
 
-    return application.generateKey(this.config.get(&quot;API_SECRET&quot;) as string);
+    return application.generateKey(this.config.get(&quot;API_KEY_SECRET&quot;) as string);
+  }
+
+  async updateScopes(id: string, scopes: ApplicationScopes[], uid: string): Promise&lt;Application&gt; {
+    const application &#x3D; await this.findOne(id, uid);
+    if (!application) throw new ApplicationNotFound(id);
+
+    return application.updateScopes(scopes);
   }
 }
 </code></pre>

@@ -132,6 +132,9 @@
                                     <a href="../classes/IncorrectPassword.html" >IncorrectPassword</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/InsufficientScopes.html" >InsufficientScopes</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                 </li>
                                 <li class="link">
@@ -177,6 +180,9 @@
                                     <a href="../classes/StreamMeter.html" >StreamMeter</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/TooManyApplications.html" >TooManyApplications</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/TooManyFields.html" >TooManyFields</a>
                                 </li>
                                 <li class="link">
@@ -187,6 +193,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -489,6 +498,9 @@
                                            <a href="../classes/IncorrectPassword.html" >IncorrectPassword</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/InsufficientScopes.html" >InsufficientScopes</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/InvalidAPIKey.html" >InvalidAPIKey</a>
                                        </li>
                                        <li class="link">
@@ -534,6 +546,9 @@
                                            <a href="../classes/StreamMeter.html" >StreamMeter</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/TooManyApplications.html" >TooManyApplications</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/TooManyFields.html" >TooManyFields</a>
                                        </li>
                                        <li class="link">
@@ -544,6 +559,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/UnsupportedContentType.html" >UnsupportedContentType</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -785,6 +803,21 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b> scopes</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>scopes:     <code>ApplicationScopes[]</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b> string</b>
                                 </td>
                             </tr>
@@ -799,13 +832,20 @@
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { IsNotEmpty, IsString, MaxLength } from &quot;class-validator&quot;;
+        <pre><code class="hljs javascript">import { ArrayUnique, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from &quot;class-validator&quot;;
+
+import { ApplicationScopes } from &quot;../enums/application-scopes.enum&quot;;
 
 export class CreateApplicationDto {
   @IsNotEmpty({ message: &quot;Application name cannot be empty!&quot; })
-  @IsString()
+  @IsString({ message: &quot;Application name must be a $constraint1&quot; })
   @MaxLength(32, { message: &quot;Application name cannot be greater than $constraint1 characters!&quot; })
   name!: string;
+
+  @ArrayUnique({ message: &quot;Application scope elements must be unique!&quot; })
+  @IsEnum(ApplicationScopes, { each: true, message: &quot;Invalid application scopes provided! $constraint&quot; })
+  @IsOptional()
+  scopes: ApplicationScopes[] &#x3D; [];
 }
 </code></pre>
     </div>

@@ -195,7 +195,7 @@
                                     <a href="../classes/UnsupportedContentType.html" >UnsupportedContentType</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
+                                    <a href="../classes/UpdateApplicationScopesDto.html"  class="active" >UpdateApplicationScopesDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -302,7 +302,7 @@
                                     <a href="../interfaces/Email.html" >Email</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/GoogleCloudEngineOptions.html"  class="active" >GoogleCloudEngineOptions</a>
+                                    <a href="../interfaces/GoogleCloudEngineOptions.html" >GoogleCloudEngineOptions</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/IRequest.html" >IRequest</a>
@@ -561,7 +561,7 @@
                                            <a href="../classes/UnsupportedContentType.html" >UnsupportedContentType</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../classes/UpdateApplicationScopesDto.html" >UpdateApplicationScopesDto</a>
+                                           <a href="../classes/UpdateApplicationScopesDto.html"  class="active" >UpdateApplicationScopesDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/UploadSessionNotFound.html" >UploadSessionNotFound</a>
@@ -668,7 +668,7 @@
                                            <a href="../interfaces/Email.html" >Email</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/GoogleCloudEngineOptions.html"  class="active" >GoogleCloudEngineOptions</a>
+                                           <a href="../interfaces/GoogleCloudEngineOptions.html" >GoogleCloudEngineOptions</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/IRequest.html" >IRequest</a>
@@ -747,7 +747,7 @@
                    
                    </nav>
                </div>
-               <div class="content interface">
+               <div class="content class">
                    <div class="content-data">
 
 
@@ -755,10 +755,9 @@
 
 
 
-
 <ol class="breadcrumb">
-  <li>Interfaces</li>
-  <li>GoogleCloudEngineOptions</li>
+  <li>Classes</li>
+  <li>UpdateApplicationScopesDto</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -776,7 +775,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/modules/storage/engines/google-cloud.engine.ts</code>
+            <code>src/modules/applications/dto/update-application-scopes.dto.ts</code>
         </p>
 
 
@@ -787,65 +786,50 @@
                 <h3 id="inputs">Properties</h3>
                     <table class="table table-sm table-bordered">
                         <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <b>bucketName</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>bucketName:     <code>string</code>
-</bcode>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>    <code>string</code>
-
-                                        </td>
-                                    </tr>
-
-
-
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> ApplicationScopes</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>ApplicationScopes:     <code>any[]</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> scopes</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>scopes:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Readable, Writable } from &quot;stream&quot;;
+        <pre><code class="hljs javascript">import { ArrayUnique, IsEnum } from &quot;class-validator&quot;;
 
-import { Storage, StorageOptions } from &quot;@google-cloud/storage&quot;;
+import { ApplicationScopes } from &quot;../enums/application-scopes.enum&quot;;
 
-import { StorageEngine } from &quot;../interfaces/storage-engine.interface&quot;;
-
-const client &#x3D; new Storage();
-
-export interface GoogleCloudEngineOptions extends StorageOptions {
-  bucketName: string;
-}
-
-export class GoogleCloudEngine implements StorageEngine {
-  constructor(private readonly options: GoogleCloudEngineOptions) {}
-
-  private readonly bucket &#x3D; client.bucket(this.options.bucketName);
-
-  async delete(id: string): Promise&lt;void&gt; {
-    await this.bucket.file(id).delete();
-  }
-
-  createReadable(id: string): Readable {
-    return this.bucket.file(id).createReadStream();
-  }
-
-  createWritable(id: string): Writable {
-    return this.bucket.file(id).createWriteStream();
-  }
+export class UpdateApplicationScopesDto {
+  @ArrayUnique({ message: &quot;Application scope elements must be unique!&quot; })
+  @IsEnum(ApplicationScopes, { each: true, message: &quot;Invalid application scopes provided!&quot; })
+  scopes!: ApplicationScopes[];
 }
 </code></pre>
     </div>
 </div>
+
 
 
 
