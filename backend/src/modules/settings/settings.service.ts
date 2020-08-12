@@ -2,28 +2,14 @@ import { Injectable } from "@nestjs/common";
 
 import { InvalidEmailConfirmationLink, InvalidUserActivationLink } from "./settings.errors";
 
-import { ApplicationsService } from "@/modules/applications/applications.service";
-import { AuthService } from "@/modules/auth/auth.service";
-import { FilesService } from "@/modules/files/files.service";
 import { MailerService } from "@/modules/mailer/mailer.service";
 import { UsersService } from "@/modules/users/users.service";
-
-import { IncorrectPassword } from "@/modules/auth/auth.errors";
-
-import { DisplayNameAlreadyExists, EmailAlreadyExists } from "@/modules/users/users.errors";
-import { User } from "@/modules/users/schemas/user.schema";
 
 import { settle } from "@/utils/settle";
 
 @Injectable()
 export class SettingsService {
-  constructor(
-    private readonly applications: ApplicationsService,
-    private readonly auth: AuthService,
-    private readonly files: FilesService,
-    private readonly mailer: MailerService,
-    private readonly users: UsersService
-  ) {}
+  constructor(private readonly mailer: MailerService, private readonly users: UsersService) {}
 
   async activate(token: string): Promise<void> {
     const activation = await this.mailer.findUserActivation({ token });
@@ -34,41 +20,6 @@ export class SettingsService {
 
     await user.activate();
     await activation.deleteOne();
-  }
-
-  async changeAvatar(newAvatarId: string, user: User): Promise<User> {
-    if (user.avatar) {
-      await this.files.delete(user.avatar, user.id).catch(() => undefined);
-    }
-
-    await user.changeAvatar(newAvatarId);
-
-    return user;
-  }
-
-  async changeDisplayName(newDisplayName: string, user: User): Promise<User> {
-    if (await this.users.exists({ displayName: newDisplayName })) {
-      throw new DisplayNameAlreadyExists(newDisplayName);
-    }
-
-    return user.changeDisplayName(newDisplayName);
-  }
-
-  async changeEmail(newEmail: string, user: User): Promise<void> {
-    if (await this.users.exists({ email: newEmail })) {
-      throw new EmailAlreadyExists(newEmail);
-    }
-
-    await this.mailer.sendEmailConfirmation(newEmail, user);
-  }
-
-  async changePassword(oldPassword: string, newPassword: string, user: User): Promise<void> {
-    if (!(await user.comparePassword(oldPassword))) {
-      throw new IncorrectPassword();
-    }
-
-    await user.changePassword(newPassword);
-    await this.mailer.sendPasswordChanged(user);
   }
 
   async confirmEmail(token: string): Promise<void> {
@@ -83,30 +34,12 @@ export class SettingsService {
       throw new InvalidEmailConfirmationLink();
     }
 
-    const oldUser = user.toObject();
+    const oldUser = user.toJSON();
 
-    await user.changeEmail(confirmation.newEmail);
+    user.email = confirmation.newEmail;
+
+    await user.save();
+
     await settle([confirmation.deleteOne(), this.mailer.sendEmailChanged(oldUser)]);
-  }
-
-  async deleteAccount(password: string, user: User): Promise<void> {
-    if (!(await user.comparePassword(password))) throw new IncorrectPassword();
-
-    await settle([
-      this.applications.deleteAllFor(user.id),
-      this.auth.logoutAllDevices(user.id),
-      this.files.deleteAllFor(user.id),
-      this.mailer.deleteAllFor(user.id)
-    ]);
-
-    await user.delete();
-  }
-
-  async resendUserActivationEmail(user: User): Promise<void> {
-    const activation = await this.mailer.findUserActivation({ uid: user.id });
-    if (!activation) throw new InvalidUserActivationLink();
-
-    await this.mailer.sendUserActivation(user);
-    await activation.resent();
   }
 }

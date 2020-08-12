@@ -1,10 +1,10 @@
 import { Request } from "express";
 
-import { ISession } from "@/interfaces/session.interface";
+import { SessionDto } from "@/modules/sessions/dto/session.dto";
 
 import { User } from "@/modules/users/schemas/user.schema";
 
 export interface IRequest extends Request {
-  session?: ISession;
-  user: User | null;
+  session?: Express.Session & SessionDto;
+  user: (User & { [key: string]: any }) | null;
 }

@@ -65,7 +65,6 @@ export class File extends Document implements FileDto {
   })
   uid!: string;
 
-  rename!: (newFilename: string) => Promise<this>;
   toDto!: () => FileDto;
 }
 
@@ -75,13 +74,4 @@ FileSchema.methods.toDto = function(this: File): FileDto {
   return plainToClass(FileDto, this.toJSON(), {
     excludePrefixes: ["_"]
   });
-};
-
-FileSchema.methods.rename = async function(this: File, newFilename: string): Promise<File> {
-  if (this.filename !== newFilename) {
-    this.filename = newFilename;
-    await this.save();
-  }
-
-  return this;
 };

@@ -9,7 +9,7 @@ export class CreateApplicationDto {
   name!: string;
 
   @ArrayUnique({ message: "Application scope elements must be unique!" })
-  @IsEnum(ApplicationScopes, { each: true, message: "Invalid application scopes provided! $constraint" })
+  @IsEnum(ApplicationScopes, { each: true, message: "Invalid application scopes provided!" })
   @IsOptional()
   scopes: ApplicationScopes[] = [];
 }

@@ -113,13 +113,8 @@ export class User extends Document implements UserDto {
   username!: string;
 
   activate!: () => Promise<this>;
-  changeAvatar!: (newAvatarId: string) => Promise<this>;
-  changeDisplayName!: (newDisplayName: string) => Promise<this>;
-  changeEmail!: (newEmail: string) => Promise<this>;
-  changePassword!: (newPassword: string) => Promise<this>;
   comparePassword!: (password: string) => Promise<boolean>;
   delete!: () => Promise<this>;
-  deleteAvatar!: () => Promise<this>;
   toDto!: <T = UserDto>(cls?: ClassType<T>) => T;
 }
 
@@ -149,48 +144,9 @@ UserSchema.pre<User>("save", function(next) {
 });
 
 UserSchema.methods.activate = async function(this: User): Promise<User> {
-  if (!this.activated || this.expiresAt) {
-    this.activated = true;
-    this.expiresAt = null;
+  this.activated = true;
+  this.expiresAt = null;
 
-    await this.save();
-  }
-
-  return this;
-};
-
-UserSchema.methods.changeAvatar = async function(this: User, newAvatarId: string): Promise<User> {
-  if (this.avatar !== newAvatarId) {
-    this.avatar = newAvatarId;
-    await this.save();
-  }
-
-  return this;
-};
-
-UserSchema.methods.changeDisplayName = async function(
-  this: User,
-  newDisplayName: string
-): Promise<User> {
-  if (this.displayName !== newDisplayName) {
-    this.displayName = newDisplayName;
-    await this.save();
-  }
-
-  return this;
-};
-
-UserSchema.methods.changeEmail = async function(this: User, newEmail: string): Promise<User> {
-  if (this.email !== newEmail) {
-    this.email = newEmail;
-    await this.save();
-  }
-
-  return this;
-};
-
-UserSchema.methods.changePassword = async function(this: User, newPassword: string): Promise<User> {
-  this.password = newPassword;
   return this.save();
 };
 
@@ -203,26 +159,13 @@ UserSchema.methods.comparePassword = function(this: User, password: string): Pro
  ** Overwrite type safety of *this* to set email and password to null
  */
 UserSchema.methods.delete = async function(this: any): Promise<User> {
-  if (!this.deleted) {
-    this.activated = false;
-    this.avatar = null;
-    this.deleted = true;
-    this.email = null;
-    this.password = null;
+  this.activated = false;
+  this.avatar = null;
+  this.deleted = true;
+  this.email = null;
+  this.password = null;
 
-    await this.save({ validateBeforeSave: false });
-  }
-
-  return this;
-};
-
-UserSchema.methods.deleteAvatar = async function(this: User): Promise<User> {
-  if (this.avatar) {
-    this.avatar = null;
-    await this.save();
-  }
-
-  return this;
+  return this.save({ validateBeforeSave: false });
 };
 
 UserSchema.methods.toDto = function<T = UserDto>(this: User, cls?: ClassType<T>): T | UserDto {

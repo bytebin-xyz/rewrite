@@ -1,25 +1,31 @@
-import { NotFoundException, ConflictException } from "@nestjs/common";
+import { ConflictException, NotFoundException, UnprocessableEntityException } from "@nestjs/common";
 
-export class DisplayNameAlreadyExists extends ConflictException {
-  constructor(displayName: string) {
-    super(`Display name "${displayName}" already exists!`);
+export class DisplayNameTaken extends ConflictException {
+  constructor() {
+    super("Display name is already in use!");
   }
 }
 
-export class EmailAlreadyExists extends ConflictException {
-  constructor(email: string) {
-    super(`Email "${email}" already exists!`);
+export class EmailTaken extends ConflictException {
+  constructor() {
+    super("Email is already in use!");
   }
 }
 
-export class UsernameAlreadyExists extends ConflictException {
-  constructor(username: string) {
-    super(`Username "${username}" already exist!`);
+export class InvalidAvatarFileType extends UnprocessableEntityException {
+  constructor() {
+    super("Invalid file type! Avatar must be a JPEG or PNG!");
+  }
+}
+
+export class UsernameTaken extends ConflictException {
+  constructor() {
+    super("Username is already in use!");
   }
 }
 
 export class UserNotFound extends NotFoundException {
-  constructor(username: string) {
-    super(`User "${username}" does not exist!`);
+  constructor(query: string) {
+    super(`User "${query}" does not exist!`);
   }
 }

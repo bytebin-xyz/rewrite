@@ -13,7 +13,6 @@ import { StorageModule } from "@/modules/storage/storage.module";
 
 @Module({
   imports: [
-
     BullModule.registerQueueAsync({
       inject: [ConfigService],
       name: "files",

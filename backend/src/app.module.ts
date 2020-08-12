@@ -7,8 +7,6 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { ThrottlerGuard, ThrottlerModule } from "nestjs-throttler";
 import { ThrottlerStorageRedisService } from "nestjs-throttler-storage-redis";
 
-import { AppController } from "./app.controller";
-
 import { AdminModule } from "./modules/admin/admin.module";
 import { ApplicationsModule } from "./modules/applications/applications.module";
 import { AuthModule } from "./modules/auth/auth.module";
@@ -16,6 +14,7 @@ import { BullBoardModule } from "./modules/bull-board/bull-board.module";
 import { FilesModule } from "./modules/files/files.module";
 import { HealthModule } from "./modules/health/health.module";
 import { MailerModule } from "./modules/mailer/mailer.module";
+import { SessionsModule } from "./modules/sessions/sessions.module";
 import { SettingsModule } from "./modules/settings/settings.module";
 import { UsersModule } from "./modules/users/users.module";
 
@@ -148,11 +147,11 @@ const MAX_PORT = 65535;
     BullBoardModule,
     FilesModule,
     HealthModule,
+    SessionsModule,
     SettingsModule,
     UsersModule
   ],
   exports: [ApplicationsModule, ConfigModule, Logger, MailerModule, UsersModule],
-  controllers: [AppController],
   providers: [
     Logger,
     {

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { InjectQueue } from "@nestjs/bull";
 
-import { Model } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
 import { Queue } from "bull";
 
 import { FileNotFound } from "./files.errors";
@@ -19,7 +19,7 @@ export class FilesService {
     private readonly filesQueue: Queue
   ) {}
 
-  async create(options: {
+  async create(data: {
     filename: File["filename"];
     hidden?: File["hidden"];
     id: File["id"];
@@ -27,22 +27,12 @@ export class FilesService {
     size: File["size"];
     uid: File["uid"];
   }): Promise<File> {
-    return new this.files(options).save();
+    return new this.files(data).save();
   }
 
-  async delete(id: string, uid: string): Promise<File> {
-    const file = await this.findOne(id, uid);
-    if (!file) throw new FileNotFound(id);
-
-    await this.filesQueue.add("delete", { fileId: file.id });
-    await file.deleteOne();
-
-    return file;
-  }
-
-  async deleteAllFor(uid: string): Promise<void> {
+  async delete(query: FilterQuery<File>): Promise<void> {
     await this.files
-      .find({ uid })
+      .find(query)
       .cursor()
       .eachAsync(async (file: File) => {
         await this.filesQueue.add("delete", { fileId: file.id });
@@ -50,18 +40,35 @@ export class FilesService {
       });
   }
 
-  async findOne(id: string, uid: string): Promise<File | null> {
-    return this.files.findOne({ id, uid });
+  async deleteOne(query: FilterQuery<File>): Promise<File> {
+    const file = await this.files.findOne(query);
+    if (!file) throw new FileNotFound();
+
+    await this.filesQueue.add("delete", { fileId: file.id });
+    await file.deleteOne();
+
+    return file;
   }
 
-  async findPublicFile(id: string): Promise<File | null> {
-    return this.files.findOne({ id, public: true });
+  async find(query: FilterQuery<File>): Promise<File[]> {
+    return this.files.find(query);
   }
 
-  async rename(id: string, newFilename: string, uid: string): Promise<File> {
-    const file = await this.findOne(id, uid);
-    if (!file) throw new FileNotFound(id);
+  async findOne(query: FilterQuery<File>): Promise<File | null> {
+    return this.files.findOne(query);
+  }
 
-    return file.rename(newFilename);
+  async updateOne(
+    query: FilterQuery<File>,
+    data: {
+      filename: string;
+      hidden: boolean;
+      public: boolean;
+    }
+  ): Promise<File> {
+    const file = await this.files.findOne(query);
+    if (!file) throw new FileNotFound();
+
+    return file.updateOne(data);
   }
 }

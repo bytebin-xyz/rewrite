@@ -2,7 +2,7 @@ import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { Model } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
 
 import {
   ApplicationAlreadyExists,
@@ -23,7 +23,13 @@ export class ApplicationsService {
     private readonly applications: Model<Application>
   ) {}
 
-  async create(name: string, scopes: ApplicationScopes[], uid: string): Promise<Application> {
+  async create(data: {
+    name: Application["name"];
+    scopes: ApplicationScopes[];
+    uid: Application["uid"];
+  }): Promise<Application> {
+    const { name, uid } = data;
+
     if ((await this.applications.countDocuments({ uid })) > 50) {
       throw new TooManyApplications();
     }
@@ -32,39 +38,48 @@ export class ApplicationsService {
       throw new ApplicationAlreadyExists(name);
     }
 
-    return new this.applications({ name, scopes, uid }).save();
+    return new this.applications(data).save();
   }
 
-  async delete(id: string, uid: string): Promise<Application> {
-    const application = await this.findOne(id, uid);
-    if (!application) throw new ApplicationNotFound(id);
+  async delete(query: FilterQuery<Application>): Promise<void> {
+    await this.applications.deleteMany(query);
+  }
+
+  async deleteOne(query: FilterQuery<Application>): Promise<Application> {
+    const application = await this.applications.findOne(query);
+    if (!application) throw new ApplicationNotFound();
 
     return application.deleteOne();
   }
 
-  async deleteAllFor(uid: string): Promise<void> {
-    await this.applications.deleteMany({ uid });
+  async find(query: FilterQuery<Application>): Promise<Application[]> {
+    return this.applications.find(query).sort("-lastUsed");
   }
 
-  async find(uid: string): Promise<Application[]> {
-    return this.applications.find({ uid }).sort("-lastUsed");
+  async findOne(query: FilterQuery<Application>): Promise<Application | null> {
+    return this.applications.findOne(query);
   }
 
-  async findOne(id: string, uid?: string): Promise<Application | null> {
-    return this.applications.findOne(uid ? { id, uid } : { id });
-  }
-
-  async generateKey(id: string, uid: string): Promise<string> {
-    const application = await this.findOne(id, uid);
-    if (!application) throw new ApplicationNotFound(id);
+  async generateKey(query: FilterQuery<Application>): Promise<string> {
+    const application = await this.applications.findOne(query);
+    if (!application) throw new ApplicationNotFound();
 
     return application.generateKey(this.config.get("API_KEY_SECRET") as string);
   }
 
-  async updateScopes(id: string, scopes: ApplicationScopes[], uid: string): Promise<Application> {
-    const application = await this.findOne(id, uid);
-    if (!application) throw new ApplicationNotFound(id);
+  async updateOne(
+    query: FilterQuery<Application>,
+    data: {
+      name: Application["name"];
+      scopes: ApplicationScopes[];
+    }
+  ): Promise<Application> {
+    const application = await this.applications.findOne(query);
+    if (!application) throw new ApplicationNotFound();
 
-    return application.updateScopes(scopes);
+    return application.updateOne({
+      name: data.name,
+      scopes: Array.from(new Set(data.scopes))
+    });
   }
 }

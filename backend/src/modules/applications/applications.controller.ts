@@ -7,13 +7,10 @@ import { ApplicationsService } from "./applications.service";
 import { ApplicationDto } from "./dto/application.dto";
 import { CreateApplicationDto } from "./dto/create-application.dto";
 import { GenerateApplicationKeyDto } from "./dto/generate-application-key.dto";
-import { UpdateApplicationScopesDto } from "./dto/update-application-scopes.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
 
 import { AuthGuard } from "@/guards/auth.guard";
-
-import { User } from "@/modules/users/schemas/user.schema";
 
 @Controller("applications")
 @UseGuards(AuthGuard)
@@ -21,42 +18,43 @@ export class ApplicationsController {
   constructor(private readonly applications: ApplicationsService) {}
 
   @Get()
-  all(@CurrentUser() user: User): Promise<ApplicationDto[]> {
+  all(@CurrentUser("id") uid: string): Promise<ApplicationDto[]> {
     return this.applications
-      .find(user.id)
+      .find({ uid })
       .then(applications => applications.map(application => application.toDto()));
   }
 
   @Post()
   @Throttle(25, 60)
-  create(@Body() dto: CreateApplicationDto, @CurrentUser() user: User): Promise<ApplicationDto> {
-    return this.applications
-      .create(dto.name, dto.scopes || [], user.id)
-      .then(application => application.toDto());
+  create(
+    @Body() dto: CreateApplicationDto,
+    @CurrentUser("id") uid: string
+  ): Promise<ApplicationDto> {
+    return this.applications.create({ ...dto, uid }).then(application => application.toDto());
   }
 
   @Delete("/:id")
-  delete(@CurrentUser() user: User, @Param("id") id: string): Promise<ApplicationDto> {
-    return this.applications.delete(id, user.id).then(application => application.toDto());
+  deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<ApplicationDto> {
+    return this.applications.deleteOne({ id, uid }).then(application => application.toDto());
+  }
+
+  @Patch("/:id")
+  updateOne(
+    @Body() dto: CreateApplicationDto,
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<ApplicationDto> {
+    return this.applications.updateOne({ id, uid }, dto).then(application => application.toDto());
   }
 
   @Post("/:id/key")
   @Throttle(25, 60)
   async generateKey(
-    @CurrentUser() user: User,
+    @CurrentUser("id") uid: string,
     @Param("id") id: string
   ): Promise<GenerateApplicationKeyDto> {
-    return { key: await this.applications.generateKey(id, user.id) };
-  }
-
-  @Patch("/:id/scopes")
-  updateScopes(
-    @Body() dto: UpdateApplicationScopesDto,
-    @CurrentUser() user: User,
-    @Param("id") id: string
-  ): Promise<ApplicationDto> {
-    return this.applications
-      .updateScopes(id, dto.scopes, user.id)
-      .then(application => application.toDto());
+    return {
+      key: await this.applications.generateKey({ id, uid })
+    };
   }
 }

@@ -88,13 +88,10 @@ export class Application extends Document implements ApplicationDto {
   })
   uid!: string;
 
-  changeName!: (newName: string) => Promise<this>;
   compareKey!: (key: string, secret: string) => boolean;
   generateKey!: (secret: string) => Promise<string>;
   hasSufficientScopes!: (scopes: ApplicationScopes[]) => boolean;
   toDto!: () => ApplicationDto;
-  updateLastUsed!: () => Promise<this>;
-  updateScopes!: (scopes: ApplicationScopes[]) => Promise<this>;
 }
 
 export const ApplicationSchema = SchemaFactory.createForClass(Application);
@@ -110,18 +107,6 @@ ApplicationSchema.pre<Application>("save", function(next) {
     .catch(error => next(error));
 });
 
-ApplicationSchema.methods.changeName = async function(
-  this: Application,
-  newName: string
-): Promise<Application> {
-  if (this.name !== newName) {
-    this.name = newName;
-    await this.save();
-  }
-
-  return this;
-};
-
 ApplicationSchema.methods.compareKey = function(
   this: Application,
   key: string,
@@ -136,6 +121,12 @@ ApplicationSchema.methods.generateKey = async function(
   this: Application,
   secret: string
 ): Promise<string> {
+  /**
+   ** The final api key length must be a multiple of 3 to avoid padding when converted to base64.
+   ** Application ID (18) + period (1) + Application secret token (32) = 51
+   ** The period is used as a seperator so when we decode the base64 in the auth guard, we know
+   ** which part is our application id and secret token.
+   */
   const token = await generateId(16);
   const key = `${this.id}.${token}`;
 
@@ -157,27 +148,4 @@ ApplicationSchema.methods.toDto = function(this: Application): ApplicationDto {
   return plainToClass(ApplicationDto, this.toJSON(), {
     excludePrefixes: ["_"]
   });
-};
-
-ApplicationSchema.methods.updateLastUsed = async function(this: Application): Promise<Application> {
-  this.lastUsed = new Date();
-
-  await this.save();
-
-  return this;
-};
-
-ApplicationSchema.methods.updateScopes = async function(
-  this: Application,
-  scopes: ApplicationScopes[]
-) {
-  this.scopes = new Types.Array();
-
-  for (const scope of scopes) {
-    this.scopes.addToSet(scope);
-  }
-
-  await this.save();
-
-  return this;
 };

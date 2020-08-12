@@ -57,7 +57,7 @@ export class AuthGuard implements CanActivate {
     const [id, token] = key.split(".");
     if (!id || !token) throw new InvalidAPIKey();
 
-    const application = await this.applications.findOne(id);
+    const application = await this.applications.findOne({ id });
 
     if (!application || !application.compareKey(key, this.config.get("API_SECRET") as string)) {
       throw new InvalidAPIKey();
@@ -71,7 +71,7 @@ export class AuthGuard implements CanActivate {
     const user = await this.users.findOne({ id: application.uid });
     if (!user) throw new InvalidAPIKey();
 
-    await application.updateLastUsed();
+    await application.updateOne({ lastUsed: new Date() });
 
     req.user = user;
 

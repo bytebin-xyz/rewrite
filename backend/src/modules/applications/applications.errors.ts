@@ -11,8 +11,8 @@ export class ApplicationAlreadyExists extends ConflictException {
   }
 }
 export class ApplicationNotFound extends NotFoundException {
-  constructor(identifier: string) {
-    super(`Application "${identifier}" does not exist!`);
+  constructor() {
+    super("Application does not exist!");
   }
 }
 

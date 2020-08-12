@@ -34,11 +34,13 @@ export class MailerService {
     private readonly emailsQueue: Queue
   ) {}
 
-  async deleteAllFor(uid: string): Promise<void> {
+  async delete(
+    query: FilterQuery<EmailConfirmation & PasswordReset & UserActivation>
+  ): Promise<void> {
     await settle([
-      this.emailConfirmations.deleteMany({ uid }),
-      this.passwordResets.deleteMany({ uid }),
-      this.userActivations.deleteMany({ uid })
+      this.emailConfirmations.deleteMany(query),
+      this.passwordResets.deleteMany(query),
+      this.userActivations.deleteMany(query)
     ]);
   }
 
@@ -94,7 +96,7 @@ export class MailerService {
 
   async sendUserActivation(user: User): Promise<void> {
     const activation = await new this.userActivations({ uid: user.id }).save();
-    
+
     await this.emailsQueue.add("send-user-activation", {
       activationLink: `${this.baseURL}/activate-account/${activation.token}`,
       displayName: user.displayName,

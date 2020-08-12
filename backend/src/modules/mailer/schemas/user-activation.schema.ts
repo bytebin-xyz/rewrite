@@ -32,7 +32,7 @@ export class UserActivation extends Document {
     max: MAX_RESEND_ATTEMPTS,
     min: 0
   })
-  times_resent!: number;
+  timesResent!: number;
 
   @Prop({
     lowercase: true,
@@ -52,8 +52,6 @@ export class UserActivation extends Document {
     unique: true
   })
   uid!: string;
-
-  resent!: () => Promise<this>;
 }
 
 export const UserActivationSchema = SchemaFactory.createForClass(UserActivation);
@@ -68,13 +66,3 @@ UserActivationSchema.pre<UserActivation>("save", function(next) {
     })
     .catch(error => next(error));
 });
-
-UserActivationSchema.methods.resent = async function(
-  this: UserActivation
-): Promise<UserActivation> {
-  this.times_resent += 1;
-
-  await this.save();
-
-  return this;
-};

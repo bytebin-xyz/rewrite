@@ -21,7 +21,7 @@ import { FileNotFound } from "./files.errors";
 import { FilesService } from "./files.service";
 
 import { FileDto } from "./dto/file.dto";
-import { RenameFileDto } from "./dto/rename-file.dto";
+import { UpdateFileDto } from "./dto/update-file.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
 import { OptionalAuth } from "@/decorators/optional-auth";
@@ -33,8 +33,6 @@ import { ApplicationScopes } from "@/modules/applications/enums/application-scop
 
 import { StorageService } from "@/modules/storage/storage.service";
 
-import { User } from "@/modules/users/schemas/user.schema";
-
 @Controller("files")
 @UseGuards(AuthGuard)
 export class FilesController {
@@ -45,37 +43,44 @@ export class FilesController {
     private readonly storage: StorageService
   ) {}
 
-  @Delete("delete/:id")
+  @Delete("/:id")
   @UseScopes(ApplicationScopes.FILES_WRITE)
-  delete(@CurrentUser() user: User, @Param("id") id: string): Promise<FileDto> {
-    return this.files.delete(id, user.id).then(deleted => deleted.toDto());
+  delete(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<FileDto> {
+    return this.files.deleteOne({ id, uid }).then(deleted => deleted.toDto());
+  }
+
+  @Patch("/:id")
+  @UseScopes(ApplicationScopes.FILES_WRITE)
+  updateOne(
+    @Body() dto: UpdateFileDto,
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<FileDto> {
+    return this.files.updateOne({ id, uid }, dto).then(file => file.toDto());
   }
 
   @Get("download/:id")
   @OptionalAuth()
   @UseScopes(ApplicationScopes.FILES_READ)
   async download(
-    @CurrentUser() user: User | undefined,
+    @CurrentUser("id") uid: string | undefined,
     @Param("id") id: string,
     @Res() res: Response
   ): Promise<void> {
-    const file = user ? await this.files.findOne(id, user.id) : await this.files.findPublicFile(id);
-    if (!file) throw new FileNotFound(id);
+    const file = uid
+      ? await this.files.findOne({ id, uid })
+      : await this.files.findOne({ id, public: true });
+
+    if (!file) throw new FileNotFound();
 
     const readable = await this.storage.read(file.id);
 
-    readable.on("error", (error: NodeJS.ErrnoException & Error) => {
-      // prettier-ignore
-      const err = error.code === "ENOENT"
-        ? new FileNotFound(id) 
-        : new InternalServerErrorException(error);
-
+    readable.on("error", (error: Error) => {
       // Exception handler disabled when using the @Res() decorator, so we have to log the error manually
-      if (err instanceof InternalServerErrorException) {
-        this.logger.error(error);
-      }
+      this.logger.error(error);
 
       if (!res.headersSent) {
+        const err = new InternalServerErrorException(error);
         res.status(err.getStatus()).send(err.getResponse());
       }
     });
@@ -83,19 +88,9 @@ export class FilesController {
     readable.pipe(res);
   }
 
-  @Patch("rename/:id")
-  @UseScopes(ApplicationScopes.FILES_WRITE)
-  rename(
-    @Body() { newFilename }: RenameFileDto,
-    @CurrentUser() user: User,
-    @Param("id") id: string
-  ): Promise<FileDto> {
-    return this.files.rename(id, newFilename, user.id).then(file => file.toDto());
-  }
-
   @Post("upload")
   @UseScopes(ApplicationScopes.FILES_WRITE)
-  async upload(@CurrentUser() user: User, @Req() req: Request): Promise<FileDto[]> {
+  async upload(@CurrentUser("id") uid: string, @Req() req: Request): Promise<FileDto[]> {
     const files = await this.storage.write(req, {
       field: "file",
       limits: {
@@ -111,7 +106,7 @@ export class FilesController {
             filename: file.filename,
             id: file.id,
             size: file.size,
-            uid: user.id
+            uid
           })
           .then(file => file.toDto())
       )

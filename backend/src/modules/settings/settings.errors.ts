@@ -1,10 +1,4 @@
-import { BadRequestException, UnprocessableEntityException } from "@nestjs/common";
-
-export class InvalidAvatarFileType extends UnprocessableEntityException {
-  constructor() {
-    super("Invalid file type! Avatars must be a JPEG or PNG!");
-  }
-}
+import { BadRequestException } from "@nestjs/common";
 
 export class InvalidEmailConfirmationLink extends BadRequestException {
   constructor() {

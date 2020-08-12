@@ -7,8 +7,8 @@ export class ChunkAlreadyUploaded extends ConflictException {
 }
 
 export class FileNotFound extends NotFoundException {
-  constructor(identifier: string) {
-    super(`File "${identifier}" was not found on the server!`);
+  constructor() {
+    super("File does not exists!");
   }
 }
 
