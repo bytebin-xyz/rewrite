@@ -1,6 +1,6 @@
-import nodemailer, { SendMailOptions } from "nodemailer";
+import nodemailer from "nodemailer";
 
-import { Inject, Injectable, Logger, LoggerService, OnApplicationBootstrap } from "@nestjs/common";
+import { Inject, Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { Process, Processor } from "@nestjs/bull";
 
 import { Job } from "bull";
@@ -8,6 +8,7 @@ import { Job } from "bull";
 import { NODEMAILER_MODULE_OPTIONS } from "./mailer.constants";
 
 import { MailerOptions } from "./interfaces/mailer-module-options.interface";
+import { SendMailOptions } from "./interfaces/send-mail-options.interface";
 
 @Injectable()
 @Processor("emails")
@@ -16,10 +17,7 @@ export class MailerProcessor implements OnApplicationBootstrap {
     from: `Bytebin <${this.options.from}>`
   });
 
-  constructor(
-    @Inject(Logger) private readonly logger: LoggerService,
-    @Inject(NODEMAILER_MODULE_OPTIONS) private readonly options: MailerOptions
-  ) {}
+  constructor(@Inject(NODEMAILER_MODULE_OPTIONS) private readonly options: MailerOptions) {}
 
   async onApplicationBootstrap(): Promise<void> {
     await this.transporter.verify();
