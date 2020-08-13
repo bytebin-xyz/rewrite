@@ -1,7 +1,7 @@
 import nodemailer, { SendMailOptions } from "nodemailer";
 
 import { Inject, Injectable, Logger, LoggerService, OnApplicationBootstrap } from "@nestjs/common";
-import { OnQueueError, Process, Processor } from "@nestjs/bull";
+import { Process, Processor } from "@nestjs/bull";
 
 import { Job } from "bull";
 
