@@ -1,106 +1,48 @@
+import ejs from "ejs";
+import fs from "fs";
+import mjml2html from "mjml";
+
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
 import { InjectQueue } from "@nestjs/bull";
 
-import { FilterQuery, Model } from "mongoose";
 import { Queue } from "bull";
 
-import { EmailConfirmation } from "./schemas/email-confirmation.schema";
-import { PasswordReset } from "./schemas/password-reset.schema";
-import { UserActivation } from "./schemas/user-activation.schema";
-
-import { User } from "@/modules/users/schemas/user.schema";
-
-import { settle } from "@/utils/settle";
+import { SendMailOptions } from "./interfaces/send-mail-options.interface";
 
 @Injectable()
 export class MailerService {
-  private readonly baseURL = `http://${this.config.get("FRONTEND_DOMAIN")}`;
-
   constructor(
     private readonly config: ConfigService,
-
-    @InjectModel(EmailConfirmation.name)
-    private readonly emailConfirmations: Model<EmailConfirmation>,
-
-    @InjectModel(PasswordReset.name)
-    private readonly passwordResets: Model<PasswordReset>,
-
-    @InjectModel(UserActivation.name)
-    private readonly userActivations: Model<UserActivation>,
 
     @InjectQueue("emails")
     private readonly emailsQueue: Queue
   ) {}
 
-  async delete(
-    query: FilterQuery<EmailConfirmation & PasswordReset & UserActivation>
-  ): Promise<void> {
-    await settle([
-      this.emailConfirmations.deleteMany(query),
-      this.passwordResets.deleteMany(query),
-      this.userActivations.deleteMany(query)
-    ]);
+  createAbsoluteLink(relativeLink: string): string {
+    const protocol = this.config.get("NODE_ENV") === "production" ? "https" : "http";
+    const root = `${protocol}://${this.config.get("FRONTEND_DOMAIN")}/`;
+
+    return root + relativeLink.substring(relativeLink.startsWith("/") ? 1 : 0);
   }
 
-  async findEmailConfirmation(
-    query: FilterQuery<EmailConfirmation>
-  ): Promise<EmailConfirmation | null> {
-    return this.emailConfirmations.findOne(query);
+  async render(template: fs.PathLike, data: Record<string, unknown>): Promise<string> {
+    const mjml = await fs.promises.readFile(template).then(buffer => buffer.toString());
+    return ejs.render(this.transpileMJML(mjml), data, { async: true });
   }
 
-  async findPasswordReset(query: FilterQuery<PasswordReset>): Promise<PasswordReset | null> {
-    return this.passwordResets.findOne(query);
+  async send(options: SendMailOptions): Promise<void> {
+    options.html = options.mjml
+      ? await this.render(options.mjml.template, options.mjml.data || {})
+      : options.html;
+
+    await this.emailsQueue.add("send", options);
   }
 
-  async findUserActivation(query: FilterQuery<UserActivation>): Promise<UserActivation | null> {
-    return this.userActivations.findOne(query);
-  }
+  transpileMJML(mjml: string): string {
+    const { errors, html } = mjml2html(mjml, { keepComments: false, validationLevel: "strict" });
+    if (errors && errors.length) throw new Error(errors.join("\n"));
 
-  async sendEmailChanged(user: User): Promise<void> {
-    await this.emailsQueue.add("send-email-changed", {
-      displayName: user.displayName,
-      forgotPasswordLink: `${this.baseURL}/forgot-password`,
-      to: user.email
-    });
-  }
-
-  async sendEmailConfirmation(newEmail: string, user: User): Promise<void> {
-    const confirmation = await new this.emailConfirmations({ newEmail, uid: user.id }).save();
-
-    await this.emailsQueue.add("send-email-confirmation", {
-      confirmEmailLink: `${this.baseURL}/confirm-email/${confirmation.token}`,
-      displayName: user.displayName,
-      to: newEmail
-    });
-  }
-
-  async sendPasswordChanged(user: User): Promise<void> {
-    await this.emailsQueue.add("send-password-changed", {
-      displayName: user.displayName,
-      forgotPasswordLink: `${this.baseURL}/forgot-password`,
-      to: user.email
-    });
-  }
-
-  async sendPasswordReset(user: User): Promise<void> {
-    const reset = await new this.passwordResets({ uid: user.id }).save();
-
-    await this.emailsQueue.add("send-password-reset", {
-      displayName: user.displayName,
-      resetPasswordLink: `${this.baseURL}/reset-password/${reset.token}`,
-      to: user.email
-    });
-  }
-
-  async sendUserActivation(user: User): Promise<void> {
-    const activation = await new this.userActivations({ uid: user.id }).save();
-
-    await this.emailsQueue.add("send-user-activation", {
-      activationLink: `${this.baseURL}/activate-account/${activation.token}`,
-      displayName: user.displayName,
-      to: user.email
-    });
+    return html;
   }
 }

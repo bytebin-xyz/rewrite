@@ -1,4 +1,9 @@
-import { ConflictException, NotFoundException, UnprocessableEntityException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+  UnprocessableEntityException
+} from "@nestjs/common";
 
 export class DisplayNameTaken extends ConflictException {
   constructor() {
@@ -15,6 +20,12 @@ export class EmailTaken extends ConflictException {
 export class InvalidAvatarFileType extends UnprocessableEntityException {
   constructor() {
     super("Invalid file type! Avatar must be a JPEG or PNG!");
+  }
+}
+
+export class InvalidEmailConfirmationToken extends BadRequestException {
+  constructor() {
+    super("Invalid email confirmation token, please ensure that the link is correct!");
   }
 }
 

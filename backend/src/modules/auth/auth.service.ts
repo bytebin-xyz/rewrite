@@ -1,6 +1,21 @@
 import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
 
-import { InvalidCredentials, InvalidPasswordResetLink, UserNotActivated } from "./auth.errors";
+import { Model } from "mongoose";
+
+import {
+  InvalidCredentials,
+  InvalidPasswordResetLink,
+  InvalidUserActivationLink,
+  UserNotActivated
+} from "./auth.errors";
+
+import { passwordChanged } from "./emails/password-changed.email";
+import { passwordReset } from "./emails/password-reset.email";
+import { userActivation } from "./emails/user-activation.email";
+
+import { PasswordReset } from "./schemas/password-reset.schema";
+import { UserActivation } from "./schemas/user-activation.schema";
 
 import { MailerService } from "@/modules/mailer/mailer.service";
 import { SessionsService } from "@/modules/sessions/sessions.service";
@@ -8,21 +23,46 @@ import { UsersService } from "@/modules/users/users.service";
 
 import { User } from "@/modules/users/schemas/user.schema";
 
-import { settle } from "@/utils/settle";
-
 @Injectable()
 export class AuthService {
   constructor(
     private readonly mailer: MailerService,
     private readonly sessions: SessionsService,
-    private readonly users: UsersService
+    private readonly users: UsersService,
+
+    @InjectModel(PasswordReset.name)
+    private readonly passwordResets: Model<PasswordReset>,
+
+    @InjectModel(UserActivation.name)
+    private readonly userActivations: Model<UserActivation>
   ) {}
+
+  async activateAccount(token: string): Promise<void> {
+    const activation = await this.userActivations.findOne({ token });
+    if (!activation) throw new InvalidUserActivationLink();
+
+    const user = await this.users.findOne({ id: activation.uid });
+    if (!user) throw new InvalidUserActivationLink();
+
+    user.activated = true;
+    user.expiresAt = null;
+
+    await user.save();
+    await activation.deleteOne();
+  }
 
   async forgotPassword(email: string): Promise<boolean> {
     const user = await this.users.findOne({ email });
     if (!user) return false;
 
-    await this.mailer.sendPasswordReset(user);
+    const reset = await new this.passwordResets({ uid: user.id }).save();
+
+    await this.mailer.send(
+      passwordReset(email, {
+        displayName: user.displayName,
+        link: this.mailer.createAbsoluteLink(`/reset-password/${reset.token}`)
+      })
+    );
 
     return true;
   }
@@ -38,22 +78,35 @@ export class AuthService {
 
   async register(email: string, password: string, username: string): Promise<void> {
     const user = await this.users.create(email, password, username);
+    const activation = await new this.userActivations({ uid: user.id }).save();
 
-    await this.mailer.sendUserActivation(user);
+    await this.mailer.send(
+      userActivation(email, {
+        displayName: user.displayName,
+        link: this.mailer.createAbsoluteLink(`/activate-account/${activation.token}`)
+      })
+    );
   }
 
   async resetPassword(newPassword: string, token: string): Promise<void> {
-    const passwordReset = await this.mailer.findPasswordReset({ token });
+    const passwordReset = await this.passwordResets.findOne({ token });
     if (!passwordReset) throw new InvalidPasswordResetLink();
 
-    const user = await this.users.findOne({ id: passwordReset.id });
+    const user = await this.users.findOne({ id: passwordReset.uid });
     if (!user) throw new InvalidPasswordResetLink();
 
-    await settle([
-      this.sessions.delete({ "session.uid": user.id }),
-      user.updateOne({ password: newPassword })
-    ]);
+    await this.sessions.delete({ "session.uid": user.id });
 
-    await settle([this.mailer.sendPasswordChanged(user), passwordReset.deleteOne()]);
+    user.password = newPassword;
+
+    await user.save();
+    await passwordReset.deleteOne();
+
+    await this.mailer.send(
+      passwordChanged(user.email, {
+        displayName: user.displayName,
+        link: this.mailer.createAbsoluteLink("/forgot-password")
+      })
+    );
   }
 }

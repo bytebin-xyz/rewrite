@@ -15,7 +15,6 @@ import { FilesModule } from "./modules/files/files.module";
 import { HealthModule } from "./modules/health/health.module";
 import { MailerModule } from "./modules/mailer/mailer.module";
 import { SessionsModule } from "./modules/sessions/sessions.module";
-import { SettingsModule } from "./modules/settings/settings.module";
 import { UsersModule } from "./modules/users/users.module";
 
 const MIN_PORT = 1;
@@ -148,7 +147,6 @@ const MAX_PORT = 65535;
     FilesModule,
     HealthModule,
     SessionsModule,
-    SettingsModule,
     UsersModule
   ],
   exports: [ApplicationsModule, ConfigModule, Logger, MailerModule, UsersModule],

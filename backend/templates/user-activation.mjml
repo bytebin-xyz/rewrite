@@ -31,7 +31,7 @@
           </p>
         </mj-text>
 
-        <mj-button font-size="20px" href="<%= activationLink %>" padding="25px">
+        <mj-button font-size="20px" href="<%= link %>" padding="25px">
           Activate Account
         </mj-button>
 
@@ -40,8 +40,8 @@
         </mj-text>
 
         <mj-text padding-top="0">
-          <a href="<%= activationLink %>" style="color: #395ECA;" target="_blank">
-            <%= activationLink %>
+          <a href="<%= link %>" style="color: #395ECA;" target="_blank">
+            <%= link %>
           </a>
         </mj-text>
       </mj-column>

@@ -76,7 +76,7 @@ export class FilesController {
     const readable = await this.storage.read(file.id);
 
     readable.on("error", (error: Error) => {
-      // Exception handler disabled when using the @Res() decorator, so we have to log the error manually
+      // Exception filter disabled when using the @Res() decorator, so we have to log the error manually
       this.logger.error(error);
 
       if (!res.headersSent) {

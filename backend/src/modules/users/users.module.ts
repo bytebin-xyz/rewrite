@@ -5,6 +5,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
 
+import { EmailConfirmation, EmailConfirmationSchema } from "./schemas/email-confirmation.schema";
 import { User, UserSchema } from "./schemas/user.schema";
 
 import { AuthModule } from "@/modules/auth/auth.module";
@@ -18,7 +19,10 @@ import { StorageModule } from "@/modules/storage/storage.module";
 
     FilesModule,
 
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: EmailConfirmation.name, schema: EmailConfirmationSchema },
+      { name: User.name, schema: UserSchema }
+    ]),
 
     SessionsModule,
 

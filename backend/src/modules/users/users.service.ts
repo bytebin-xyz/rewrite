@@ -3,8 +3,18 @@ import { FilterQuery, Model } from "mongoose";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { DisplayNameTaken, EmailTaken, UsernameTaken } from "./users.errors";
+import {
+  DisplayNameTaken,
+  EmailTaken,
+  InvalidEmailConfirmationToken,
+  UsernameTaken
+} from "./users.errors";
 
+import { emailChanged } from "./emails/email-changed.email";
+import { emailConfirmation } from "./emails/email-confirmation.email";
+import { passwordChangedEmail } from "./emails/password-changed.email";
+
+import { EmailConfirmation } from "./schemas/email-confirmation.schema";
 import { User } from "./schemas/user.schema";
 
 import { IncorrectPassword } from "@/modules/auth/auth.errors";
@@ -24,9 +34,39 @@ export class UsersService {
     private readonly mailer: MailerService,
     private readonly sessions: SessionsService,
 
+    @InjectModel(EmailConfirmation.name)
+    private readonly emailConfirmations: Model<EmailConfirmation>,
+
     @InjectModel(User.name)
     private readonly users: Model<User>
   ) {}
+
+  async confirmEmail(token: string): Promise<void> {
+    const confirmation = await this.emailConfirmations.findOne({ token });
+    if (!confirmation) throw new InvalidEmailConfirmationToken();
+
+    const user = await this.users.findOne({ id: confirmation.uid });
+    if (!user) throw new InvalidEmailConfirmationToken();
+
+    if (await this.users.exists({ email: confirmation.newEmail })) {
+      await confirmation.deleteOne();
+      throw new InvalidEmailConfirmationToken();
+    }
+
+    const oldUser = user.toObject();
+
+    user.email = confirmation.newEmail;
+
+    await user.save();
+    await confirmation.deleteOne();
+
+    await this.mailer.send(
+      emailChanged(oldUser.email, {
+        displayName: user.displayName,
+        link: this.mailer.createAbsoluteLink("/forgot-password")
+      })
+    );
+  }
 
   async create(email: string, password: string, username: string): Promise<User> {
     if (await this.users.exists({ email })) throw new EmailTaken();
@@ -41,7 +81,6 @@ export class UsersService {
     await settle([
       this.applications.delete({ uid: user.id }),
       this.files.delete({ uid: user.id }),
-      this.mailer.delete({ uid: user.id }),
       this.sessions.delete({ "session.uid": user.id })
     ]);
 
@@ -59,33 +98,55 @@ export class UsersService {
   async updateOne(
     user: User,
     data: {
-      displayName: string;
-      email: string;
+      newDisplayName?: string;
+      newEmail?: string;
       newPassword?: string;
       password: string;
     }
   ): Promise<User> {
-    const { displayName, email, newPassword, password } = data;
+    const { newDisplayName, newEmail, newPassword, password } = data;
 
-    if (!(await user.comparePassword(password))) throw new IncorrectPassword();
-
-    if (displayName !== user.displayName) {
-      if (await this.users.exists({ displayName })) throw new DisplayNameTaken();
-
-      user.displayName = displayName;
+    if (!(await user.comparePassword(password))) {
+      throw new IncorrectPassword();
     }
 
-    if (email !== user.email) {
-      if (await this.users.exists({ email })) throw new EmailTaken();
+    if (newDisplayName && newDisplayName !== user.displayName) {
+      if (await this.users.exists({ displayName: newDisplayName })) {
+        throw new DisplayNameTaken();
+      }
 
-      await this.mailer.sendEmailConfirmation(email, user);
+      user.displayName = newDisplayName;
+    }
+
+    if (newEmail && newEmail !== user.email) {
+      if (await this.users.exists({ email: newEmail })) {
+        throw new EmailTaken();
+      }
+
+      const confirmation = await new this.emailConfirmations({ newEmail, uid: user.id }).save();
+
+      await this.mailer.send(
+        emailConfirmation(newEmail, {
+          displayName: user.displayName,
+          link: this.mailer.createAbsoluteLink(`/confirm-email/${confirmation.token}`)
+        })
+      );
     }
 
     if (newPassword) {
       user.password = newPassword;
+
+      await this.mailer.send(
+        passwordChangedEmail(user.email, {
+          displayName: user.displayName,
+          link: this.mailer.createAbsoluteLink("/forgot-password")
+        })
+      );
     }
 
-    return user.save();
+    await user.save();
+
+    return user;
   }
 
   async updateAvatar(user: User, newAvatarId: string): Promise<User> {

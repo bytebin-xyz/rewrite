@@ -1,7 +1,6 @@
 import { BullModule } from "@nestjs/bull";
 import { ConfigService } from "@nestjs/config";
 import { DynamicModule, Module, Provider } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
 
 import { NODEMAILER_MODULE_ID, NODEMAILER_MODULE_OPTIONS } from "./mailer.constants";
 
@@ -11,10 +10,6 @@ import { MailerService } from "./mailer.service";
 import { MailerOptions } from "./interfaces/mailer-module-options.interface";
 import { MailerOptionsFactory } from "./interfaces/mailer-module-options-factory";
 import { MailerModuleAsyncOptions } from "./interfaces/mailer-module-async-options.interface";
-
-import { EmailConfirmation, EmailConfirmationSchema } from "./schemas/email-confirmation.schema";
-import { PasswordReset, PasswordResetSchema } from "./schemas/password-reset.schema";
-import { UserActivation, UserActivationSchema } from "./schemas/user-activation.schema";
 
 @Module({
   imports: [
@@ -27,13 +22,7 @@ import { UserActivation, UserActivationSchema } from "./schemas/user-activation.
           port: config.get("REDIS_PORT")
         }
       })
-    }),
-
-    MongooseModule.forFeature([
-      { name: EmailConfirmation.name, schema: EmailConfirmationSchema },
-      { name: PasswordReset.name, schema: PasswordResetSchema },
-      { name: UserActivation.name, schema: UserActivationSchema }
-    ])
+    })
   ],
   exports: [BullModule, MailerService],
   providers: [MailerProcessor, MailerService]

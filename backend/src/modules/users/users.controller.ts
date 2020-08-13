@@ -16,8 +16,11 @@ import { UserDto } from "./dto/user.dto";
 import { User } from "./schemas/user.schema";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
+import { UseScopes } from "@/decorators/scopes.decorator";
 
 import { AuthGuard } from "@/guards/auth.guard";
+
+import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
 
 import { FilesService } from "@/modules/files/files.service";
 import { StorageService } from "@/modules/storage/storage.service";
@@ -32,6 +35,7 @@ export class UsersController {
   ) {}
 
   @Get("@me")
+  @UseScopes(ApplicationScopes.USERS_READ)
   me(@CurrentUser() me: User): UserDto {
     return me.toDto();
   }
@@ -80,6 +84,11 @@ export class UsersController {
   @Post("@me/delete")
   deleteOne(@Body() { password }: DeleteUserDto, @CurrentUser() me: User): Promise<UserDto> {
     return this.users.deleteOne(me, password);
+  }
+
+  @Get("confirm-email/:token")
+  confirmEmail(@Param("token") token: string): Promise<void> {
+    return this.users.confirmEmail(token);
   }
 
   @Get("search/@:username")

@@ -35,7 +35,7 @@
           </p>
         </mj-text>
 
-        <mj-button font-size="20px" href="<%= confirmEmailLink %>" padding="25px">
+        <mj-button font-size="20px" href="<%= link %>" padding="25px">
           Confirm Email Address
         </mj-button>
 
@@ -44,8 +44,8 @@
         </mj-text>
 
         <mj-text padding-top="0">
-          <a href="<%= confirmEmailLink %>" style="color: #395ECA;" target="_blank">
-            <%= confirmEmailLink %>
+          <a href="<%= link %>" style="color: #395ECA;" target="_blank">
+            <%= link %>
           </a>
         </mj-text>
       </mj-column>

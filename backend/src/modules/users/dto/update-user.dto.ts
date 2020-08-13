@@ -11,14 +11,16 @@ import {
 export class UpdateUserDto {
   @IsAlphanumeric(undefined, { message: "Display names must be alphanumeric!" })
   @IsNotEmpty({ message: "New display name cannot be empty!" })
+  @IsOptional()
   @IsString()
   @MaxLength(32, { message: "Display names cannot be longer than $constraint1 characters!" })
-  displayName!: string;
+  newDisplayName?: string;
 
   @IsEmail({}, { message: "You must enter a valid email!" })
   @IsNotEmpty({ message: "Email cannot be empty!" })
+  @IsOptional()
   @IsString()
-  email!: string;
+  newEmail?: string;
 
   @IsNotEmpty({ message: "New password cannot be empty!" })
   @IsOptional()

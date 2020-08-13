@@ -112,7 +112,6 @@ export class User extends Document implements UserDto {
   })
   username!: string;
 
-  activate!: () => Promise<this>;
   comparePassword!: (password: string) => Promise<boolean>;
   delete!: () => Promise<this>;
   toDto!: <T = UserDto>(cls?: ClassType<T>) => T;
@@ -142,13 +141,6 @@ UserSchema.pre<User>("save", function(next) {
     next();
   });
 });
-
-UserSchema.methods.activate = async function(this: User): Promise<User> {
-  this.activated = true;
-  this.expiresAt = null;
-
-  return this.save();
-};
 
 UserSchema.methods.comparePassword = function(this: User, password: string): Promise<boolean> {
   return bcrypt.compare(password, this.password);

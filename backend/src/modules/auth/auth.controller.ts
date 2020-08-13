@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Headers, Post, Req, Session, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Req,
+  Session,
+  UseGuards
+} from "@nestjs/common";
 
 import { getClientIp } from "request-ip";
 
@@ -30,6 +41,11 @@ import { generateId } from "@/utils/generateId";
 @Throttle(25, 300) // 25 request every 5 minutes
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
+
+  @Get("activate-account/:token")
+  activateAccount(@Param("token") token: string): Promise<void> {
+    return this.auth.activateAccount(token);
+  }
 
   @Post("forgot-password")
   forgotPassword(@Body() { email }: ForgotPasswordDto): void {

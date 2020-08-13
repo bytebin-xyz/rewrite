@@ -18,6 +18,12 @@ export class InvalidPasswordResetLink extends BadRequestException {
   }
 }
 
+export class InvalidUserActivationLink extends BadRequestException {
+  constructor() {
+    super("Invalid user activation link, please ensure that the link is correct!");
+  }
+}
+
 export class UserNotActivated extends ForbiddenException {
   constructor() {
     super("Please activate your account first!");
