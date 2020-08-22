@@ -2,7 +2,7 @@ import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { FilterQuery, Model } from "mongoose";
+import { FilterQuery, Model, Types } from "mongoose";
 
 import {
   ApplicationAlreadyExists,
@@ -77,9 +77,11 @@ export class ApplicationsService {
     const application = await this.applications.findOne(query);
     if (!application) throw new ApplicationNotFound();
 
-    return application.updateOne({
-      name: data.name,
-      scopes: Array.from(new Set(data.scopes))
-    });
+    application.name = data.name;
+    application.scopes = new Types.Array<ApplicationScopes>();
+
+    Array.from(new Set(data.scopes)).forEach(scope => application.scopes.addToSet(scope));
+
+    return application.save();
   }
 }

@@ -10,6 +10,7 @@ import { User, UserSchema } from "./schemas/user.schema";
 
 import { AuthModule } from "@/modules/auth/auth.module";
 import { FilesModule } from "@/modules/files/files.module";
+import { FoldersModule } from "@/modules/folders/folders.module";
 import { SessionsModule } from "@/modules/sessions/sessions.module";
 import { StorageModule } from "@/modules/storage/storage.module";
 
@@ -18,6 +19,8 @@ import { StorageModule } from "@/modules/storage/storage.module";
     AuthModule,
 
     FilesModule,
+
+    FoldersModule,
 
     MongooseModule.forFeature([
       { name: EmailConfirmation.name, schema: EmailConfirmationSchema },

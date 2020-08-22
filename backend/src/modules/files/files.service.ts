@@ -1,17 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { InjectQueue } from "@nestjs/bull";
 
 import { FilterQuery, Model } from "mongoose";
 import { Queue } from "bull";
 
-import { FileNotFound } from "./files.errors";
+import { FileNotDeletable, FileNotFound } from "./files.errors";
 
 import { File } from "./schemas/file.schema";
+
+import { FolderNotFound } from "@/modules/folders/folders.errors";
+import { FoldersService } from "@/modules/folders/folders.service";
 
 @Injectable()
 export class FilesService {
   constructor(
+    @Inject(forwardRef(() => FoldersService))
+    private readonly folders: FoldersService,
+
     @InjectModel(File.name)
     private readonly files: Model<File>,
 
@@ -19,20 +25,31 @@ export class FilesService {
     private readonly filesQueue: Queue
   ) {}
 
-  async create(data: {
-    filename: File["filename"];
-    hidden?: File["hidden"];
-    id: File["id"];
-    public?: File["public"];
-    size: File["size"];
-    uid: File["uid"];
-  }): Promise<File> {
-    return new this.files(data).save();
+  async create(
+    data: {
+      deletable?: File["deletable"];
+      filename: File["filename"];
+      folder: string | null;
+      hidden?: File["hidden"];
+      id: File["id"];
+      public?: File["public"];
+      size: File["size"];
+    },
+    uid: string
+  ): Promise<File> {
+    const folder = data.folder
+      ? await this.folders.findOne({ id: data.folder, uid }).then(folder => folder && folder._id)
+      : null;
+
+    if (!folder && data.folder) throw new FolderNotFound();
+
+    return new this.files({ ...data, folder, uid }).save();
   }
 
+  // Deletes ALL files including ones with deletable: false. Used for account deletion
   async delete(query: FilterQuery<File>): Promise<void> {
     await this.files
-      .find(query)
+      .deleteMany(query)
       .cursor()
       .eachAsync(async (file: File) => {
         await this.filesQueue.add("delete", { fileId: file.id });
@@ -42,7 +59,9 @@ export class FilesService {
 
   async deleteOne(query: FilterQuery<File>): Promise<File> {
     const file = await this.files.findOne(query);
+
     if (!file) throw new FileNotFound();
+    if (!file.deletable) throw new FileNotDeletable();
 
     await this.filesQueue.add("delete", { fileId: file.id });
     await file.deleteOne();
@@ -62,6 +81,7 @@ export class FilesService {
     query: FilterQuery<File>,
     data: {
       filename: string;
+      folder: string | null;
       hidden: boolean;
       public: boolean;
     }
@@ -69,6 +89,20 @@ export class FilesService {
     const file = await this.files.findOne(query);
     if (!file) throw new FileNotFound();
 
-    return file.updateOne(data);
+    if (data.folder) {
+      const folder = await this.folders
+        .findOne({ id: data.folder, uid: file.uid })
+        .then(folder => folder && folder._id);
+
+      if (!folder) throw new FolderNotFound();
+
+      file.folder = folder;
+    }
+
+    file.filename = data.filename;
+    file.hidden = data.hidden;
+    file.public = data.public;
+
+    return file.save();
   }
 }

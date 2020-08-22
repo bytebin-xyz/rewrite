@@ -8,7 +8,7 @@ export const emailChanged = (
     data,
     template: "./templates/email-changed.mjml"
   },
-  subject: "Your email has been changed.",
+  subject: "Bytebin - Email Changed",
   text: [
     `Hey ${data.displayName}\n`,
     "Your email has been changed.",

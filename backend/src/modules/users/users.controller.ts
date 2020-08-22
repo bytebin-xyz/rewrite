@@ -69,14 +69,18 @@ export class UsersController {
       ]
     });
 
-    await this.files.create({
-      filename: avatar.filename,
-      hidden: true,
-      id: avatar.id,
-      public: true,
-      size: avatar.size,
-      uid: me.id
-    });
+    await this.files.create(
+      {
+        deletable: false,
+        filename: avatar.filename,
+        folder: null,
+        hidden: true,
+        id: avatar.id,
+        public: true,
+        size: avatar.size
+      },
+      me.id
+    );
 
     return this.users.updateAvatar(me, avatar.id).then(user => user.toDto());
   }

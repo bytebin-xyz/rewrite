@@ -6,6 +6,12 @@ export class ChunkAlreadyUploaded extends ConflictException {
   }
 }
 
+export class FileNotDeletable extends ForbiddenException {
+  constructor() {
+    super("This file is crucial and cannot be deleted!");
+  }
+}
+
 export class FileNotFound extends NotFoundException {
   constructor() {
     super("File does not exists!");

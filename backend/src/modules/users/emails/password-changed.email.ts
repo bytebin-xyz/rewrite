@@ -8,7 +8,7 @@ export const passwordChangedEmail = (
     data,
     template: "./templates/password-changed.mjml"
   },
-  subject: "Your password has been changed.",
+  subject: "Bytebin - Password Changed",
   text: [
     `Hey ${data.displayName}\n`,
     "Your password has been changed.",

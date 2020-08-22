@@ -1,6 +1,6 @@
 import { SendMailOptions } from "@/modules/mailer/interfaces/send-mail-options.interface";
 
-export const userActivation = (
+export const successfulLogin = (
   to: string,
   data: { displayName: string; link: string }
 ): SendMailOptions => ({
@@ -8,7 +8,7 @@ export const userActivation = (
     data,
     template: "./templates/user-activation.mjml"
   },
-  subject: "Bytebin - Activate your account",
+  subject: "Bytebin - Successful Login",
   text: [
     `Hey ${data.displayName},\n`,
     "To finish up the registration process, please activate your account by visiting the link below",

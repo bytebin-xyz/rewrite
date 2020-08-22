@@ -6,10 +6,12 @@ import {
   InternalServerErrorException,
   Logger,
   Param,
+  ParseBoolPipe,
   Patch,
   Post,
   Req,
   Res,
+  Query,
   UseGuards
 } from "@nestjs/common";
 
@@ -31,6 +33,9 @@ import { AuthGuard } from "@/guards/auth.guard";
 
 import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
 
+import { FolderNotFound } from "@/modules/folders/folders.errors";
+
+import { FoldersService } from "@/modules/folders/folders.service";
 import { StorageService } from "@/modules/storage/storage.service";
 
 @Controller("files")
@@ -39,6 +44,7 @@ export class FilesController {
   constructor(
     private readonly config: ConfigService,
     private readonly files: FilesService,
+    private readonly folders: FoldersService,
     private readonly logger: Logger,
     private readonly storage: StorageService
   ) {}
@@ -90,7 +96,17 @@ export class FilesController {
 
   @Post("upload")
   @UseScopes(ApplicationScopes.FILES_WRITE)
-  async upload(@CurrentUser("id") uid: string, @Req() req: Request): Promise<FileDto[]> {
+  async upload(
+    @CurrentUser("id") uid: string,
+    @Query("folder") folder: string | undefined,
+    @Query("hidden", ParseBoolPipe) hidden: boolean | undefined,
+    @Query("public", ParseBoolPipe) isPublic: boolean | undefined,
+    @Req() req: Request
+  ): Promise<FileDto[]> {
+    if (folder && !(await this.folders.exists({ id: folder, uid }))) {
+      throw new FolderNotFound();
+    }
+
     const files = await this.storage.write(req, {
       field: "file",
       limits: {
@@ -102,12 +118,17 @@ export class FilesController {
     return Promise.all(
       files.map(file =>
         this.files
-          .create({
-            filename: file.filename,
-            id: file.id,
-            size: file.size,
+          .create(
+            {
+              filename: file.filename,
+              folder: folder || null,
+              hidden: hidden || false,
+              id: file.id,
+              public: isPublic || false,
+              size: file.size
+            },
             uid
-          })
+          )
           .then(file => file.toDto())
       )
     );

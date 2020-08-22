@@ -1,10 +1,14 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
-import { Prop, Schema, SchemaFactory, raw } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import { plainToClass } from "class-transformer";
 
 import { FileDto } from "../dto/file.dto";
+
+import { FolderDto } from "@/modules/folders/dto/folder.dto";
+
+import { Folder } from "@/modules/folders/schemas/folder.schema";
 
 @Schema({
   id: false,
@@ -15,20 +19,22 @@ export class File extends Document implements FileDto {
   updatedAt!: Date;
 
   @Prop({
+    default: true
+  })
+  deletable!: boolean;
+
+  @Prop({
     maxlength: 255,
     required: true,
     trim: true
   })
   filename!: string;
 
-  @Prop(
-    raw({
-      default: null,
-      trim: true,
-      type: String
-    })
-  )
-  folder!: string | null;
+  @Prop({
+    ref: Folder.name,
+    type: Types.ObjectId
+  })
+  folder!: FolderDto | Types.ObjectId | null;
 
   @Prop({
     default: false
@@ -69,6 +75,22 @@ export class File extends Document implements FileDto {
 }
 
 export const FileSchema = SchemaFactory.createForClass(File);
+
+FileSchema.pre<File>("find", function() {
+  this.populate("folder");
+});
+
+FileSchema.pre<File>("findOne", function() {
+  this.populate("folder");
+});
+
+FileSchema.post<File>("save", function(doc, next) {
+  doc
+    .populate("folder")
+    .execPopulate()
+    .then(() => next())
+    .catch(error => next(error));
+});
 
 FileSchema.methods.toDto = function(this: File): FileDto {
   return plainToClass(FileDto, this.toJSON(), {

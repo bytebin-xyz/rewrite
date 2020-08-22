@@ -10,8 +10,8 @@ import {
   UserNotActivated
 } from "./auth.errors";
 
-import { passwordChanged } from "./emails/password-changed.email";
 import { passwordReset } from "./emails/password-reset.email";
+import { passwordResetted } from "./emails/password-resetted.email";
 import { userActivation } from "./emails/user-activation.email";
 
 import { PasswordReset } from "./schemas/password-reset.schema";
@@ -103,7 +103,7 @@ export class AuthService {
     await passwordReset.deleteOne();
 
     await this.mailer.send(
-      passwordChanged(user.email, {
+      passwordResetted(user.email, {
         displayName: user.displayName,
         link: this.mailer.createAbsoluteLink("/forgot-password")
       })
