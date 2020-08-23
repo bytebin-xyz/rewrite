@@ -21,6 +21,8 @@ import { UAParser } from "ua-parser-js";
 
 import { AuthService } from "./auth.service";
 
+import { successfulLogin } from "./emails/successful-login.email";
+
 import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
@@ -33,6 +35,8 @@ import { RecaptchaGuard } from "@/guards/recaptcha.guard";
 
 import { ISessionData } from "@/modules/sessions/interfaces/session-data.interface";
 
+import { MailerService } from "@/modules/mailer/mailer.service";
+
 import { User } from "@/modules/users/schemas/user.schema";
 
 import { generateId } from "@/utils/generateId";
@@ -40,7 +44,7 @@ import { generateId } from "@/utils/generateId";
 @Controller("auth")
 @Throttle(25, 300) // 25 request every 5 minutes
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
+  constructor(private readonly auth: AuthService, private readonly mailer: MailerService) {}
 
   @Get("activate-account/:token")
   activateAccount(@Param("token") token: string): Promise<void> {
@@ -78,6 +82,14 @@ export class AuthController {
       os: ua.getOS()
     };
     session.uid = user.id;
+
+    await this.mailer.send(
+      successfulLogin(user.email, {
+        displayName: user.displayName,
+        link: this.mailer.createAbsoluteLink("/forgot-password"),
+        session
+      })
+    );
 
     return user;
   }

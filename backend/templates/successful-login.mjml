@@ -1,0 +1,57 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-body background-color="#f6f6f6"></mj-body>
+      <mj-button background-color="#395ECA" font-size="14px" padding="15px"></mj-button>
+      <mj-text color="#555" font-family="Roboto, Helvetica, Arial, sans-serif" font-size="14px" letter-spacing="0.25px" line-height="1.5" padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-image src="https://raw.githubusercontent.com/bytebin-xyz/api/master/public/logo/profile.png" width="100px"></mj-image>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#fff">
+      <mj-column padding="20px 40px">
+        <mj-text align="center">
+          <h1>A new login has occurred on your account.</h1>
+        </mj-text>
+        
+        <mj-text>
+        	<p>Hey <%= displayName %>,</p>
+        </mj-text>
+          
+        <mj-text>
+          <p>This email was sent because a new login has occurred on your account at <strong><%= time %></strong>.</p>
+         </mj-text>
+          
+        <mj-text>
+          <p><strong>IP Address:</strong> <%= session.ip || "Unknown" %></p>
+          <p><strong>Device:</strong> <%= session.ua.os.name %> <%= session.ua.os.version %></p>
+          <p><strong>Browser:</strong> <%= session.ua.browser.name %> <%= session.ua.browser.version %></p>
+        </mj-text>
+
+        <mj-text>
+          <p>If this was not you, please reset your password immediately using the link below.</p>
+        </mj-text>
+
+        <mj-button href="<%= link %>">
+          Reset Password
+        </mj-button>
+
+        <mj-text>
+          <p>Button not working? Please visit the following link by clicking on it or pasting it into your browser.</p>
+        </mj-text>
+
+        <mj-text>
+          <a href="<%= link %>" style="color: #395ECA;" target="_blank">
+            <%= link %>
+          </a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
