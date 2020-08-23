@@ -6,7 +6,7 @@ export const passwordReset = (
 ): SendMailOptions => ({
   mjml: {
     data,
-    template: "./templates/password-reset.mjml"
+    template: "./templates/password-reset-request.mjml"
   },
   subject: "Bytebin - Password reset requested",
   text: [

@@ -11,7 +11,7 @@ import {
 } from "./auth.errors";
 
 import { passwordReset } from "./emails/password-reset.email";
-import { passwordResetted } from "./emails/password-resetted.email";
+import { passwordResetted } from "./emails/password-post-reset.email";
 import { userActivation } from "./emails/user-activation.email";
 
 import { PasswordReset } from "./schemas/password-reset.schema";

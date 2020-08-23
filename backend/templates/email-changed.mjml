@@ -2,8 +2,8 @@
   <mj-head>
     <mj-attributes>
       <mj-body background-color="#f6f6f6"></mj-body>
-      <mj-button background-color="#395ECA"></mj-button>
-      <mj-text color="#555" font-family="Roboto, Helvetica, Arial, sans-serif" letter-spacing="0.25px" />
+      <mj-button background-color="#395ECA" font-size="14px" padding="15px"></mj-button>
+      <mj-text color="#555" font-family="Roboto, Helvetica, Arial, sans-serif" font-size="14px" letter-spacing="0.25px" line-height="1.5" padding="0" />
     </mj-attributes>
   </mj-head>
 
@@ -14,33 +14,37 @@
       </mj-column>
     </mj-section>
 
-    <mj-section background-color="#fff" padding="25px 15px">
-      <mj-column>
-        <mj-text font-size="20px">
-          <h1 style="margin: 0;">Hey <%= displayName %>,</h1>
+    <mj-section background-color="#fff">
+      <mj-column padding="20px 40px">
+        <mj-text align="center">
+          <h1>Your email has been changed.</h1>
+        </mj-text>
+        
+        <mj-text>
+        	<p>Hey <%= displayName %>,</p>
+        </mj-text>
+          
+        <mj-text>
+          <p>This email was sent because your email has been changed.</p>
+         </mj-text>
+   
+        <mj-text>
+          <p>If this action was performed by you, then no further action is necessary.</p>
         </mj-text>
 
-        <mj-text font-size="16px" line-height="32px" padding-bottom="15px" padding-top="25px">
-          <h2 style="margin: 0;">Your email has been changed.</h2>
+        <mj-text>
+          <p>However, if you do not recognize this action being performed by you, please reset your password immediately using the link below.</p>
         </mj-text>
 
-        <mj-text font-size="20px" line-height="32px">
-          <p style="margin: 0;">If this was you, then no further action is needed.</p>
-        </mj-text>
-
-        <mj-text font-size="20px" line-height="32px">
-          <p style="margin: 0;">If you did <strong>NOT</strong> perform this action, your account has been compromised. Please reset your password immediately by clicking on the button below.</p>
-        </mj-text>
-
-        <mj-button font-size="20px" href="<%= link %>" padding="25px">
-          Recover Account
+        <mj-button href="<%= link %>">
+          Reset Password
         </mj-button>
 
-        <mj-text line-height="20px" padding-bottom="0">
+        <mj-text>
           <p>Button not working? Please visit the following link by clicking on it or pasting it into your browser.</p>
         </mj-text>
 
-        <mj-text padding-top="0">
+        <mj-text>
           <a href="<%= link %>" style="color: #395ECA;" target="_blank">
             <%= link %>
           </a>
