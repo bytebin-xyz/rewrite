@@ -46,7 +46,6 @@ export class FilesService {
     return new this.files({ ...data, folder, uid }).save();
   }
 
-  // Deletes ALL files including ones with deletable: false. Used for account deletion
   async delete(query: FilterQuery<File>): Promise<void> {
     await this.files
       .deleteMany(query)
@@ -89,17 +88,16 @@ export class FilesService {
     const file = await this.files.findOne(query);
     if (!file) throw new FileNotFound();
 
-    if (data.folder) {
-      const folder = await this.folders
-        .findOne({ id: data.folder, uid: file.uid })
-        .then(folder => folder && folder._id);
+    const folder = data.folder
+      ? await this.folders
+          .findOne({ id: data.folder, uid: file.uid })
+          .then(folder => folder && folder._id)
+      : null;
 
-      if (!folder) throw new FolderNotFound();
-
-      file.folder = folder;
-    }
+    if (!folder && data.folder) throw new FolderNotFound();
 
     file.filename = data.filename;
+    file.folder = folder;
     file.hidden = data.hidden;
     file.public = data.public;
 

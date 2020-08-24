@@ -98,9 +98,9 @@ export class FilesController {
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async upload(
     @CurrentUser("id") uid: string,
-    @Query("folder") folder: string | undefined,
-    @Query("hidden", ParseBoolPipe) hidden: boolean | undefined,
-    @Query("public", ParseBoolPipe) isPublic: boolean | undefined,
+    @Query("folder") folder: string,
+    @Query("hidden", ParseBoolPipe) hidden: boolean,
+    @Query("public", ParseBoolPipe) isPublic: boolean,
     @Req() req: Request
   ): Promise<FileDto[]> {
     if (folder && !(await this.folders.exists({ id: folder, uid }))) {

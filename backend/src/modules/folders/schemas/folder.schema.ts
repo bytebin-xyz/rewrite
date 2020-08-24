@@ -8,6 +8,8 @@ import { FolderDto } from "../dto/folder.dto";
 
 import { generateId } from "@/utils/generateId";
 
+import { PATH_SAFE_REGEX } from "@/validators/is-string-path-safe.validator";
+
 @Schema({
   id: false,
   timestamps: true
@@ -33,7 +35,8 @@ export class Folder extends Document implements FolderDto {
   @Prop({
     maxlength: 255,
     required: true,
-    trim: true
+    trim: true,
+    validate: (value: string) => !PATH_SAFE_REGEX.test(value)
   })
   name!: string;
 
@@ -42,6 +45,11 @@ export class Folder extends Document implements FolderDto {
     type: Types.ObjectId
   })
   parent!: Folder | Types.ObjectId | null;
+
+  @Prop({
+    index: true
+  })
+  path!: string;
 
   @Prop({
     default: false
@@ -57,6 +65,7 @@ export class Folder extends Document implements FolderDto {
   })
   uid!: string;
 
+  populateParent!: () => Promise<Folder | null>;
   toDto!: () => FolderDto;
 }
 
@@ -81,13 +90,33 @@ FolderSchema.pre<Folder>("save", function(next) {
     .catch(error => next(error));
 });
 
-FolderSchema.post("save", function(doc, next) {
+FolderSchema.pre<Folder>("save", async function(next) {
+  if (!this.isModified("name") && !this.isModified("parent")) return next();
+
+  try {
+    const parent = await this.populateParent();
+
+    // ALWAYS end with trailing forward slash so we can use regex to find descendants
+    this.path = parent ? `${parent.path + this.name}/` : `/${this.name}/`;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+FolderSchema.post<Folder>("save", function(doc, next) {
   doc
-    .populate("parent")
-    .execPopulate()
+    .populateParent()
     .then(() => next())
     .catch(error => next(error));
 });
+
+FolderSchema.methods.populateParent = async function(this: Folder): Promise<Folder | null> {
+  await this.populate("parent").execPopulate();
+
+  return this.parent as Folder | null;
+};
 
 FolderSchema.methods.toDto = function(this: Folder): FolderDto {
   return plainToClass(FolderDto, this.toJSON(), {

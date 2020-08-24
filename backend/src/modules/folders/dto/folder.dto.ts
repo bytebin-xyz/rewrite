@@ -14,6 +14,8 @@ export class FolderDto {
 
   parent!: FolderDto | Types.ObjectId | null;
 
+  path!: string;
+
   public!: boolean;
 
   uid!: string;
