@@ -55,11 +55,6 @@ export class File extends Document implements FileDto {
   id!: string;
 
   @Prop({
-    index: true
-  })
-  path!: string;
-
-  @Prop({
     default: false
   })
   public!: boolean;
@@ -79,7 +74,6 @@ export class File extends Document implements FileDto {
   })
   uid!: string;
 
-  populateFolder!: () => Promise<Folder | null>;
   toDto!: () => FileDto;
 }
 
@@ -93,32 +87,13 @@ FileSchema.pre<File>("findOne", function() {
   this.populate("folder");
 });
 
-FileSchema.pre<File>("save", async function(next) {
-  if (!this.isModified("filename") && !this.isModified("folder")) return next();
-
-  try {
-    const folder = await this.populateFolder();
-
-    this.path = folder ? folder.path + this.filename : `/${this.filename}`;
-
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
 FileSchema.post<File>("save", function(doc, next) {
   doc
-    .populateFolder()
+    .populate("folder")
+    .execPopulate()
     .then(() => next())
     .catch(error => next(error));
 });
-
-FileSchema.methods.populateFolder = async function(this: File): Promise<Folder | null> {
-  await this.populate("folder").execPopulate();
-
-  return this.folder as Folder | null;
-};
 
 FileSchema.methods.toDto = function(this: File): FileDto {
   return plainToClass(FileDto, this.toJSON(), {

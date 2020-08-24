@@ -18,8 +18,6 @@ export class FileDto {
 
   id!: string;
 
-  path!: string;
-
   public!: boolean;
 
   size!: number;
