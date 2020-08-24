@@ -825,9 +825,12 @@
     <div class="tab-pane fade tab-source-code" id="source">
         <pre><code class="hljs javascript">import { IsNotEmpty, IsOptional, IsString, MaxLength } from &quot;class-validator&quot;;
 
+import { IsStringPathSafe } from &quot;@/validators/is-string-path-safe.validator&quot;;
+
 export class CreateFolderDto {
   @IsNotEmpty({ message: &quot;Folder name cannot be empty!&quot; })
   @IsString()
+  @IsStringPathSafe()
   @MaxLength(255, { message: &quot;Folder name cannot be greater than $constraint1 characters!&quot; })
   name!: string;
 

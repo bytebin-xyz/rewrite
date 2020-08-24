@@ -983,7 +983,6 @@ export class FilesService {
     return new this.files({ ...data, folder, uid }).save();
   }
 
-  // Deletes ALL files including ones with deletable: false. Used for account deletion
   async delete(query: FilterQuery&lt;File&gt;): Promise&lt;void&gt; {
     await this.files
       .deleteMany(query)
@@ -1026,17 +1025,16 @@ export class FilesService {
     const file &#x3D; await this.files.findOne(query);
     if (!file) throw new FileNotFound();
 
-    if (data.folder) {
-      const folder &#x3D; await this.folders
-        .findOne({ id: data.folder, uid: file.uid })
-        .then(folder &#x3D;&gt; folder &amp;&amp; folder._id);
+    const folder &#x3D; data.folder
+      ? await this.folders
+          .findOne({ id: data.folder, uid: file.uid })
+          .then(folder &#x3D;&gt; folder &amp;&amp; folder._id)
+      : null;
 
-      if (!folder) throw new FolderNotFound();
-
-      file.folder &#x3D; folder;
-    }
+    if (!folder &amp;&amp; data.folder) throw new FolderNotFound();
 
     file.filename &#x3D; data.filename;
+    file.folder &#x3D; folder;
     file.hidden &#x3D; data.hidden;
     file.public &#x3D; data.public;
 

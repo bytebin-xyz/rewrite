@@ -914,12 +914,42 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b> path</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>path:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b> public</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
                                     <code>public:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> string</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>string:     <code>any</code>
             </bcode>
                                 </td>
                             </tr>
@@ -1018,6 +1048,8 @@ export class FolderDto {
   name!: string;
 
   parent!: FolderDto | Types.ObjectId | null;
+
+  path!: string;
 
   public!: boolean;
 

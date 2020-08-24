@@ -810,9 +810,12 @@
     <div class="tab-pane fade tab-source-code" id="source">
         <pre><code class="hljs javascript">import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from &quot;class-validator&quot;;
 
+import { IsStringPathSafe } from &quot;@/validators/is-string-path-safe.validator&quot;;
+
 export class UpdateFileDto {
   @IsNotEmpty({ message: &quot;New filename cannot be empty!&quot; })
   @IsString()
+  @IsStringPathSafe()
   @MaxLength(255, { message: &quot;Filename cannot be greater than $constraint1 characters!&quot; })
   filename!: string;
 

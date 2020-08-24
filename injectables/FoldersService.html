@@ -972,6 +972,7 @@ import { FolderAlreadyExists, FolderNotFound, ParentFolderNotFound } from &quot;
 import { Folder } from &quot;./schemas/folder.schema&quot;;
 
 import { FilesService } from &quot;@/modules/files/files.service&quot;;
+import { settle } from &quot;~/src/utils/settle&quot;;
 
 @Injectable()
 export class FoldersService {
@@ -1010,7 +1011,12 @@ export class FoldersService {
     const folder &#x3D; await this.folders.findOne(query);
     if (!folder) throw new FolderNotFound();
 
-    await this.files.delete({ folder: folder._id, uid: folder.uid });
+    const path &#x3D; { $regex: &#x60;^${folder.path}&#x60; };
+
+    await settle([
+      this.files.delete({ deletable: true, path, uid: folder.uid }),
+      this.folders.deleteMany({ path, uid: folder.uid })
+    ]);
 
     return folder.deleteOne();
   }
