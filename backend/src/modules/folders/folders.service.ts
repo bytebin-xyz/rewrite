@@ -94,7 +94,7 @@ export class FoldersService {
       const parentFolder = await this.folders.findOne({ id: data.parent, uid: folder.uid });
       if (!parentFolder) throw new ParentFolderNotFound();
 
-      if (parentFolder.parent && parentFolder.parent.equals(folder._id)) {
+      if (parentFolder.path.startsWith(`${folder.path}/`)) {
         throw new ParentFolderIsChildrenOfItself();
       }
 

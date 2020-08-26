@@ -132,7 +132,7 @@ FolderSchema.post<Folder>("save", function(doc, next) {
     .catch(error => next(error));
 });
 
-FolderSchema.virtual("deepness", function(this: Folder) {
+FolderSchema.virtual("deepness").get(function(this: Folder) {
   return this.path.split("/").filter(el => el.length > 0).length;
 });
 
