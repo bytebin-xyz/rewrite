@@ -12,11 +12,19 @@ import { PATH_SAFE_REGEX } from "@/validators/is-string-path-safe.validator";
 
 @Schema({
   id: false,
-  timestamps: true
+  timestamps: true,
+  toJSON: {
+    virtuals: true
+  },
+  toObject: {
+    virtuals: true
+  }
 })
 export class Folder extends Document implements FolderDto {
   createdAt!: Date;
   updatedAt!: Date;
+
+  deepness!: number;
 
   @Prop({
     default: false
@@ -47,7 +55,9 @@ export class Folder extends Document implements FolderDto {
   parent!: Folder | Types.ObjectId | null;
 
   @Prop({
-    index: true
+    default: "/",
+    index: true,
+    unique: true
   })
   path!: string;
 
@@ -96,8 +106,18 @@ FolderSchema.pre<Folder>("save", async function(next) {
   try {
     const parent = await this.populateParent();
 
-    // ALWAYS end with trailing forward slash so we can use regex to find descendants
-    this.path = parent ? `${parent.path + this.name}/` : `/${this.name}/`;
+    const newPath = parent ? `${parent.path}/${this.name}` : `/${this.name}`;
+    const oldPath = this.path.toString();
+
+    this.path = newPath;
+
+    await this.model<Folder>(Folder.name)
+      .find({ path: { $regex: `^${oldPath}/` } })
+      .cursor()
+      .eachAsync(async child => {
+        child.path = newPath + child.path.substr(oldPath.length);
+        await child.save();
+      });
 
     next();
   } catch (error) {
@@ -110,6 +130,10 @@ FolderSchema.post<Folder>("save", function(doc, next) {
     .populateParent()
     .then(() => next())
     .catch(error => next(error));
+});
+
+FolderSchema.virtual("deepness", function(this: Folder) {
+  return this.path.split("/").filter(el => el.length > 0).length;
 });
 
 FolderSchema.methods.populateParent = async function(this: Folder): Promise<Folder | null> {

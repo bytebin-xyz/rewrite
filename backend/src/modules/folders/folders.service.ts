@@ -3,12 +3,19 @@ import { InjectModel } from "@nestjs/mongoose";
 
 import { FilterQuery, Model } from "mongoose";
 
-import { FolderAlreadyExists, FolderNotFound, ParentFolderNotFound } from "./folders.errors";
+import {
+  FolderAlreadyExists,
+  FolderNotFound,
+  ParentFolderNotFound,
+  ParentFolderIsItself,
+  ParentFolderIsChildrenOfItself
+} from "./folders.errors";
 
 import { Folder } from "./schemas/folder.schema";
 
 import { FilesService } from "@/modules/files/files.service";
-import { settle } from "~/src/utils/settle";
+
+import { settle } from "@/utils/settle";
 
 @Injectable()
 export class FoldersService {
@@ -47,7 +54,7 @@ export class FoldersService {
     const folder = await this.folders.findOne(query);
     if (!folder) throw new FolderNotFound();
 
-    const path = { $regex: `^${folder.path}` };
+    const path = { $regex: `^${folder.path}/` };
 
     await settle([
       this.files.delete({ deletable: true, path, uid: folder.uid }),
@@ -79,17 +86,22 @@ export class FoldersService {
     const folder = await this.folders.findOne(query);
     if (!folder) throw new FolderNotFound();
 
-    if (data.parent) {
-      const parent = await this.folders
-        .findOne({ id: data.parent, uid: folder.uid })
-        .then(parent => parent && parent._id);
-
-      if (!parent) throw new ParentFolderNotFound();
-
-      folder.parent = parent;
-    }
-
     folder.name = data.name;
+
+    if (data.parent) {
+      if (data.parent === folder.id) throw new ParentFolderIsItself();
+
+      const parentFolder = await this.folders.findOne({ id: data.parent, uid: folder.uid });
+      if (!parentFolder) throw new ParentFolderNotFound();
+
+      if (parentFolder.parent && parentFolder.parent.equals(folder._id)) {
+        throw new ParentFolderIsChildrenOfItself();
+      }
+
+      folder.parent = parentFolder._id;
+    } else {
+      folder.parent = null;
+    }
 
     return folder.save();
   }

@@ -62,7 +62,7 @@ export class FilesController {
     @CurrentUser("id") uid: string,
     @Param("id") id: string
   ): Promise<FileDto> {
-    return this.files.updateOne({ id, uid }, dto).then(file => file.toDto());
+    return this.files.updateOne({ id, uid }, { ...dto, hidden: false }).then(file => file.toDto());
   }
 
   @Get("download/:id")

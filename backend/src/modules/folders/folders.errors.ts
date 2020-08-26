@@ -1,4 +1,4 @@
-import { ConflictException, NotFoundException } from "@nestjs/common";
+import { ConflictException, ForbiddenException, NotFoundException } from "@nestjs/common";
 
 export class FolderAlreadyExists extends ConflictException {
   constructor(name: string) {
@@ -8,6 +8,18 @@ export class FolderAlreadyExists extends ConflictException {
 export class FolderNotFound extends NotFoundException {
   constructor() {
     super("Folder does not exist!");
+  }
+}
+
+export class ParentFolderIsChildrenOfItself extends ForbiddenException {
+  constructor() {
+    super("The parent of a folder cannot be a children of itself!");
+  }
+}
+
+export class ParentFolderIsItself extends ForbiddenException {
+  constructor() {
+    super("The parent of a folder cannot be itself!");
   }
 }
 

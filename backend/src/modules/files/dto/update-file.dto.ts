@@ -14,8 +14,5 @@ export class UpdateFileDto {
   folder!: string | null;
 
   @IsBoolean()
-  hidden!: boolean;
-
-  @IsBoolean()
   public!: boolean;
 }

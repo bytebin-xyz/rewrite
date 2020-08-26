@@ -5,6 +5,8 @@ import { Types } from "mongoose";
 export class FolderDto {
   createdAt!: Date;
 
+  deepness!: number;
+
   @Exclude()
   hidden!: boolean;
 
