@@ -153,7 +153,7 @@
                                     <a href="../classes/InvalidUserActivationLink.html" >InvalidUserActivationLink</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../classes/LoginDto.html"  class="active" >LoginDto</a>
+                                    <a href="../classes/LoginDto.html" >LoginDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/MaxActiveUploadSessionsError.html" >MaxActiveUploadSessionsError</a>
@@ -162,7 +162,7 @@
                                     <a href="../classes/NoFilesUploaded.html" >NoFilesUploaded</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../classes/ParentFolderIsChildrenOfItself.html" >ParentFolderIsChildrenOfItself</a>
+                                    <a href="../classes/ParentFolderIsChildrenOfItself.html"  class="active" >ParentFolderIsChildrenOfItself</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/ParentFolderIsItself.html" >ParentFolderIsItself</a>
@@ -513,7 +513,7 @@
                                            <a href="../classes/InvalidUserActivationLink.html" >InvalidUserActivationLink</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../classes/LoginDto.html"  class="active" >LoginDto</a>
+                                           <a href="../classes/LoginDto.html" >LoginDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/MaxActiveUploadSessionsError.html" >MaxActiveUploadSessionsError</a>
@@ -522,7 +522,7 @@
                                            <a href="../classes/NoFilesUploaded.html" >NoFilesUploaded</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../classes/ParentFolderIsChildrenOfItself.html" >ParentFolderIsChildrenOfItself</a>
+                                           <a href="../classes/ParentFolderIsChildrenOfItself.html"  class="active" >ParentFolderIsChildrenOfItself</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/ParentFolderIsItself.html" >ParentFolderIsItself</a>
@@ -745,7 +745,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>LoginDto</li>
+  <li>ParentFolderIsChildrenOfItself</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -763,122 +763,57 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/modules/auth/dto/login.dto.ts</code>
+            <code>src/modules/folders/folders.errors.ts</code>
         </p>
 
 
-
-
-
             <section>
-                <h3 id="inputs">Properties</h3>
+                <h3 id="constructor">Constructor</h3>
                     <table class="table table-sm table-bordered">
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b> password</b>
+                                    <code>constructor(name: string)</code>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>password:     <code>boolean</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> recaptcha</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>recaptcha:     <code>boolean</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> string</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>string:     <code>any</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> string</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>string:     <code>any</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> string</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>string:     <code>any</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> username</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>username:     <code>boolean</code>
-            </bcode>
-                                </td>
-                            </tr>
+            
                         </tbody>
                     </table>
             </section>
+
+
+
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { IsNotEmpty, IsString } from &quot;class-validator&quot;;
+        <pre><code class="hljs javascript">import { ConflictException, ForbiddenException, NotFoundException } from &quot;@nestjs/common&quot;;
 
-export class LoginDto {
-  @IsNotEmpty({ message: &quot;Password cannot be empty!&quot; })
-  @IsString()
-  password!: string;
+export class FolderAlreadyExists extends ConflictException {
+  constructor(name: string) {
+    super(&#x60;Folder &quot;${name}&quot; already exists!&#x60;);
+  }
+}
+export class FolderNotFound extends NotFoundException {
+  constructor() {
+    super(&quot;Folder does not exist!&quot;);
+  }
+}
 
-  @IsNotEmpty()
-  @IsString()
-  recaptcha!: string;
+export class ParentFolderIsChildrenOfItself extends ForbiddenException {
+  constructor() {
+    super(&quot;The parent of a folder cannot be a children of itself!&quot;);
+  }
+}
 
-  @IsNotEmpty({ message: &quot;Username cannot be empty!&quot; })
-  @IsString()
-  username!: string;
+export class ParentFolderIsItself extends ForbiddenException {
+  constructor() {
+    super(&quot;The parent of a folder cannot be itself!&quot;);
+  }
+}
+
+export class ParentFolderNotFound extends NotFoundException {
+  constructor() {
+    super(&quot;Parent folder does not exist!&quot;);
+  }
 }
 </code></pre>
     </div>
