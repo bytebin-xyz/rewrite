@@ -1,12 +1,10 @@
-import { Document, Types } from "mongoose";
+import { Document } from "mongoose";
 
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import { plainToClass } from "class-transformer";
 
 import { FileDto } from "../dto/file.dto";
-
-import { FolderDto } from "@/modules/folders/dto/folder.dto";
 
 import { Folder } from "@/modules/folders/schemas/folder.schema";
 
@@ -18,7 +16,6 @@ import { PATH_SAFE_REGEX } from "@/validators/is-string-path-safe.validator";
 })
 export class File extends Document implements FileDto {
   createdAt!: Date;
-  updatedAt!: Date;
 
   @Prop({
     default: true
@@ -33,11 +30,8 @@ export class File extends Document implements FileDto {
   })
   filename!: string;
 
-  @Prop({
-    ref: Folder.name,
-    type: Types.ObjectId
-  })
-  folder!: FolderDto | Types.ObjectId | null;
+  @Prop()
+  folder!: string | null;
 
   @Prop({
     default: false
@@ -53,6 +47,11 @@ export class File extends Document implements FileDto {
     unique: true
   })
   id!: string;
+
+  @Prop({
+    unique: true
+  })
+  path!: string;
 
   @Prop({
     default: false
@@ -74,25 +73,25 @@ export class File extends Document implements FileDto {
   })
   uid!: string;
 
+  updatedAt!: Date;
+
   toDto!: () => FileDto;
 }
 
 export const FileSchema = SchemaFactory.createForClass(File);
 
-FileSchema.pre<File>("find", function() {
-  this.populate("folder");
-});
+FileSchema.pre<File>("save", async function(next) {
+  if (!this.isNew || (!this.isModified("filename") && !this.isModified("folder"))) return next();
 
-FileSchema.pre<File>("findOne", function() {
-  this.populate("folder");
-});
+  const folder = this.folder
+    ? await this.model<Folder>(Folder.name)
+        .findOne({ id: this.folder, uid: this.uid })
+        .catch(error => next(error))
+    : null;
 
-FileSchema.post<File>("save", function(doc, next) {
-  doc
-    .populate("folder")
-    .execPopulate()
-    .then(() => next())
-    .catch(error => next(error));
+  this.path = folder ? `${folder.path}/${this.filename}` : `/${this.filename}`;
+
+  next();
 });
 
 FileSchema.methods.toDto = function(this: File): FileDto {

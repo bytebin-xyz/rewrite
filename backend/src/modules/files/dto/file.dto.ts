@@ -1,9 +1,5 @@
 import { Exclude } from "class-transformer";
 
-import { Types } from "mongoose";
-
-import { FolderDto } from "@/modules/folders/dto/folder.dto";
-
 export class FileDto {
   createdAt!: Date;
 
@@ -11,12 +7,14 @@ export class FileDto {
 
   filename!: string;
 
-  folder!: FolderDto | Types.ObjectId | null;
+  folder!: string | null;
 
   @Exclude()
   hidden!: boolean;
 
   id!: string;
+
+  path!: string;
 
   public!: boolean;
 

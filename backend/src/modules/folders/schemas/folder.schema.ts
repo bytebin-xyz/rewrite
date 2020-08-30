@@ -1,10 +1,14 @@
-import { Document, Types } from "mongoose";
+// TODO: Folder and File schema is too tightly coupled
+
+import { Document } from "mongoose";
 
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 import { plainToClass } from "class-transformer";
 
 import { FolderDto } from "../dto/folder.dto";
+
+import { File } from "@/modules/files/schemas/file.schema";
 
 import { generateId } from "@/utils/generateId";
 
@@ -22,7 +26,6 @@ import { PATH_SAFE_REGEX } from "@/validators/is-string-path-safe.validator";
 })
 export class Folder extends Document implements FolderDto {
   createdAt!: Date;
-  updatedAt!: Date;
 
   deepness!: number;
 
@@ -48,15 +51,10 @@ export class Folder extends Document implements FolderDto {
   })
   name!: string;
 
-  @Prop({
-    ref: Folder.name,
-    type: Types.ObjectId
-  })
-  parent!: Folder | Types.ObjectId | null;
+  @Prop()
+  parent!: string | null;
 
   @Prop({
-    default: "/",
-    index: true,
     unique: true
   })
   path!: string;
@@ -75,44 +73,62 @@ export class Folder extends Document implements FolderDto {
   })
   uid!: string;
 
+  updatedAt!: Date;
+
   toDto!: () => FolderDto;
 }
 
 export const FolderSchema = SchemaFactory.createForClass(Folder);
 
-FolderSchema.pre<Folder>("save", function(next) {
+FolderSchema.pre<Folder>("save", async function(next) {
   if (!this.isNew) return next();
 
-  generateId(8)
-    .then(id => {
-      this.id = id;
-      next();
-    })
-    .catch(error => next(error));
+  const folders = this.model<Folder>(Folder.name);
+
+  try {
+    const id = await generateId(8);
+    const parent = this.parent ? await folders.findOne({ id: this.parent, uid: this.uid }) : null;
+
+    this.id = id;
+    this.path = parent ? `${parent.path}/${this.name}` : `/${this.name}`;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 FolderSchema.pre<Folder>("save", async function(next) {
-  if (!this.isModified("name") && !this.isModified("parent")) return next();
+  if (this.isNew || (!this.isModified("name") && !this.isModified("parent"))) return next();
+
+  const files = this.model<File>(File.name);
+  const folders = this.model<Folder>(Folder.name);
 
   try {
-    const parent = await this.populate("parent")
-      .execPopulate()
-      .then(folder => folder.parent as Folder | null);
+    const parent = this.parent ? await folders.findOne({ id: this.parent, uid: this.uid }) : null;
 
     const newPath = parent ? `${parent.path}/${this.name}` : `/${this.name}`;
     const oldPath = this.path.toString();
 
+    const oldPathQuery = { path: { $regex: `^${oldPath}/` }, uid: this.uid };
+
     this.path = newPath;
 
-    await this.model<Folder>(Folder.name)
-      .find({ path: { $regex: `^${oldPath}/` } })
+    await folders
+      .find(oldPathQuery)
       .cursor()
       .eachAsync(async child => {
         child.path = newPath + child.path.substr(oldPath.length);
         await child.save();
       });
 
-    this.depopulate("parent");
+    await files
+      .find(oldPathQuery)
+      .cursor()
+      .eachAsync(async file => {
+        file.path = newPath + file.path.substr(oldPath.length);
+        await file.save();
+      });
 
     next();
   } catch (error) {

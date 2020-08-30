@@ -35,7 +35,7 @@ export class FoldersService {
     uid: string
   ): Promise<Folder> {
     const parent = data.parent
-      ? await this.folders.findOne({ id: data.parent, uid }).then(parent => parent && parent._id)
+      ? await this.folders.findOne({ id: data.parent, uid }).then(parent => parent && parent.id)
       : null;
 
     if (!parent && data.parent) throw new ParentFolderNotFound();
@@ -98,7 +98,7 @@ export class FoldersService {
         throw new ParentFolderIsChildrenOfItself();
       }
 
-      folder.parent = parentFolder._id;
+      folder.parent = parentFolder.id;
     } else {
       folder.parent = null;
     }

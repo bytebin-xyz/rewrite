@@ -38,7 +38,7 @@ export class FilesService {
     uid: string
   ): Promise<File> {
     const folder = data.folder
-      ? await this.folders.findOne({ id: data.folder, uid }).then(folder => folder && folder._id)
+      ? await this.folders.findOne({ id: data.folder, uid }).then(folder => folder && folder.id)
       : null;
 
     if (!folder && data.folder) throw new FolderNotFound();
@@ -91,7 +91,7 @@ export class FilesService {
     const folder = data.folder
       ? await this.folders
           .findOne({ id: data.folder, uid: file.uid })
-          .then(folder => folder && folder._id)
+          .then(folder => folder && folder.id)
       : null;
 
     if (!folder && data.folder) throw new FolderNotFound();
