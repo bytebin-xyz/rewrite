@@ -156,7 +156,7 @@
                                     <a href="../classes/InvalidUserActivationLink.html" >InvalidUserActivationLink</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../classes/ListFilesDto.html" >ListFilesDto</a>
+                                    <a href="../classes/ListFilesDto.html"  class="active" >ListFilesDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/LoginDto.html" >LoginDto</a>
@@ -183,7 +183,7 @@
                                     <a href="../classes/RegisterDto.html" >RegisterDto</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../classes/ResetPasswordDto.html"  class="active" >ResetPasswordDto</a>
+                                    <a href="../classes/ResetPasswordDto.html" >ResetPasswordDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/SessionDto.html" >SessionDto</a>
@@ -522,7 +522,7 @@
                                            <a href="../classes/InvalidUserActivationLink.html" >InvalidUserActivationLink</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../classes/ListFilesDto.html" >ListFilesDto</a>
+                                           <a href="../classes/ListFilesDto.html"  class="active" >ListFilesDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/LoginDto.html" >LoginDto</a>
@@ -549,7 +549,7 @@
                                            <a href="../classes/RegisterDto.html" >RegisterDto</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../classes/ResetPasswordDto.html"  class="active" >ResetPasswordDto</a>
+                                           <a href="../classes/ResetPasswordDto.html" >ResetPasswordDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/SessionDto.html" >SessionDto</a>
@@ -757,7 +757,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>ResetPasswordDto</li>
+  <li>ListFilesDto</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -775,7 +775,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/modules/auth/dto/reset-password.dto.ts</code>
+            <code>src/modules/files/dto/list-files.dto.ts</code>
         </p>
 
 
@@ -788,12 +788,12 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b> newPassword</b>
+                                    <b> path</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>newPassword:     <code>boolean</code>
+                                    <code>path:     <code>boolean</code>
             </bcode>
                                 </td>
                             </tr>
@@ -809,36 +809,6 @@
                             <tr>
                                 <td class="col-md-4">
                                     <code>string:     <code>any</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> string</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>string:     <code>any</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> token</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>token:     <code>boolean</code>
             </bcode>
                                 </td>
                             </tr>
@@ -847,17 +817,18 @@
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { IsNotEmpty, IsString, MinLength } from &quot;class-validator&quot;;
+        <pre><code class="hljs javascript">import escapeRegExp from &quot;lodash.escaperegexp&quot;;
 
-export class ResetPasswordDto {
-  @IsNotEmpty({ message: &quot;New password cannot be empty!&quot; })
-  @IsString()
-  @MinLength(8, { message: &quot;Your password must be at least $constraint1 characters long!&quot; })
-  newPassword!: string;
+import { IsString } from &quot;class-validator&quot;;
+import { Transform } from &quot;class-transformer&quot;;
 
-  @IsNotEmpty({ message: &quot;Password reset token cannot be missing!&quot; })
+import { IsStringValidPath } from &quot;@/validators/is-string-valid-path.validator&quot;;
+
+export class ListFilesDto {
   @IsString()
-  token!: string;
+  @IsStringValidPath()
+  @Transform((value: string) &#x3D;&gt; escapeRegExp(value))
+  path!: string;
 }
 </code></pre>
     </div>

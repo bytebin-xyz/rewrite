@@ -87,6 +87,9 @@
                                     <a href="../classes/CreateFolderDto.html" >CreateFolderDto</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/DeleteFilesDto.html" >DeleteFilesDto</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/DeleteUserDto.html" >DeleteUserDto</a>
                                 </li>
                                 <li class="link">
@@ -151,6 +154,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/InvalidUserActivationLink.html" >InvalidUserActivationLink</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../classes/ListFilesDto.html" >ListFilesDto</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/LoginDto.html" >LoginDto</a>
@@ -447,6 +453,9 @@
                                            <a href="../classes/CreateFolderDto.html" >CreateFolderDto</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/DeleteFilesDto.html" >DeleteFilesDto</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/DeleteUserDto.html" >DeleteUserDto</a>
                                        </li>
                                        <li class="link">
@@ -511,6 +520,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/InvalidUserActivationLink.html" >InvalidUserActivationLink</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../classes/ListFilesDto.html" >ListFilesDto</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/LoginDto.html" >LoginDto</a>
@@ -794,7 +806,7 @@
                                         <span class="modifier-icon method fa fa-play ">
                                             <span class="fa fa-"></span>
                                         </span>
-                                    <code>create(data: { deletable?: boolean; filename: boolean; folder: string; hidden?: boolean; id: boolean; public?:..., uid: string)</code>
+                                    <code>create(data: { deletable?: boolean; filename: boolean; folder: string; hidden?: any; id: any; public?: any; si..., uid: string)</code>
                                 </td>
                             </tr>
             
@@ -987,7 +999,7 @@ export class FilesService {
     uid: string
   ): Promise&lt;File&gt; {
     const folder &#x3D; data.folder
-      ? await this.folders.findOne({ id: data.folder, uid }).then(folder &#x3D;&gt; folder &amp;&amp; folder._id)
+      ? await this.folders.findOne({ id: data.folder, uid }).then(folder &#x3D;&gt; folder &amp;&amp; folder.id)
       : null;
 
     if (!folder &amp;&amp; data.folder) throw new FolderNotFound();
@@ -1040,7 +1052,7 @@ export class FilesService {
     const folder &#x3D; data.folder
       ? await this.folders
           .findOne({ id: data.folder, uid: file.uid })
-          .then(folder &#x3D;&gt; folder &amp;&amp; folder._id)
+          .then(folder &#x3D;&gt; folder &amp;&amp; folder.id)
       : null;
 
     if (!folder &amp;&amp; data.folder) throw new FolderNotFound();
