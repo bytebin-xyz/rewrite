@@ -37,7 +37,7 @@ import { ISessionData } from "@/modules/sessions/interfaces/session-data.interfa
 
 import { MailerService } from "@/modules/mailer/mailer.service";
 
-import { User } from "@/modules/users/schemas/user.schema";
+import { UserDto } from "@/modules/users/dto/user.dto";
 
 import { generateId } from "@/utils/generateId";
 
@@ -69,7 +69,7 @@ export class AuthController {
     @Headers("user-agent") userAgent: string | undefined,
     @Req() req: Request,
     @Session() session: ISessionData
-  ): Promise<User> {
+  ): Promise<UserDto> {
     const user = await this.auth.login(username, password);
     const ua = new UAParser(userAgent);
 
@@ -91,7 +91,7 @@ export class AuthController {
       })
     );
 
-    return user;
+    return user.toDto();
   }
 
   @Delete("logout")

@@ -1,33 +1,37 @@
 import { ConflictException, ForbiddenException, NotFoundException } from "@nestjs/common";
 
-export class ChunkAlreadyUploaded extends ConflictException {
-  constructor(chunkIndex: number) {
-    super(`Chunk index ${chunkIndex} has already been uploaded to the server!`);
+export class EntryAlreadyExists extends ConflictException {
+  constructor(name: string) {
+    super(`Entry "${name}" already exists!`);
   }
 }
 
-export class FileNotDeletable extends ForbiddenException {
+export class EntryNotDeletable extends ForbiddenException {
   constructor() {
-    super("This file is crucial and cannot be deleted!");
+    super("This entry cannot be deleted!");
   }
 }
 
-export class FileNotFound extends NotFoundException {
+export class EntryNotFound extends NotFoundException {
   constructor() {
-    super("File does not exists!");
+    super("Entry does not exist!");
   }
 }
 
-export class MaxActiveUploadSessionsError extends ForbiddenException {
+export class ParentIsChildrenOfItself extends ForbiddenException {
   constructor() {
-    super(
-      "You have exceeded the maximum amount of active upload sessions. Please commit or destroy your existing upload sessions first before creating a new one!"
-    );
+    super("The parent of an entry cannot be a children of itself!");
   }
 }
 
-export class UploadSessionNotFound extends NotFoundException {
-  constructor(id: string) {
-    super(`Upload session "${id}" does not exists!`);
+export class ParentIsItself extends ForbiddenException {
+  constructor() {
+    super("The parent of an entry cannot be itself!");
+  }
+}
+
+export class ParentDirectoryNotFound extends NotFoundException {
+  constructor() {
+    super("Parent directory does not exist!");
   }
 }

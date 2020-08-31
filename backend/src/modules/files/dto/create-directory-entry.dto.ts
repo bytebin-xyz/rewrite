@@ -2,16 +2,16 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-va
 
 import { IsStringPathSafe } from "@/validators/is-string-path-safe.validator";
 
-export class UpdateFileDto {
-  @IsNotEmpty({ message: "New filename cannot be empty!" })
+export class CreateDirectoryEntryDto {
+  @IsNotEmpty({ message: "Directory name cannot be empty!" })
   @IsString()
   @IsStringPathSafe()
-  @MaxLength(255, { message: "Filename cannot be greater than $constraint1 characters!" })
-  filename!: string;
+  @MaxLength(255, { message: "Directory name cannot be greater than $constraint1 characters!" })
+  name!: string;
 
   @IsOptional()
   @IsString()
-  folder!: string | null;
+  parent!: string | null;
 
   @IsBoolean()
   public!: boolean;

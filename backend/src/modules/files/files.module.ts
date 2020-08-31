@@ -1,21 +1,18 @@
 import { BullModule } from "@nestjs/bull";
 import { ConfigService } from "@nestjs/config";
-import { Module, forwardRef } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { FilesController } from "./files.controller";
 import { FilesProcessor } from "./files.processor";
 import { FilesService } from "./files.service";
 
-import { File, FileSchema } from "./schemas/file.schema";
+import { Entry, EntrySchema } from "./schemas/entry.schema";
 
-import { FoldersModule } from "@/modules/folders/folders.module";
 import { StorageModule } from "@/modules/storage/storage.module";
 
 @Module({
   imports: [
-    forwardRef(() => FoldersModule),
-
     BullModule.registerQueueAsync({
       inject: [ConfigService],
       name: "files",
@@ -27,7 +24,7 @@ import { StorageModule } from "@/modules/storage/storage.module";
       })
     }),
 
-    MongooseModule.forFeature([{ name: File.name, schema: FileSchema }]),
+    MongooseModule.forFeature([{ name: Entry.name, schema: EntrySchema }]),
 
     StorageModule.registerAsync({
       inject: [ConfigService],

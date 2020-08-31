@@ -21,7 +21,6 @@ import { IncorrectPassword } from "@/modules/auth/auth.errors";
 
 import { ApplicationsService } from "@/modules/applications/applications.service";
 import { FilesService } from "@/modules/files/files.service";
-import { FoldersService } from "@/modules/folders/folders.service";
 import { MailerService } from "@/modules/mailer/mailer.service";
 import { SessionsService } from "@/modules/sessions/sessions.service";
 
@@ -32,7 +31,6 @@ export class UsersService {
   constructor(
     private readonly applications: ApplicationsService,
     private readonly files: FilesService,
-    private readonly folders: FoldersService,
     private readonly mailer: MailerService,
     private readonly sessions: SessionsService,
 
@@ -82,8 +80,7 @@ export class UsersService {
 
     await settle([
       this.applications.delete({ uid: user.id }),
-      this.files.delete({ folder: null, uid: user.id }),
-      this.folders.delete({ uid: user.id }),
+      this.files.deleteMany({ uid: user.id }),
       this.sessions.delete({ "session.uid": user.id })
     ]);
 
@@ -154,7 +151,7 @@ export class UsersService {
 
   async updateAvatar(user: User, newAvatarId: string): Promise<User> {
     if (user.avatar) {
-      await this.files.delete({ id: user.avatar, uid: user.id }).catch(() => undefined);
+      await this.files.deleteOne({ id: user.avatar, uid: user.id }).catch(() => undefined);
     }
 
     user.avatar = newAvatarId;

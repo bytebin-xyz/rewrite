@@ -69,18 +69,18 @@ export class UsersController {
       ]
     });
 
-    await this.files.create(
-      {
-        deletable: false,
-        filename: avatar.filename,
-        folder: null,
-        hidden: true,
-        id: avatar.id,
-        public: true,
-        size: avatar.size
-      },
-      me.id
-    );
+    await this.files.createEntry({
+      deletable: false,
+      hidden: true,
+      id: avatar.id,
+      isDirectory: false,
+      isFile: true,
+      name: avatar.filename,
+      parent: null,
+      public: true,
+      size: avatar.size,
+      uid: me.id
+    });
 
     return this.users.updateAvatar(me, avatar.id).then(user => user.toDto());
   }

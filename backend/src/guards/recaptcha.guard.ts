@@ -17,6 +17,7 @@ import { Request } from "express";
 
 const RECAPTCHA_FAILED = "reCAPTCHA failed, please try again!";
 const RECAPTCHA_MISSING = "Please complete the reCAPTCHA!";
+const RECAPTCHA_UNEXPECTED_RESULT = "Action or score metadata not provided for v3 reCAPTCHA!";
 const RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify";
 
 export const RECAPTCHA_ACTION_KEY = "RECAPTCHA_ACTION";
@@ -70,9 +71,12 @@ export class RecaptchaGuard implements CanActivate {
       throw new BadRequestException(RECAPTCHA_FAILED);
     }
 
-    // If its successful but wrong recaptcha version response
-    if ((action && result.action !== action) || (score && result.score < score)) {
-      throw new BadRequestException(RECAPTCHA_FAILED);
+    if (result.action && result.score) {
+      if (!action || !score) throw new InternalServerErrorException(RECAPTCHA_UNEXPECTED_RESULT);
+
+      if (result.action !== action || result.score < score) {
+        throw new BadRequestException(RECAPTCHA_FAILED);
+      }
     }
 
     return true;

@@ -5,7 +5,7 @@ import { Transform } from "class-transformer";
 
 import { IsStringValidPath } from "@/validators/is-string-valid-path.validator";
 
-export class DeleteFilesDto {
+export class ListEntriesDto {
   @IsString()
   @IsStringValidPath()
   @Transform((value: string) => escapeRegExp(value))

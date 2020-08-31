@@ -1,106 +1,153 @@
-import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { InjectQueue } from "@nestjs/bull";
 
 import { FilterQuery, Model } from "mongoose";
 import { Queue } from "bull";
 
-import { FileNotDeletable, FileNotFound } from "./files.errors";
+import {
+  EntryAlreadyExists,
+  EntryNotDeletable,
+  EntryNotFound,
+  ParentDirectoryNotFound,
+  ParentIsChildrenOfItself,
+  ParentIsItself
+} from "./files.errors";
 
-import { File } from "./schemas/file.schema";
-
-import { FolderNotFound } from "@/modules/folders/folders.errors";
-import { FoldersService } from "@/modules/folders/folders.service";
+import { Entry } from "./schemas/entry.schema";
 
 @Injectable()
 export class FilesService {
   constructor(
-    @Inject(forwardRef(() => FoldersService))
-    private readonly folders: FoldersService,
-
-    @InjectModel(File.name)
-    private readonly files: Model<File>,
+    @InjectModel(Entry.name)
+    private readonly entries: Model<Entry>,
 
     @InjectQueue("files")
     private readonly filesQueue: Queue
   ) {}
 
-  async create(
-    data: {
-      deletable?: File["deletable"];
-      filename: File["filename"];
-      folder: string | null;
-      hidden?: File["hidden"];
-      id: File["id"];
-      public?: File["public"];
-      size: File["size"];
-    },
-    uid: string
-  ): Promise<File> {
-    const folder = data.folder
-      ? await this.folders.findOne({ id: data.folder, uid }).then(folder => folder && folder.id)
+  async createEntry(data: {
+    deletable: Entry["deletable"];
+    hidden: Entry["hidden"];
+    id?: Entry["id"];
+    isDirectory: Entry["isDirectory"];
+    isFile: Entry["isFile"];
+    name: Entry["name"];
+    parent: Entry["parent"];
+    public: Entry["public"];
+    size: Entry["size"];
+    uid: Entry["uid"];
+  }): Promise<Entry> {
+    const parent = data.parent
+      ? await this.entries
+          .findOne({ id: data.parent, uid: data.uid })
+          .then(entry => entry && entry.id)
       : null;
 
-    if (!folder && data.folder) throw new FolderNotFound();
+    if (!parent && data.parent) throw new ParentDirectoryNotFound();
 
-    return new this.files({ ...data, folder, uid }).save();
+    const copies = await this.entries.countDocuments({ name: data.name, parent, uid: data.uid });
+    const entry = { ...data, parent };
+
+    if (copies > 0) {
+      if (!data.isFile) throw new EntryAlreadyExists(data.name);
+
+      entry.name = this._renameWithIndex(data.name, copies);
+    }
+
+    return new this.entries(entry).save();
   }
 
-  async delete(query: FilterQuery<File>): Promise<void> {
-    await this.files
-      .deleteMany(query)
+  async deleteMany(query: FilterQuery<Entry>): Promise<void> {
+    // We have to use .remove on each individual document so that middlewares are executed
+    await this.entries
+      .find(query)
       .cursor()
-      .eachAsync(async (file: File) => {
-        await this.filesQueue.add("delete", { fileId: file.id });
-        await file.deleteOne();
+      .eachAsync(async (entry: Entry) => {
+        if (entry.isFile) {
+          await this.filesQueue.add("delete", { fileId: entry.id });
+        }
+
+        await entry.remove();
       });
   }
 
-  async deleteOne(query: FilterQuery<File>): Promise<File> {
-    const file = await this.files.findOne(query);
+  async deleteOne(query: FilterQuery<Entry>): Promise<Entry> {
+    const entry = await this.entries.findOne(query);
 
-    if (!file) throw new FileNotFound();
-    if (!file.deletable) throw new FileNotDeletable();
+    if (!entry) throw new EntryNotFound();
+    if (!entry.deletable) throw new EntryNotDeletable();
 
-    await this.filesQueue.add("delete", { fileId: file.id });
-    await file.deleteOne();
+    await entry
+      .getChildren({ isFile: true })
+      .eachAsync(child => this.filesQueue.add("delete", { fileId: child.id }));
 
-    return file;
+    return entry.remove();
   }
 
-  async find(query: FilterQuery<File>): Promise<File[]> {
-    return this.files.find(query);
+  async exists(query: FilterQuery<Entry>): Promise<boolean> {
+    return this.entries.exists(query);
   }
 
-  async findOne(query: FilterQuery<File>): Promise<File | null> {
-    return this.files.findOne(query);
+  async find(query: FilterQuery<Entry>): Promise<Entry[]> {
+    return this.entries.find(query);
+  }
+
+  async findOne(query: FilterQuery<Entry>): Promise<Entry | null> {
+    return this.entries.findOne(query);
   }
 
   async updateOne(
-    query: FilterQuery<File>,
+    query: FilterQuery<Entry>,
     data: {
-      filename: string;
-      folder: string | null;
-      hidden: boolean;
-      public: boolean;
+      deletable: Entry["deletable"];
+      hidden: Entry["hidden"];
+      name: Entry["name"];
+      parent: Entry["parent"];
+      public: Entry["public"];
     }
-  ): Promise<File> {
-    const file = await this.files.findOne(query);
-    if (!file) throw new FileNotFound();
+  ): Promise<Entry> {
+    const entry = await this.entries.findOne(query);
+    if (!entry) throw new EntryNotFound();
 
-    const folder = data.folder
-      ? await this.folders
-          .findOne({ id: data.folder, uid: file.uid })
-          .then(folder => folder && folder.id)
+    const exists = await this.entries.exists({
+      name: data.name,
+      parent: entry.parent,
+      uid: entry.uid
+    });
+
+    if (exists) throw new EntryAlreadyExists(data.name);
+
+    const parent = data.parent
+      ? await this._validateParent(entry, data.parent).then(parent => parent.id)
       : null;
 
-    if (!folder && data.folder) throw new FolderNotFound();
+    entry.hidden = data.hidden;
+    entry.parent = parent;
+    entry.public = data.public;
+    entry.name = data.name;
 
-    file.filename = data.filename;
-    file.folder = folder;
-    file.hidden = data.hidden;
-    file.public = data.public;
+    return entry.save();
+  }
 
-    return file.save();
+  private _renameWithIndex(filename: string, index: number): string {
+    // If filename has no extension
+    if (!filename.includes(".")) return `${filename} (${index})`;
+
+    const parts = filename.split(".");
+
+    parts[parts.length - 2] += ` (${index})`;
+
+    return parts.join(".").trim();
+  }
+
+  private async _validateParent(entry: Entry, parentId: string): Promise<Entry> {
+    const parent = await this.entries.findOne({ id: parentId, uid: entry.uid });
+
+    if (!parent) throw new ParentDirectoryNotFound();
+    if (parent.id === entry.id) throw new ParentIsItself();
+    if (parent.path.startsWith(`${entry.path}/`)) throw new ParentIsChildrenOfItself();
+
+    return parent;
   }
 }

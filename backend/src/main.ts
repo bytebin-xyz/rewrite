@@ -76,7 +76,7 @@ const MongoStore = connectMongo(session);
     .use(
       session({
         cookie: {
-          maxAge: ms("7d"),
+          maxAge: ms("14d"),
           secure: process.env.NODE_ENV === "production"
         },
         resave: false,

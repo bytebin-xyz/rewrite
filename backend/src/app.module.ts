@@ -12,7 +12,6 @@ import { ApplicationsModule } from "./modules/applications/applications.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { BullBoardModule } from "./modules/bull-board/bull-board.module";
 import { FilesModule } from "./modules/files/files.module";
-import { FoldersModule } from "./modules/folders/folders.module";
 import { HealthModule } from "./modules/health/health.module";
 import { MailerModule } from "./modules/mailer/mailer.module";
 import { SessionsModule } from "./modules/sessions/sessions.module";
@@ -146,7 +145,6 @@ const MAX_PORT = 65535;
     AuthModule,
     BullBoardModule,
     FilesModule,
-    FoldersModule,
     HealthModule,
     SessionsModule,
     UsersModule

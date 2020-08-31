@@ -19,11 +19,12 @@ import { ConfigService } from "@nestjs/config";
 
 import { Request, Response } from "express";
 
-import { FileNotFound } from "./files.errors";
+import { EntryNotFound, ParentDirectoryNotFound } from "./files.errors";
 import { FilesService } from "./files.service";
 
-import { FileDto } from "./dto/file.dto";
-import { UpdateFileDto } from "./dto/update-file.dto";
+import { CreateDirectoryEntryDto } from "./dto/create-directory-entry.dto";
+import { EntryDto } from "./dto/entry.dto";
+import { UpdateEntryDto } from "./dto/update-entry.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
 import { OptionalAuth } from "@/decorators/optional-auth";
@@ -33,9 +34,6 @@ import { AuthGuard } from "@/guards/auth.guard";
 
 import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
 
-import { FolderNotFound } from "@/modules/folders/folders.errors";
-
-import { FoldersService } from "@/modules/folders/folders.service";
 import { StorageService } from "@/modules/storage/storage.service";
 
 @Controller("files")
@@ -44,25 +42,47 @@ export class FilesController {
   constructor(
     private readonly config: ConfigService,
     private readonly files: FilesService,
-    private readonly folders: FoldersService,
     private readonly logger: Logger,
     private readonly storage: StorageService
   ) {}
 
   @Delete("/:id")
   @UseScopes(ApplicationScopes.FILES_WRITE)
-  delete(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<FileDto> {
+  deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
     return this.files.deleteOne({ id, uid }).then(deleted => deleted.toDto());
   }
 
   @Patch("/:id")
   @UseScopes(ApplicationScopes.FILES_WRITE)
   updateOne(
-    @Body() dto: UpdateFileDto,
+    @Body() dto: UpdateEntryDto,
     @CurrentUser("id") uid: string,
     @Param("id") id: string
-  ): Promise<FileDto> {
-    return this.files.updateOne({ id, uid }, { ...dto, hidden: false }).then(file => file.toDto());
+  ): Promise<EntryDto> {
+    return this.files
+      .updateOne({ id, uid }, { ...dto, deletable: true, hidden: false })
+      .then(file => file.toDto());
+  }
+
+  @Post("create-directory")
+  @UseScopes(ApplicationScopes.FILES_WRITE)
+  createDirectory(
+    @Body() dto: CreateDirectoryEntryDto,
+    @CurrentUser("id") uid: string
+  ): Promise<EntryDto> {
+    return this.files
+      .createEntry({
+        deletable: true,
+        hidden: false,
+        isDirectory: true,
+        isFile: false,
+        name: dto.name,
+        parent: dto.parent,
+        public: dto.public,
+        size: 0,
+        uid
+      })
+      .then(entry => entry.toDto());
   }
 
   @Get("download/:id")
@@ -77,7 +97,7 @@ export class FilesController {
       ? await this.files.findOne({ id, uid })
       : await this.files.findOne({ id, public: true });
 
-    if (!file) throw new FileNotFound();
+    if (!file) throw new EntryNotFound();
 
     const readable = await this.storage.read(file.id);
 
@@ -99,12 +119,11 @@ export class FilesController {
   async upload(
     @CurrentUser("id") uid: string,
     @Query("folder") folder: string,
-    @Query("hidden", ParseBoolPipe) hidden: boolean,
     @Query("public", ParseBoolPipe) isPublic: boolean,
     @Req() req: Request
-  ): Promise<FileDto[]> {
-    if (folder && !(await this.folders.exists({ id: folder, uid }))) {
-      throw new FolderNotFound();
+  ): Promise<EntryDto[]> {
+    if (!(await this.files.exists({ id: folder, uid }))) {
+      throw new ParentDirectoryNotFound();
     }
 
     const files = await this.storage.write(req, {
@@ -118,17 +137,18 @@ export class FilesController {
     return Promise.all(
       files.map(file =>
         this.files
-          .create(
-            {
-              filename: file.filename,
-              folder: folder || null,
-              hidden: hidden || false,
-              id: file.id,
-              public: isPublic || false,
-              size: file.size
-            },
+          .createEntry({
+            deletable: true,
+            hidden: false,
+            id: file.id,
+            isDirectory: false,
+            isFile: true,
+            name: file.filename,
+            parent: folder,
+            public: isPublic,
+            size: file.size,
             uid
-          )
+          })
           .then(file => file.toDto())
       )
     );

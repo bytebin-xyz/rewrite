@@ -1,24 +1,28 @@
 import { Exclude } from "class-transformer";
 
-export class FileDto {
+export class EntryDto {
   createdAt!: Date;
 
+  deepness!: number;
+
   deletable!: boolean;
-
-  filename!: string;
-
-  folder!: string | null;
 
   @Exclude()
   hidden!: boolean;
 
   id!: string;
 
+  isDirectory!: boolean;
+
+  isFile!: boolean;
+
+  name!: string;
+
+  parent!: string | null;
+
   path!: string;
 
   public!: boolean;
-
-  size!: number;
 
   uid!: string;
 
