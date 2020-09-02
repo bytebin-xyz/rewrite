@@ -741,7 +741,7 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>constructor(entries: any, filesQueue: any)</code>
+                                    <code>constructor(storage: any, entries: any, filesQueue: any)</code>
                                 </td>
                             </tr>
             
@@ -765,6 +765,33 @@
                                             <span class="fa fa-"></span>
                                         </span>
                                     <code>createEntry(data: { deletable: boolean; hidden: boolean; id?: boolean; isDirectory: boolean; isFile: boolean; name:...)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>any</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier"></span> createReadable</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <span class="modifier-icon method fa fa-play ">
+                                            <span class="fa fa-"></span>
+                                        </span>
+                                    <code>createReadable(id: string, uid: string)</code>
                                 </td>
                             </tr>
             
@@ -1004,6 +1031,7 @@ import { InjectQueue } from &quot;@nestjs/bull&quot;;
 
 import { FilterQuery, Model } from &quot;mongoose&quot;;
 import { Queue } from &quot;bull&quot;;
+import { Readable } from &quot;stream&quot;;
 
 import {
   EntryAlreadyExists,
@@ -1016,9 +1044,13 @@ import {
 
 import { Entry } from &quot;./schemas/entry.schema&quot;;
 
+import { StorageService } from &quot;@/modules/storage/storage.service&quot;;
+
 @Injectable()
 export class FilesService {
   constructor(
+    private readonly storage: StorageService,
+
     @InjectModel(Entry.name)
     private readonly entries: Model&lt;Entry&gt;,
 
@@ -1056,6 +1088,16 @@ export class FilesService {
     }
 
     return new this.entries(entry).save();
+  }
+
+  async createReadable(id: string, uid?: string): Promise&lt;Readable&gt; {
+    const file &#x3D; uid
+      ? await this.entries.findOne({ id, isDirectory: false, isFile: true, uid })
+      : await this.entries.findOne({ id, isDirectory: false, isFile: true, public: true });
+
+    if (!file) throw new EntryNotFound();
+
+    return this.storage.read(file.id);
   }
 
   async deleteMany(query: FilterQuery&lt;Entry&gt;): Promise&lt;void&gt; {
@@ -1109,14 +1151,6 @@ export class FilesService {
   ): Promise&lt;Entry&gt; {
     const entry &#x3D; await this.entries.findOne(query);
     if (!entry) throw new EntryNotFound();
-
-    const exists &#x3D; await this.entries.exists({
-      name: data.name,
-      parent: entry.parent,
-      uid: entry.uid
-    });
-
-    if (exists) throw new EntryAlreadyExists(data.name);
 
     const parent &#x3D; data.parent
       ? await this._validateParent(entry, data.parent).then(parent &#x3D;&gt; parent.id)

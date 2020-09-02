@@ -836,12 +836,12 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b> deepness</b>
+                                    <b> deletable</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>deepness:     <code>boolean</code>
+                                    <code>deletable:     <code>boolean</code>
             </bcode>
                                 </td>
                             </tr>
@@ -851,12 +851,12 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b> deletable</b>
+                                    <b> depth</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>deletable:     <code>boolean</code>
+                                    <code>depth:     <code>boolean</code>
             </bcode>
                                 </td>
                             </tr>
@@ -1005,9 +1005,9 @@
 export class EntryDto {
   createdAt!: Date;
 
-  deepness!: number;
-
   deletable!: boolean;
+
+  depth!: number;
 
   @Exclude()
   hidden!: boolean;
