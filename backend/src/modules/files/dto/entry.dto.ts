@@ -3,9 +3,9 @@ import { Exclude } from "class-transformer";
 export class EntryDto {
   createdAt!: Date;
 
-  deepness!: number;
-
   deletable!: boolean;
+
+  depth!: number;
 
   @Exclude()
   hidden!: boolean;

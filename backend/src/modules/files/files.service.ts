@@ -4,6 +4,7 @@ import { InjectQueue } from "@nestjs/bull";
 
 import { FilterQuery, Model } from "mongoose";
 import { Queue } from "bull";
+import { Readable } from "stream";
 
 import {
   EntryAlreadyExists,
@@ -16,9 +17,13 @@ import {
 
 import { Entry } from "./schemas/entry.schema";
 
+import { StorageService } from "@/modules/storage/storage.service";
+
 @Injectable()
 export class FilesService {
   constructor(
+    private readonly storage: StorageService,
+
     @InjectModel(Entry.name)
     private readonly entries: Model<Entry>,
 
@@ -56,6 +61,16 @@ export class FilesService {
     }
 
     return new this.entries(entry).save();
+  }
+
+  async createReadable(id: string, uid?: string): Promise<Readable> {
+    const file = uid
+      ? await this.entries.findOne({ id, isDirectory: false, isFile: true, uid })
+      : await this.entries.findOne({ id, isDirectory: false, isFile: true, public: true });
+
+    if (!file) throw new EntryNotFound();
+
+    return this.storage.read(file.id);
   }
 
   async deleteMany(query: FilterQuery<Entry>): Promise<void> {
@@ -109,14 +124,6 @@ export class FilesService {
   ): Promise<Entry> {
     const entry = await this.entries.findOne(query);
     if (!entry) throw new EntryNotFound();
-
-    const exists = await this.entries.exists({
-      name: data.name,
-      parent: entry.parent,
-      uid: entry.uid
-    });
-
-    if (exists) throw new EntryAlreadyExists(data.name);
 
     const parent = data.parent
       ? await this._validateParent(entry, data.parent).then(parent => parent.id)

@@ -23,12 +23,12 @@ import { PATH_SAFE_REGEX } from "@/validators/is-string-path-safe.validator";
 export class Entry extends Document implements EntryDto {
   createdAt!: Date;
 
-  deepness!: number;
-
   @Prop({
     default: true
   })
   deletable!: boolean;
+
+  depth!: number;
 
   @Prop({
     default: false
@@ -157,7 +157,48 @@ EntrySchema.pre<Entry>("save", async function(next) {
   }
 });
 
-EntrySchema.virtual("deepness").get(function(this: Entry) {
+EntrySchema.pre<Entry>("save", async function(next) {
+  if (
+    !this.isModified("deletable") &&
+    !this.isModified("hidden") &&
+    !this.isModified("parent") &&
+    !this.isModified("public")
+  ) {
+    return next();
+  }
+
+  try {
+    const parent = await this.getParent();
+
+    const deletable = parent ? parent.deletable : this.deletable;
+
+    // If the parent is set to false for these, then the childrens for these can only be false
+    const hidden = parent?.hidden === false ? false : this.hidden;
+    const isPublic = parent?.public === false ? false : this.public;
+
+    this.deletable = deletable;
+    this.hidden = hidden;
+    this.public = isPublic;
+
+    await this.model<Entry>(Entry.name).updateMany(
+      {
+        path: { $regex: `^${this.path}/` },
+        uid: this.uid
+      },
+      {
+        deletable,
+        hidden,
+        public: isPublic
+      }
+    );
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+EntrySchema.virtual("depth").get(function(this: Entry) {
   return this.path.split("/").filter(el => el.length > 0).length;
 });
 

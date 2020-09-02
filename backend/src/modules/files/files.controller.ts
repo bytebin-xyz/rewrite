@@ -48,41 +48,46 @@ export class FilesController {
 
   @Delete("/:id")
   @UseScopes(ApplicationScopes.FILES_WRITE)
-  deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
-    return this.files.deleteOne({ id, uid }).then(deleted => deleted.toDto());
+  async deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
+    const deleted = await this.files.deleteOne({ id, uid });
+
+    return deleted.toDto();
   }
 
   @Patch("/:id")
   @UseScopes(ApplicationScopes.FILES_WRITE)
-  updateOne(
+  async updateOne(
     @Body() dto: UpdateEntryDto,
     @CurrentUser("id") uid: string,
     @Param("id") id: string
   ): Promise<EntryDto> {
-    return this.files
-      .updateOne({ id, uid }, { ...dto, deletable: true, hidden: false })
-      .then(file => file.toDto());
+    const entry = await this.files.updateOne(
+      { id, uid },
+      { ...dto, deletable: true, hidden: false }
+    );
+
+    return entry.toDto();
   }
 
   @Post("create-directory")
   @UseScopes(ApplicationScopes.FILES_WRITE)
-  createDirectory(
+  async createDirectory(
     @Body() dto: CreateDirectoryEntryDto,
     @CurrentUser("id") uid: string
   ): Promise<EntryDto> {
-    return this.files
-      .createEntry({
-        deletable: true,
-        hidden: false,
-        isDirectory: true,
-        isFile: false,
-        name: dto.name,
-        parent: dto.parent,
-        public: dto.public,
-        size: 0,
-        uid
-      })
-      .then(entry => entry.toDto());
+    const directory = await this.files.createEntry({
+      deletable: true,
+      hidden: false,
+      isDirectory: true,
+      isFile: false,
+      name: dto.name,
+      parent: dto.parent,
+      public: dto.public,
+      size: 0,
+      uid
+    });
+
+    return directory.toDto();
   }
 
   @Get("download/:id")
@@ -93,13 +98,7 @@ export class FilesController {
     @Param("id") id: string,
     @Res() res: Response
   ): Promise<void> {
-    const file = uid
-      ? await this.files.findOne({ id, uid })
-      : await this.files.findOne({ id, public: true });
-
-    if (!file) throw new EntryNotFound();
-
-    const readable = await this.storage.read(file.id);
+    const readable = await this.files.createReadable(id, uid);
 
     readable.on("error", (error: Error) => {
       // Exception filter disabled when using the @Res() decorator, so we have to log the error manually
