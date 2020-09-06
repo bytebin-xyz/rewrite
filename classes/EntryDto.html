@@ -862,7 +862,9 @@
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Exclude } from &quot;class-transformer&quot;;
+        <pre><code class="hljs javascript">import { ApiHideProperty, ApiProperty } from &quot;@nestjs/swagger&quot;;
+
+import { Exclude } from &quot;class-transformer&quot;;
 
 export class EntryDto {
   createdAt!: Date;
@@ -871,8 +873,10 @@ export class EntryDto {
 
   depth!: number;
 
+  @ApiProperty({ nullable: true, type: String })
   folder!: string | null;
 
+  @ApiHideProperty()
   @Exclude()
   hidden!: boolean;
 
