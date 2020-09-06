@@ -2,7 +2,7 @@ import { BadRequestException, PayloadTooLargeException, UnsupportedMediaTypeExce
 
 export class FileTooLarge extends PayloadTooLargeException {
   constructor(filename: string) {
-    super(`File "${filename}" is too large!`);
+    super(`File '${filename}' is too large!`);
   }
 }
 

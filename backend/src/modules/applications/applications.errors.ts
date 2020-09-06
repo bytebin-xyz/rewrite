@@ -7,7 +7,7 @@ import {
 
 export class ApplicationAlreadyExists extends ConflictException {
   constructor(name: string) {
-    super(`Application "${name}" already exists on your account!`);
+    super(`Application '${name}' already exists on your account!`);
   }
 }
 export class ApplicationNotFound extends NotFoundException {

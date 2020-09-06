@@ -37,6 +37,6 @@ export class UsernameTaken extends ConflictException {
 
 export class UserNotFound extends NotFoundException {
   constructor(query: string) {
-    super(`User "${query}" does not exist!`);
+    super(`User '${query}' does not exist!`);
   }
 }
