@@ -1,3 +1,5 @@
+import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
+
 import { Exclude } from "class-transformer";
 
 export class EntryDto {
@@ -7,8 +9,10 @@ export class EntryDto {
 
   depth!: number;
 
+  @ApiProperty({ nullable: true, type: String })
   folder!: string | null;
 
+  @ApiHideProperty()
   @Exclude()
   hidden!: boolean;
 
