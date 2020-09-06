@@ -41,6 +41,13 @@ export class ApplicationsService {
     return new this.applications(data).save();
   }
 
+  async createKey(query: FilterQuery<Application>): Promise<string> {
+    const application = await this.applications.findOne(query);
+    if (!application) throw new ApplicationNotFound();
+
+    return application.createKey(this.config.get("API_KEY_SECRET") as string);
+  }
+
   async delete(query: FilterQuery<Application>): Promise<void> {
     await this.applications.deleteMany(query);
   }
@@ -58,13 +65,6 @@ export class ApplicationsService {
 
   async findOne(query: FilterQuery<Application>): Promise<Application | null> {
     return this.applications.findOne(query);
-  }
-
-  async generateKey(query: FilterQuery<Application>): Promise<string> {
-    const application = await this.applications.findOne(query);
-    if (!application) throw new ApplicationNotFound();
-
-    return application.generateKey(this.config.get("API_KEY_SECRET") as string);
   }
 
   async updateOne(

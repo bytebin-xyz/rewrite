@@ -89,7 +89,7 @@ export class Application extends Document implements ApplicationDto {
   uid!: string;
 
   compareKey!: (key: string, secret: string) => boolean;
-  generateKey!: (secret: string) => Promise<string>;
+  createKey!: (secret: string) => Promise<string>;
   hasSufficientScopes!: (scopes: ApplicationScopes[]) => boolean;
   toDto!: () => ApplicationDto;
 }
@@ -117,7 +117,7 @@ ApplicationSchema.methods.compareKey = function(
   return crypto.timingSafeEqual(Buffer.from(HMAC_SHA256(key, secret)), Buffer.from(this.key));
 };
 
-ApplicationSchema.methods.generateKey = async function(
+ApplicationSchema.methods.createKey = async function(
   this: Application,
   secret: string
 ): Promise<string> {

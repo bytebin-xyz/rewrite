@@ -23,44 +23,44 @@ export class ApplicationsController {
   all(@CurrentUser("id") uid: string): Promise<ApplicationDto[]> {
     return this.applications
       .find({ uid })
-      .then(applications => applications.map(application => application.toDto()));
+      .then((applications) => applications.map((application) => application.toDto()));
   }
 
   @ApiExcludeEndpoint()
-  @Post()
+  @Post("create")
   @Throttle(25, 60)
   create(
     @Body() dto: CreateApplicationDto,
     @CurrentUser("id") uid: string
   ): Promise<ApplicationDto> {
-    return this.applications.create({ ...dto, uid }).then(application => application.toDto());
+    return this.applications.create({ ...dto, uid }).then((application) => application.toDto());
   }
 
   @ApiExcludeEndpoint()
-  @Delete("/:id")
+  @Post("/:id/create-key")
+  @Throttle(25, 60)
+  async createKey(
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<GenerateApplicationKeyDto> {
+    const key = await this.applications.createKey({ id, uid });
+
+    return { key };
+  }
+
+  @ApiExcludeEndpoint()
+  @Delete("/:id/delete")
   deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<ApplicationDto> {
-    return this.applications.deleteOne({ id, uid }).then(application => application.toDto());
+    return this.applications.deleteOne({ id, uid }).then((application) => application.toDto());
   }
 
   @ApiExcludeEndpoint()
-  @Patch("/:id")
+  @Patch("/:id/update")
   updateOne(
     @Body() dto: CreateApplicationDto,
     @CurrentUser("id") uid: string,
     @Param("id") id: string
   ): Promise<ApplicationDto> {
-    return this.applications.updateOne({ id, uid }, dto).then(application => application.toDto());
-  }
-
-  @ApiExcludeEndpoint()
-  @Post("/:id/key")
-  @Throttle(25, 60)
-  async generateKey(
-    @CurrentUser("id") uid: string,
-    @Param("id") id: string
-  ): Promise<GenerateApplicationKeyDto> {
-    return {
-      key: await this.applications.generateKey({ id, uid })
-    };
+    return this.applications.updateOne({ id, uid }, dto).then((application) => application.toDto());
   }
 }
