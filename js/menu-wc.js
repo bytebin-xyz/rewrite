@@ -366,7 +366,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/CreateApplicationDto.html" data-type="entity-link">CreateApplicationDto</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CreateDirectoryEntryDto.html" data-type="entity-link">CreateDirectoryEntryDto</a>
+                                <a href="classes/CreateFolderEntryDto.html" data-type="entity-link">CreateFolderEntryDto</a>
                             </li>
                             <li class="link">
                                 <a href="classes/DeleteUserDto.html" data-type="entity-link">DeleteUserDto</a>
@@ -444,16 +444,16 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/IsStringValidPathConstraint.html" data-type="entity-link">IsStringValidPathConstraint</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ListEntriesDto.html" data-type="entity-link">ListEntriesDto</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/LoginDto.html" data-type="entity-link">LoginDto</a>
                             </li>
                             <li class="link">
                                 <a href="classes/NoFilesUploaded.html" data-type="entity-link">NoFilesUploaded</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ParentDirectoryNotFound.html" data-type="entity-link">ParentDirectoryNotFound</a>
+                                <a href="classes/PaginationDto.html" data-type="entity-link">PaginationDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ParentFolderNotFound.html" data-type="entity-link">ParentFolderNotFound</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ParentIsChildrenOfItself.html" data-type="entity-link">ParentIsChildrenOfItself</a>
@@ -601,6 +601,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/MailerOptionsFactory.html" data-type="entity-link">MailerOptionsFactory</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Pagination.html" data-type="entity-link">Pagination</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/PaginationOptions.html" data-type="entity-link">PaginationOptions</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/SendMailOptions.html" data-type="entity-link">SendMailOptions</a>

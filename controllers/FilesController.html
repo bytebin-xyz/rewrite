@@ -84,7 +84,7 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#createDirectory">createDirectory</a>
+                                <a href="#createFolder">createFolder</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -93,6 +93,14 @@
                             <li>
                                     <span class="modifier">Async</span>
                                 <a href="#download">download</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findOne">findOne</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#list">list</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -123,20 +131,20 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="createDirectory"></a>
+                    <a name="createFolder"></a>
                     <span class="name">
                         <b>
                             <span class="modifier">Async</span>
-                            createDirectory
+                            createFolder
                         </b>
-                        <a href="#createDirectory"><span class="icon ion-ios-link"></span></a>
+                        <a href="#createFolder"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createDirectory(dto: <a href="../classes/CreateDirectoryEntryDto.html">CreateDirectoryEntryDto</a>, uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>createFolder(dto: <a href="../classes/CreateFolderEntryDto.html">CreateFolderEntryDto</a>, uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -144,14 +152,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post(&#x27;create-directory&#x27;)<br />@UseScopes(ApplicationScopes.FILES_WRITE)<br /></code>
+                    <code>@Post(&#x27;create-folder&#x27;)<br />@UseScopes(ApplicationScopes.FILES_WRITE)<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="74"
-                            class="link-to-prism">src/modules/files/files.controller.ts:74</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">src/modules/files/files.controller.ts:110</a></div>
                 </td>
             </tr>
 
@@ -173,7 +181,7 @@
                                 <tr>
                                     <td>dto</td>
                                     <td>
-                                                <code><a href="../classes/CreateDirectoryEntryDto.html" target="_self" >CreateDirectoryEntryDto</a></code>
+                                                <code><a href="../classes/CreateFolderEntryDto.html" target="_self" >CreateFolderEntryDto</a></code>
                                     </td>
 
                                     <td>
@@ -235,14 +243,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;/:id&#x27;)<br />@UseScopes(ApplicationScopes.FILES_WRITE)<br /></code>
+                    <code>@Delete(&#x27;/:id/delete&#x27;)<br />@UseScopes(ApplicationScopes.FILES_WRITE)<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="51"
-                            class="link-to-prism">src/modules/files/files.controller.ts:51</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">src/modules/files/files.controller.ts:55</a></div>
                 </td>
             </tr>
 
@@ -326,14 +334,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;download/:id&#x27;)<br />@OptionalAuth()<br />@UseScopes(ApplicationScopes.FILES_READ)<br /></code>
+                    <code>@Get(&#x27;/:id/download&#x27;)<br />@OptionalAuth()<br />@UseScopes(ApplicationScopes.FILES_READ)<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="96"
-                            class="link-to-prism">src/modules/files/files.controller.ts:96</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">src/modules/files/files.controller.ts:73</a></div>
                 </td>
             </tr>
 
@@ -408,6 +416,212 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="findOne"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findOne
+                        </b>
+                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOne(uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;/:id/details&#x27;)<br />@UseScopes(ApplicationScopes.FILES_READ)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">src/modules/files/files.controller.ts:63</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uid</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;EntryDto&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="list"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            list
+                        </b>
+                        <a href="#list"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>list(uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, cursor: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, folder: string | null, limit: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;list&#x27;)<br />@UseScopes(ApplicationScopes.FILES_READ)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="131"
+                            class="link-to-prism">src/modules/files/files.controller.ts:131</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uid</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>cursor</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>folder</td>
+                                    <td>
+                                            <code>string | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>limit</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/Pagination.html" target="_self" >Promise&lt;PaginationDto&lt;EntryDto&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="updateOne"></a>
                     <span class="name">
                         <b>
@@ -429,14 +643,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Patch(&#x27;/:id&#x27;)<br />@UseScopes(ApplicationScopes.FILES_WRITE)<br /></code>
+                    <code>@Patch(&#x27;/:id/update&#x27;)<br />@UseScopes(ApplicationScopes.FILES_WRITE)<br /></code>
                 </td>
             </tr>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="59"
-                            class="link-to-prism">src/modules/files/files.controller.ts:59</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="95"
+                            class="link-to-prism">src/modules/files/files.controller.ts:95</a></div>
                 </td>
             </tr>
 
@@ -524,7 +738,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>upload(uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, folder: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, isPublic: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, req: Request)</code>
+                    <code>upload(uid: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, folder: string | null, isPublic: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, req: Request)</code>
                 </td>
             </tr>
 
@@ -538,8 +752,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="118"
-                            class="link-to-prism">src/modules/files/files.controller.ts:118</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="147"
+                            class="link-to-prism">src/modules/files/files.controller.ts:147</a></div>
                 </td>
             </tr>
 
@@ -573,7 +787,7 @@
                                 <tr>
                                     <td>folder</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            <code>string | null</code>
                                     </td>
 
                                     <td>
@@ -629,12 +843,14 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   InternalServerErrorException,
   Logger,
   Param,
   ParseBoolPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -647,16 +863,18 @@ import { ConfigService } from &quot;@nestjs/config&quot;;
 
 import { Request, Response } from &quot;express&quot;;
 
-import { EntryNotFound, ParentDirectoryNotFound } from &quot;./files.errors&quot;;
+import { EntryNotFound, ParentFolderNotFound } from &quot;./files.errors&quot;;
 import { FilesService } from &quot;./files.service&quot;;
 
-import { CreateDirectoryEntryDto } from &quot;./dto/create-directory-entry.dto&quot;;
+import { CreateFolderEntryDto } from &quot;./dto/create-folder-entry.dto&quot;;
 import { EntryDto } from &quot;./dto/entry.dto&quot;;
 import { UpdateEntryDto } from &quot;./dto/update-entry.dto&quot;;
 
 import { CurrentUser } from &quot;@/decorators/current-user.decorator&quot;;
 import { OptionalAuth } from &quot;@/decorators/optional-auth&quot;;
 import { UseScopes } from &quot;@/decorators/scopes.decorator&quot;;
+
+import { PaginationDto } from &quot;@/dto/pagination.dto&quot;;
 
 import { AuthGuard } from &quot;@/guards/auth.guard&quot;;
 
@@ -674,7 +892,7 @@ export class FilesController {
     private readonly storage: StorageService
   ) {}
 
-  @Delete(&quot;/:id&quot;)
+  @Delete(&quot;/:id/delete&quot;)
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async deleteOne(@CurrentUser(&quot;id&quot;) uid: string, @Param(&quot;id&quot;) id: string): Promise&lt;EntryDto&gt; {
     const deleted &#x3D; await this.files.deleteOne({ id, uid });
@@ -682,43 +900,16 @@ export class FilesController {
     return deleted.toDto();
   }
 
-  @Patch(&quot;/:id&quot;)
-  @UseScopes(ApplicationScopes.FILES_WRITE)
-  async updateOne(
-    @Body() dto: UpdateEntryDto,
-    @CurrentUser(&quot;id&quot;) uid: string,
-    @Param(&quot;id&quot;) id: string
-  ): Promise&lt;EntryDto&gt; {
-    const entry &#x3D; await this.files.updateOne(
-      { id, uid },
-      { ...dto, deletable: true, hidden: false }
-    );
+  @Get(&quot;/:id/details&quot;)
+  @UseScopes(ApplicationScopes.FILES_READ)
+  async findOne(@CurrentUser(&quot;id&quot;) uid: string, @Param(&quot;id&quot;) id: string): Promise&lt;EntryDto&gt; {
+    const entry &#x3D; await this.files.findOne({ id, uid });
+    if (!entry) throw new EntryNotFound();
 
     return entry.toDto();
   }
 
-  @Post(&quot;create-directory&quot;)
-  @UseScopes(ApplicationScopes.FILES_WRITE)
-  async createDirectory(
-    @Body() dto: CreateDirectoryEntryDto,
-    @CurrentUser(&quot;id&quot;) uid: string
-  ): Promise&lt;EntryDto&gt; {
-    const directory &#x3D; await this.files.createEntry({
-      deletable: true,
-      hidden: false,
-      isDirectory: true,
-      isFile: false,
-      name: dto.name,
-      parent: dto.parent,
-      public: dto.public,
-      size: 0,
-      uid
-    });
-
-    return directory.toDto();
-  }
-
-  @Get(&quot;download/:id&quot;)
+  @Get(&quot;/:id/download&quot;)
   @OptionalAuth()
   @UseScopes(ApplicationScopes.FILES_READ)
   async download(
@@ -741,16 +932,68 @@ export class FilesController {
     readable.pipe(res);
   }
 
+  @Patch(&quot;/:id/update&quot;)
+  @UseScopes(ApplicationScopes.FILES_WRITE)
+  async updateOne(
+    @Body() dto: UpdateEntryDto,
+    @CurrentUser(&quot;id&quot;) uid: string,
+    @Param(&quot;id&quot;) id: string
+  ): Promise&lt;EntryDto&gt; {
+    const entry &#x3D; await this.files.updateOne(
+      { id, uid },
+      { ...dto, deletable: true, hidden: false }
+    );
+
+    return entry.toDto();
+  }
+
+  @Post(&quot;create-folder&quot;)
+  @UseScopes(ApplicationScopes.FILES_WRITE)
+  async createFolder(
+    @Body() dto: CreateFolderEntryDto,
+    @CurrentUser(&quot;id&quot;) uid: string
+  ): Promise&lt;EntryDto&gt; {
+    const folder &#x3D; await this.files.createEntry({
+      deletable: true,
+      folder: dto.folder,
+      hidden: false,
+      isFile: false,
+      isFolder: true,
+      name: dto.name,
+      public: dto.public,
+      size: 0,
+      uid
+    });
+
+    return folder.toDto();
+  }
+
+  @Get(&quot;list&quot;)
+  @UseScopes(ApplicationScopes.FILES_READ)
+  async list(
+    @CurrentUser(&quot;id&quot;) uid: string,
+    @Query(&quot;cursor&quot;, new DefaultValuePipe(0), ParseIntPipe) cursor: number,
+    @Query(&quot;folder&quot;, new DefaultValuePipe(null)) folder: string | null,
+    @Query(&quot;limit&quot;, new DefaultValuePipe(50), ParseIntPipe) limit: number
+  ): Promise&lt;PaginationDto&lt;EntryDto&gt;&gt; {
+    const entries &#x3D; await this.files.list({ folder, uid }, { cursor, limit });
+
+    return {
+      ...entries,
+      items: entries.items.map((entry) &#x3D;&gt; entry.toDto())
+    };
+  }
+
   @Post(&quot;upload&quot;)
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async upload(
     @CurrentUser(&quot;id&quot;) uid: string,
-    @Query(&quot;folder&quot;) folder: string,
+    @Query(&quot;folder&quot;) folder: string | null,
     @Query(&quot;public&quot;, ParseBoolPipe) isPublic: boolean,
     @Req() req: Request
   ): Promise&lt;EntryDto[]&gt; {
-    if (!(await this.files.exists({ id: folder, uid }))) {
-      throw new ParentDirectoryNotFound();
+    if (folder &amp;&amp; !(await this.files.exists({ id: folder, uid }))) {
+      throw new ParentFolderNotFound();
     }
 
     const files &#x3D; await this.storage.write(req, {
@@ -762,21 +1005,21 @@ export class FilesController {
     });
 
     return Promise.all(
-      files.map(file &#x3D;&gt;
+      files.map((file) &#x3D;&gt;
         this.files
           .createEntry({
             deletable: true,
+            folder,
             hidden: false,
             id: file.id,
-            isDirectory: false,
             isFile: true,
+            isFolder: false,
             name: file.filename,
-            parent: folder,
             public: isPublic,
             size: file.size,
             uid
           })
-          .then(file &#x3D;&gt; file.toDto())
+          .then((file) &#x3D;&gt; file.toDto())
       )
     );
   }

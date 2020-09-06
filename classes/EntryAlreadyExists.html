@@ -81,7 +81,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -115,6 +115,18 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>path</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            Yes
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -138,8 +150,12 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ConflictException, ForbiddenException, NotFoundException } from &quot;@nestjs/common&quot;;
 
 export class EntryAlreadyExists extends ConflictException {
-  constructor(name: string) {
-    super(&#x60;Entry &quot;${name}&quot; already exists!&#x60;);
+  constructor(name: string, path?: string) {
+    if (path) {
+      super(&#x60;Entry &#x27;${name}&#x27; already exists at &#x27;${path}&#x27;!&#x60;);
+    } else {
+      super(&#x60;Entry &#x27;${name}&#x27; already exists!&#x60;);
+    }
   }
 }
 
@@ -155,6 +171,12 @@ export class EntryNotFound extends NotFoundException {
   }
 }
 
+export class ParentFolderNotFound extends NotFoundException {
+  constructor() {
+    super(&quot;Parent folder does not exist!&quot;);
+  }
+}
+
 export class ParentIsChildrenOfItself extends ForbiddenException {
   constructor() {
     super(&quot;The parent of an entry cannot be a children of itself!&quot;);
@@ -166,12 +188,7 @@ export class ParentIsItself extends ForbiddenException {
     super(&quot;The parent of an entry cannot be itself!&quot;);
   }
 }
-
-export class ParentDirectoryNotFound extends NotFoundException {
-  constructor() {
-    super(&quot;Parent directory does not exist!&quot;);
-  }
-}</code></pre>
+</code></pre>
     </div>
 </div>
 

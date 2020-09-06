@@ -82,7 +82,6 @@
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
                                 <a href="#_validateParent">_validateParent</a>
                             </li>
                             <li>
@@ -115,6 +114,14 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#hasDuplicates">hasDuplicates</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#list">list</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#updateOne">updateOne</a>
                             </li>
                         </ul>
@@ -140,7 +147,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/modules/files/files.service.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/modules/files/files.service.ts:26</a></div>
                             </td>
                         </tr>
 
@@ -231,8 +238,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="140"
-                            class="link-to-prism">src/modules/files/files.service.ts:140</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="186"
+                            class="link-to-prism">src/modules/files/files.service.ts:186</a></div>
                 </td>
             </tr>
 
@@ -299,7 +306,6 @@
                     <span class="name">
                         <b>
                             <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
                             _validateParent
                         </b>
                         <a href="#_validateParent"><span class="icon ion-ios-link"></span></a>
@@ -309,15 +315,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>_validateParent(entry: <a href="../classes/Entry.html">Entry</a>, parentId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>_validateParent(entry: <a href="../classes/Entry.html">Entry</a>, folder?: <a href="../classes/Entry.html">Entry | null</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="151"
-                            class="link-to-prism">src/modules/files/files.service.ts:151</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="197"
+                            class="link-to-prism">src/modules/files/files.service.ts:197</a></div>
                 </td>
             </tr>
 
@@ -349,13 +355,13 @@
 
                                 </tr>
                                 <tr>
-                                    <td>parentId</td>
+                                    <td>folder</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                <code><a href="../classes/Entry.html" target="_self" >Entry | null</a></code>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
 
@@ -366,7 +372,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Entry.html" target="_self" >Promise&lt;Entry&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/Entry.html" target="_self" >Entry</a></code>
 
                     </div>
                     <div class="io-description">
@@ -400,8 +406,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">src/modules/files/files.service.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">src/modules/files/files.service.ts:37</a></div>
                 </td>
             </tr>
 
@@ -472,8 +478,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="66"
-                            class="link-to-prism">src/modules/files/files.service.ts:66</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="65"
+                            class="link-to-prism">src/modules/files/files.service.ts:65</a></div>
                 </td>
             </tr>
 
@@ -556,8 +562,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="76"
-                            class="link-to-prism">src/modules/files/files.service.ts:76</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="75"
+                            class="link-to-prism">src/modules/files/files.service.ts:75</a></div>
                 </td>
             </tr>
 
@@ -765,15 +771,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>find(query: <a href="../classes/Entry.html">FilterQuery<Entry></a>)</code>
+                    <code>find(query: <a href="../classes/Entry.html">FilterQuery<Entry></a>, options: QueryFindOptions)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="107"
-                            class="link-to-prism">src/modules/files/files.service.ts:107</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="112"
+                            class="link-to-prism">src/modules/files/files.service.ts:112</a></div>
                 </td>
             </tr>
 
@@ -789,6 +795,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -802,6 +809,23 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>QueryFindOptions</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -837,15 +861,189 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findOne(query: <a href="../classes/Entry.html">FilterQuery<Entry></a>)</code>
+                    <code>findOne(query: <a href="../classes/Entry.html">FilterQuery<Entry></a>, options: QueryFindBaseOptions)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="111"
-                            class="link-to-prism">src/modules/files/files.service.ts:111</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="116"
+                            class="link-to-prism">src/modules/files/files.service.ts:116</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>query</td>
+                                    <td>
+                                                <code><a href="../classes/Entry.html" target="_self" >FilterQuery&lt;Entry&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>QueryFindBaseOptions</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Entry.html" target="_self" >Promise&lt;Entry | null&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasDuplicates"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            hasDuplicates
+                        </b>
+                        <a href="#hasDuplicates"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>hasDuplicates(filename: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, query: <a href="../classes/Entry.html">FilterQuery<Omit<Entry, name>></a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="123"
+                            class="link-to-prism">src/modules/files/files.service.ts:123</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>filename</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>query</td>
+                                    <td>
+                                                <code><a href="../classes/Entry.html" target="_self" >FilterQuery&lt;Omit&lt;Entry, name&gt;&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;number&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="list"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            list
+                        </b>
+                        <a href="#list"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>list(query: <a href="../classes/Entry.html">FilterQuery<Entry></a>, options: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="136"
+                            class="link-to-prism">src/modules/files/files.service.ts:136</a></div>
                 </td>
             </tr>
 
@@ -876,13 +1074,25 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Entry.html" target="_self" >Promise&lt;Entry | null&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../interfaces/Pagination.html" target="_self" >Promise&lt;Pagination&lt;Entry&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -916,8 +1126,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="115"
-                            class="link-to-prism">src/modules/files/files.service.ts:115</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="155"
+                            class="link-to-prism">src/modules/files/files.service.ts:155</a></div>
                 </td>
             </tr>
 
@@ -986,7 +1196,7 @@
 import { InjectModel } from &quot;@nestjs/mongoose&quot;;
 import { InjectQueue } from &quot;@nestjs/bull&quot;;
 
-import { FilterQuery, Model } from &quot;mongoose&quot;;
+import { FilterQuery, Model, QueryFindBaseOptions, QueryFindOptions } from &quot;mongoose&quot;;
 import { Queue } from &quot;bull&quot;;
 import { Readable } from &quot;stream&quot;;
 
@@ -994,14 +1204,17 @@ import {
   EntryAlreadyExists,
   EntryNotDeletable,
   EntryNotFound,
-  ParentDirectoryNotFound,
+  ParentFolderNotFound,
   ParentIsChildrenOfItself,
   ParentIsItself
 } from &quot;./files.errors&quot;;
 
-import { Entry } from &quot;./schemas/entry.schema&quot;;
+import { Entry, ENTRY_COLLATION_OPTIONS } from &quot;./schemas/entry.schema&quot;;
 
 import { StorageService } from &quot;@/modules/storage/storage.service&quot;;
+
+import { clamp } from &quot;@/utils/clamp&quot;;
+import { paginate, Pagination } from &quot;@/utils/paginate&quot;;
 
 @Injectable()
 export class FilesService {
@@ -1017,40 +1230,36 @@ export class FilesService {
 
   async createEntry(data: {
     deletable: Entry[&quot;deletable&quot;];
+    folder: Entry[&quot;folder&quot;];
     hidden: Entry[&quot;hidden&quot;];
     id?: Entry[&quot;id&quot;];
-    isDirectory: Entry[&quot;isDirectory&quot;];
     isFile: Entry[&quot;isFile&quot;];
+    isFolder: Entry[&quot;isFolder&quot;];
     name: Entry[&quot;name&quot;];
-    parent: Entry[&quot;parent&quot;];
     public: Entry[&quot;public&quot;];
     size: Entry[&quot;size&quot;];
     uid: Entry[&quot;uid&quot;];
   }): Promise&lt;Entry&gt; {
-    const parent &#x3D; data.parent
-      ? await this.entries
-          .findOne({ id: data.parent, uid: data.uid })
-          .then(entry &#x3D;&gt; entry &amp;&amp; entry.id)
-      : null;
+    const folder &#x3D; data.folder ? await this.findOne({ id: data.folder, uid: data.uid }) : null;
+    if (!folder &amp;&amp; data.folder) throw new ParentFolderNotFound();
 
-    if (!parent &amp;&amp; data.parent) throw new ParentDirectoryNotFound();
+    const folderId &#x3D; folder &amp;&amp; folder.id;
+    const folderPath &#x3D; (folder &amp;&amp; folder.path) || &quot;/&quot;;
 
-    const copies &#x3D; await this.entries.countDocuments({ name: data.name, parent, uid: data.uid });
-    const entry &#x3D; { ...data, parent };
+    const duplicates &#x3D; await this.hasDuplicates(data.name, { folder: folderId, uid: data.uid });
+    if (duplicates &amp;&amp; !data.isFile) throw new EntryAlreadyExists(data.name, folderPath);
 
-    if (copies &gt; 0) {
-      if (!data.isFile) throw new EntryAlreadyExists(data.name);
-
-      entry.name &#x3D; this._renameWithIndex(data.name, copies);
-    }
-
-    return new this.entries(entry).save();
+    return new this.entries({
+      ...data,
+      folder: folderId,
+      name: this._renameWithIndex(data.name, duplicates)
+    }).save();
   }
 
   async createReadable(id: string, uid?: string): Promise&lt;Readable&gt; {
     const file &#x3D; uid
-      ? await this.entries.findOne({ id, isDirectory: false, isFile: true, uid })
-      : await this.entries.findOne({ id, isDirectory: false, isFile: true, public: true });
+      ? await this.findOne({ id, isFile: true, isFolder: false, uid })
+      : await this.findOne({ id, isFile: true, isFolder: false, public: true });
 
     if (!file) throw new EntryNotFound();
 
@@ -1061,6 +1270,7 @@ export class FilesService {
     // We have to use .remove on each individual document so that middlewares are executed
     await this.entries
       .find(query)
+      .collation(ENTRY_COLLATION_OPTIONS)
       .cursor()
       .eachAsync(async (entry: Entry) &#x3D;&gt; {
         if (entry.isFile) {
@@ -1072,57 +1282,103 @@ export class FilesService {
   }
 
   async deleteOne(query: FilterQuery&lt;Entry&gt;): Promise&lt;Entry&gt; {
-    const entry &#x3D; await this.entries.findOne(query);
+    const entry &#x3D; await this.findOne(query);
 
     if (!entry) throw new EntryNotFound();
     if (!entry.deletable) throw new EntryNotDeletable();
 
     await entry
       .getChildren({ isFile: true })
-      .eachAsync(child &#x3D;&gt; this.filesQueue.add(&quot;delete&quot;, { fileId: child.id }));
+      .eachAsync((child) &#x3D;&gt; this.filesQueue.add(&quot;delete&quot;, { fileId: child.id }));
 
     return entry.remove();
   }
 
   async exists(query: FilterQuery&lt;Entry&gt;): Promise&lt;boolean&gt; {
-    return this.entries.exists(query);
+    return this.entries
+      .findOne(query)
+      .collation(ENTRY_COLLATION_OPTIONS)
+      .select({ _id: 1 })
+      .lean()
+      .then((doc) &#x3D;&gt; !!doc);
   }
 
-  async find(query: FilterQuery&lt;Entry&gt;): Promise&lt;Entry[]&gt; {
-    return this.entries.find(query);
+  async find(query: FilterQuery&lt;Entry&gt;, options: QueryFindOptions &#x3D; {}): Promise&lt;Entry[]&gt; {
+    return this.entries.find(query, undefined, options).collation(ENTRY_COLLATION_OPTIONS);
   }
 
-  async findOne(query: FilterQuery&lt;Entry&gt;): Promise&lt;Entry | null&gt; {
-    return this.entries.findOne(query);
+  async findOne(
+    query: FilterQuery&lt;Entry&gt;,
+    options: QueryFindBaseOptions &#x3D; {}
+  ): Promise&lt;Entry | null&gt; {
+    return this.entries.findOne(query, undefined, options).collation(ENTRY_COLLATION_OPTIONS);
+  }
+
+  async hasDuplicates(filename: string, query: FilterQuery&lt;Omit&lt;Entry, &quot;name&quot;&gt;&gt;): Promise&lt;number&gt; {
+    const parts &#x3D; filename.split(&quot;.&quot;);
+    const extension &#x3D; parts[parts.length - 1];
+    const name &#x3D; parts.slice(0, parts.length - 1).join(&quot;.&quot;);
+
+    // Regex for finding entries with a duplicate index i.e. filename (1..n).ext
+    const regexp &#x3D; new RegExp(&#x60;${name}( \\([0-9]+\\))+\\.${extension}&#x60;);
+
+    return this.entries
+      .countDocuments({ $or: [{ name: filename }, { name: regexp }], ...query })
+      .collation(ENTRY_COLLATION_OPTIONS);
+  }
+
+  async list(
+    query: FilterQuery&lt;Entry&gt;,
+    options: {
+      cursor?: number;
+      limit: number;
+    }
+  ): Promise&lt;Pagination&lt;Entry&gt;&gt; {
+    return paginate(this.entries, {
+      collation: ENTRY_COLLATION_OPTIONS,
+      cursor: options.cursor,
+      field: &quot;timestamp&quot;,
+      limit: clamp(1, 100, options.limit),
+      query,
+      sort: {
+        isFolder: -1
+      }
+    });
   }
 
   async updateOne(
     query: FilterQuery&lt;Entry&gt;,
     data: {
       deletable: Entry[&quot;deletable&quot;];
+      folder: Entry[&quot;folder&quot;];
       hidden: Entry[&quot;hidden&quot;];
       name: Entry[&quot;name&quot;];
-      parent: Entry[&quot;parent&quot;];
       public: Entry[&quot;public&quot;];
     }
   ): Promise&lt;Entry&gt; {
-    const entry &#x3D; await this.entries.findOne(query);
+    const entry &#x3D; await this.findOne(query);
     if (!entry) throw new EntryNotFound();
 
-    const parent &#x3D; data.parent
-      ? await this._validateParent(entry, data.parent).then(parent &#x3D;&gt; parent.id)
+    const folder &#x3D; data.folder
+      ? this._validateParent(entry, await this.findOne({ id: data.folder, uid: entry.uid }))
       : null;
 
+    const folderId &#x3D; folder &amp;&amp; folder.id;
+    const folderPath &#x3D; (folder &amp;&amp; folder.path) || &quot;/&quot;;
+
+    const exists &#x3D; data.name !&#x3D;&#x3D; entry.name &amp;&amp; (await this.exists({ folder: folderId, name: data.name, uid: entry.uid })); // prettier-ignore
+    if (exists) throw new EntryAlreadyExists(data.name, folderPath);
+
+    entry.folder &#x3D; folderId;
     entry.hidden &#x3D; data.hidden;
-    entry.parent &#x3D; parent;
-    entry.public &#x3D; data.public;
     entry.name &#x3D; data.name;
+    entry.public &#x3D; data.public;
 
     return entry.save();
   }
 
   private _renameWithIndex(filename: string, index: number): string {
-    // If filename has no extension
+    if (index &lt;&#x3D; 0) return filename;
     if (!filename.includes(&quot;.&quot;)) return &#x60;${filename} (${index})&#x60;;
 
     const parts &#x3D; filename.split(&quot;.&quot;);
@@ -1132,14 +1388,12 @@ export class FilesService {
     return parts.join(&quot;.&quot;).trim();
   }
 
-  private async _validateParent(entry: Entry, parentId: string): Promise&lt;Entry&gt; {
-    const parent &#x3D; await this.entries.findOne({ id: parentId, uid: entry.uid });
+  private _validateParent(entry: Entry, folder?: Entry | null): Entry {
+    if (!folder) throw new ParentFolderNotFound();
+    if (folder.id &#x3D;&#x3D;&#x3D; entry.id) throw new ParentIsItself();
+    if (folder.path.startsWith(&#x60;${entry.path}/&#x60;)) throw new ParentIsChildrenOfItself();
 
-    if (!parent) throw new ParentDirectoryNotFound();
-    if (parent.id &#x3D;&#x3D;&#x3D; entry.id) throw new ParentIsItself();
-    if (parent.path.startsWith(&#x60;${entry.path}/&#x60;)) throw new ParentIsChildrenOfItself();
-
-    return parent;
+    return folder;
   }
 }
 </code></pre>

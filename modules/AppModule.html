@@ -463,7 +463,7 @@ const MAX_PORT &#x3D; 65535;
       }
     }),
 
-    ThrottlerModule.forRootAsync({
+    ThrottlerModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) &#x3D;&gt; ({
         limit: config.get(&quot;THROTTLE_LIMIT&quot;),

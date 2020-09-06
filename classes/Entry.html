@@ -102,10 +102,13 @@
                                 <a href="#depth">depth</a>
                             </li>
                             <li>
+                                <a href="#folder">folder</a>
+                            </li>
+                            <li>
                                 <a href="#getChildren">getChildren</a>
                             </li>
                             <li>
-                                <a href="#getParent">getParent</a>
+                                <a href="#getParentFolder">getParentFolder</a>
                             </li>
                             <li>
                                 <a href="#hidden">hidden</a>
@@ -114,16 +117,13 @@
                                 <a href="#id">id</a>
                             </li>
                             <li>
-                                <a href="#isDirectory">isDirectory</a>
-                            </li>
-                            <li>
                                 <a href="#isFile">isFile</a>
                             </li>
                             <li>
-                                <a href="#name">name</a>
+                                <a href="#isFolder">isFolder</a>
                             </li>
                             <li>
-                                <a href="#parent">parent</a>
+                                <a href="#name">name</a>
                             </li>
                             <li>
                                 <a href="#path">path</a>
@@ -133,6 +133,9 @@
                             </li>
                             <li>
                                 <a href="#size">size</a>
+                            </li>
+                            <li>
+                                <a href="#timestamp">timestamp</a>
                             </li>
                             <li>
                                 <a href="#toDto">toDto</a>
@@ -256,6 +259,42 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="folder"></a>
+                        <span class="name">
+                            <b>
+                            folder</b>
+                            <a href="#folder"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>string | null</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @Prop()<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:34</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="getChildren"></a>
                         <span class="name">
                             <b>
@@ -272,7 +311,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:95</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:102</a></div>
                             </td>
                         </tr>
 
@@ -283,11 +322,11 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="getParent"></a>
+                        <a name="getParentFolder"></a>
                         <span class="name">
                             <b>
-                            getParent</b>
-                            <a href="#getParent"><span class="icon ion-ios-link"></span></a>
+                            getParentFolder</b>
+                            <a href="#getParentFolder"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
@@ -299,7 +338,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="96" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:96</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:103</a></div>
                             </td>
                         </tr>
 
@@ -335,7 +374,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:36</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:39</a></div>
                             </td>
                         </tr>
 
@@ -371,43 +410,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:45</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="isDirectory"></a>
-                        <span class="name">
-                            <b>
-                            isDirectory</b>
-                            <a href="#isDirectory"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Decorators : </b>
-                            <br />
-                            <code>
-                                @Prop({required: true})<br />
-                            </code>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:50</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:48</a></div>
                             </td>
                         </tr>
 
@@ -443,7 +446,43 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:55</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:53</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isFolder"></a>
+                        <span class="name">
+                            <b>
+                            isFolder</b>
+                            <a href="#isFolder"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @Prop({required: true})<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:58</a></div>
                             </td>
                         </tr>
 
@@ -474,42 +513,6 @@
                             <br />
                             <code>
                                 @Prop({maxlength: 255, required: true, trim: true, validate: undefined})<br />
-                            </code>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:63</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="parent"></a>
-                        <span class="name">
-                            <b>
-                            parent</b>
-                            <a href="#parent"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>    <code>string | null</code>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <b>Decorators : </b>
-                            <br />
-                            <code>
-                                @Prop()<br />
                             </code>
                         </td>
                     </tr>
@@ -634,6 +637,49 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="timestamp"></a>
+                        <span class="name">
+                            <b>
+                            timestamp</b>
+                            <a href="#timestamp"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Decorators : </b>
+                            <br />
+                            <code>
+                                @Prop()<br />
+                            </code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:89</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Will be used for sorting when entries are paginated.
+It is derived from the updatedAt property in a pre save hook.</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="toDto"></a>
                         <span class="name">
                             <b>
@@ -650,7 +696,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="97" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:97</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:104</a></div>
                             </td>
                         </tr>
 
@@ -686,7 +732,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:91</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:98</a></div>
                             </td>
                         </tr>
 
@@ -713,7 +759,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="93" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:93</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/modules/files/schemas/entry.schema.ts:100</a></div>
                             </td>
                         </tr>
 
@@ -764,6 +810,9 @@ export class Entry extends Document implements EntryDto {
 
   depth!: number;
 
+  @Prop()
+  folder!: string | null;
+
   @Prop({
     default: false
   })
@@ -781,12 +830,12 @@ export class Entry extends Document implements EntryDto {
   @Prop({
     required: true
   })
-  isDirectory!: boolean;
+  isFile!: boolean;
 
   @Prop({
     required: true
   })
-  isFile!: boolean;
+  isFolder!: boolean;
 
   @Prop({
     maxlength: 255,
@@ -795,9 +844,6 @@ export class Entry extends Document implements EntryDto {
     validate: (value: string) &#x3D;&gt; !PATH_SAFE_REGEX.test(value)
   })
   name!: string;
-
-  @Prop()
-  parent!: string | null;
 
   @Prop({
     unique: true
@@ -815,6 +861,13 @@ export class Entry extends Document implements EntryDto {
   })
   size!: number;
 
+  /**
+   * Will be used for sorting when entries are paginated.
+   * It is derived from the updatedAt property in a pre save hook.
+   */
+  @Prop()
+  timestamp!: number;
+
   @Prop({
     lowercase: true,
     maxlength: 16,
@@ -827,35 +880,36 @@ export class Entry extends Document implements EntryDto {
   updatedAt!: Date;
 
   getChildren!: (query?: FilterQuery&lt;Entry&gt;) &#x3D;&gt; QueryCursor&lt;Entry&gt;;
-  getParent!: () &#x3D;&gt; Promise&lt;Entry | null&gt;;
+  getParentFolder!: () &#x3D;&gt; Promise&lt;Entry | null&gt;;
   toDto!: () &#x3D;&gt; EntryDto;
 }
 
 export const EntrySchema &#x3D; SchemaFactory.createForClass(Entry);
 
-EntrySchema.pre&lt;Entry&gt;(&quot;remove&quot;, function(next) {
+export const ENTRY_COLLATION_OPTIONS &#x3D; { locale: &quot;en&quot;, strength: 2 };
+
+EntrySchema.index({ name: 1 }, { collation: ENTRY_COLLATION_OPTIONS });
+
+EntrySchema.pre&lt;Entry&gt;(&quot;remove&quot;, function (next) {
   this.model&lt;Entry&gt;(Entry.name)
     .deleteMany({
       path: { $regex: &#x60;^${this.path}/&#x60; },
       uid: this.uid
     })
     .then(() &#x3D;&gt; next())
-    .catch(error &#x3D;&gt; next(error));
+    .catch((error) &#x3D;&gt; next(error));
 });
 
-EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, async function(next) {
+EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, async function (next) {
   if (!this.isNew) return next();
   if (!this.id &amp;&amp; this.isFile) return next(new Error(&quot;File ID is missing upon entry creation!&quot;));
 
   try {
-    if (!this.id &amp;&amp; this.isDirectory) {
+    if (!this.id &amp;&amp; this.isFolder) {
       this.id &#x3D; await generateId(8);
     }
 
-    const parent &#x3D; await this.getParent();
-
-    this.path &#x3D; parent ? &#x60;${parent.path}/${this.name}&#x60; : &#x60;/${this.name}&#x60;;
-    this.size &#x3D; this.isDirectory ? 0 : this.size;
+    this.size &#x3D; this.isFolder ? 0 : this.size;
 
     next();
   } catch (error) {
@@ -863,52 +917,62 @@ EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, async function(next) {
   }
 });
 
-EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, async function(next) {
-  if (this.isNew || (!this.isModified(&quot;name&quot;) &amp;&amp; !this.isModified(&quot;parent&quot;))) return next();
+EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, function (next) {
+  if (!this.isModified()) return next();
+
+  this.timestamp &#x3D; this.updatedAt.getTime();
+
+  next();
+});
+
+EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, async function (next) {
+  if (!this.isModified(&quot;folder&quot;) &amp;&amp; !this.isModified(&quot;name&quot;)) return next();
 
   try {
-    const parent &#x3D; await this.getParent();
+    const folder &#x3D; await this.getParentFolder();
+    const newPath &#x3D; folder ? &#x60;${folder.path}/${this.name}&#x60; : &#x60;/${this.name}&#x60;;
 
-    const newPath &#x3D; parent ? &#x60;${parent.path}/${this.name}&#x60; : &#x60;/${this.name}&#x60;;
-    const oldPath &#x3D; this.path.toString();
+    if (!this.isNew) {
+      // this.path is only available if it isn&#x27;t a new document
+      await this.model&lt;Entry&gt;(Entry.name)
+        .find({
+          path: { $regex: &#x60;^${this.path}/&#x60; },
+          uid: this.uid
+        })
+        .cursor()
+        .eachAsync(async (child) &#x3D;&gt; {
+          child.path &#x3D; newPath + child.path.substr(this.path.length);
+          await child.save();
+        });
+    }
 
     this.path &#x3D; newPath;
 
-    await this.model&lt;Entry&gt;(Entry.name)
-      .find({
-        path: { $regex: &#x60;^${oldPath}/&#x60; },
-        uid: this.uid
-      })
-      .cursor()
-      .eachAsync(async child &#x3D;&gt; {
-        child.path &#x3D; newPath + child.path.substr(oldPath.length);
-        await child.save();
-      });
-
     next();
   } catch (error) {
     next(error);
   }
 });
 
-EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, async function(next) {
+EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, async function (next) {
   if (
     !this.isModified(&quot;deletable&quot;) &amp;&amp;
+    !this.isModified(&quot;folder&quot;) &amp;&amp;
     !this.isModified(&quot;hidden&quot;) &amp;&amp;
-    !this.isModified(&quot;parent&quot;) &amp;&amp;
     !this.isModified(&quot;public&quot;)
   ) {
     return next();
   }
 
   try {
-    const parent &#x3D; await this.getParent();
+    const parentFolder &#x3D; await this.getParentFolder();
 
-    const deletable &#x3D; parent ? parent.deletable : this.deletable;
+    const deletable &#x3D; parentFolder ? parentFolder.deletable : this.deletable;
 
-    // If the parent is set to false for these, then the childrens for these can only be false
-    const hidden &#x3D; parent?.hidden &#x3D;&#x3D;&#x3D; false ? false : this.hidden;
-    const isPublic &#x3D; parent?.public &#x3D;&#x3D;&#x3D; false ? false : this.public;
+    // If the values of these fields are set to false on the parent folder,
+    // then the values of its children can only be false.
+    const hidden &#x3D; parentFolder?.hidden &#x3D;&#x3D;&#x3D; false ? false : this.hidden;
+    const isPublic &#x3D; parentFolder?.public &#x3D;&#x3D;&#x3D; false ? false : this.public;
 
     this.deletable &#x3D; deletable;
     this.hidden &#x3D; hidden;
@@ -932,11 +996,11 @@ EntrySchema.pre&lt;Entry&gt;(&quot;save&quot;, async function(next) {
   }
 });
 
-EntrySchema.virtual(&quot;depth&quot;).get(function(this: Entry) {
-  return this.path.split(&quot;/&quot;).filter(el &#x3D;&gt; el.length &gt; 0).length;
+EntrySchema.virtual(&quot;depth&quot;).get(function (this: Entry) {
+  return this.path.split(&quot;/&quot;).filter((el) &#x3D;&gt; el.length &gt; 0).length;
 });
 
-EntrySchema.methods.getChildren &#x3D; function(
+EntrySchema.methods.getChildren &#x3D; function (
   this: Entry,
   query: FilterQuery&lt;Entry&gt; &#x3D; {}
 ): QueryCursor&lt;Entry&gt; {
@@ -946,19 +1010,28 @@ EntrySchema.methods.getChildren &#x3D; function(
       path: { $regex: &#x60;^${this.path}/&#x60; },
       uid: this.uid
     })
+    .collation(ENTRY_COLLATION_OPTIONS)
     .cursor();
 };
 
-EntrySchema.methods.getParent &#x3D; async function(this: Entry): Promise&lt;Entry | null&gt; {
-  if (!this.parent) return null;
+EntrySchema.methods.getParentFolder &#x3D; async function (this: Entry): Promise&lt;Entry | null&gt; {
+  if (!this.folder) return null;
 
-  return this.model&lt;Entry&gt;(Entry.name).findOne({
-    id: this.parent,
+  const folder &#x3D; await this.model&lt;Entry&gt;(Entry.name).findOne({
+    id: this.folder,
     uid: this.uid
   });
+
+  // Document is a children of a deleted folder
+  if (!folder &amp;&amp; this.folder) {
+    this.folder &#x3D; null;
+    await this.save();
+  }
+
+  return folder;
 };
 
-EntrySchema.methods.toDto &#x3D; function(this: Entry): EntryDto {
+EntrySchema.methods.toDto &#x3D; function (this: Entry): EntryDto {
   return plainToClass(EntryDto, this.toJSON(), {
     excludePrefixes: [&quot;_&quot;]
   });

@@ -86,7 +86,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/modules/files/files.errors.ts:21</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/modules/files/files.errors.ts:31</a></div>
                             </td>
                         </tr>
 
@@ -108,8 +108,12 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ConflictException, ForbiddenException, NotFoundException } from &quot;@nestjs/common&quot;;
 
 export class EntryAlreadyExists extends ConflictException {
-  constructor(name: string) {
-    super(&#x60;Entry &quot;${name}&quot; already exists!&#x60;);
+  constructor(name: string, path?: string) {
+    if (path) {
+      super(&#x60;Entry &#x27;${name}&#x27; already exists at &#x27;${path}&#x27;!&#x60;);
+    } else {
+      super(&#x60;Entry &#x27;${name}&#x27; already exists!&#x60;);
+    }
   }
 }
 
@@ -125,6 +129,12 @@ export class EntryNotFound extends NotFoundException {
   }
 }
 
+export class ParentFolderNotFound extends NotFoundException {
+  constructor() {
+    super(&quot;Parent folder does not exist!&quot;);
+  }
+}
+
 export class ParentIsChildrenOfItself extends ForbiddenException {
   constructor() {
     super(&quot;The parent of an entry cannot be a children of itself!&quot;);
@@ -136,12 +146,7 @@ export class ParentIsItself extends ForbiddenException {
     super(&quot;The parent of an entry cannot be itself!&quot;);
   }
 }
-
-export class ParentDirectoryNotFound extends NotFoundException {
-  constructor() {
-    super(&quot;Parent directory does not exist!&quot;);
-  }
-}</code></pre>
+</code></pre>
     </div>
 </div>
 
