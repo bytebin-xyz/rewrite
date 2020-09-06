@@ -8,6 +8,7 @@ import winston from "winston";
 import "winston-daily-rotate-file";
 
 import { ConfigService } from "@nestjs/config";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
@@ -42,6 +43,8 @@ const logger = WinstonModule.createLogger({
 
 const MongoStore = connectMongo(session);
 
+const sessionCookieName = "sid.the.science.kid";
+
 (async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger });
   const config = app.get<ConfigService>(ConfigService);
@@ -49,26 +52,36 @@ const MongoStore = connectMongo(session);
   const isDev = config.get<string>("NODE_ENV") === "development";
   const port = config.get("PORT") as number;
 
+  const swagger = SwaggerModule.createDocument(
+    app,
+    new DocumentBuilder()
+      .setTitle("Bytebin")
+      .setVersion("1.0")
+      .addApiKey({ name: "Authorization", type: "apiKey" })
+      .addCookieAuth(sessionCookieName)
+      .build()
+  );
+
+  SwaggerModule.setup("swagger", app, swagger);
+
   app.enableCors({
     credentials: true,
     origin: `${isDev ? "http" : "https"}://${config.get("FRONTEND_DOMAIN")}`
   });
 
-  app
-    .useGlobalFilters(new InternalServerErrorExceptionFilter(logger))
-    .useGlobalPipes(
-      new ValidationPipe({
-        forbidUnknownValues: true,
-        transform: true,
-        whitelist: true
-      })
-    );
+  app.useGlobalFilters(new InternalServerErrorExceptionFilter(logger)).useGlobalPipes(
+    new ValidationPipe({
+      forbidUnknownValues: true,
+      transform: true,
+      whitelist: true
+    })
+  );
 
   app
     .use(
       morgan("combined", {
         stream: {
-          write: message => logger.debug && logger.debug(message, "Morgan")
+          write: (message) => logger.debug && logger.debug(message, "Morgan")
         }
       })
     )
@@ -79,6 +92,7 @@ const MongoStore = connectMongo(session);
           maxAge: ms("14d"),
           secure: process.env.NODE_ENV === "production"
         },
+        name: sessionCookieName,
         resave: false,
         saveUninitialized: false,
         secret: config.get("SESSION_SECRET") as string,
