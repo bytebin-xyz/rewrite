@@ -794,6 +794,33 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b><span class="modifier"></span> createKey</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <span class="modifier-icon method fa fa-play ">
+                                            <span class="fa fa-"></span>
+                                        </span>
+                                    <code>createKey(query: any)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>any</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b><span class="modifier"></span> delete</b>
                                 </td>
                             </tr>
@@ -902,33 +929,6 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b><span class="modifier"></span> generateKey</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play ">
-                                            <span class="fa fa-"></span>
-                                        </span>
-                                    <code>generateKey(query: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>any</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
                                     <b><span class="modifier"></span> updateOne</b>
                                 </td>
                             </tr>
@@ -999,6 +999,13 @@ export class ApplicationsService {
     return new this.applications(data).save();
   }
 
+  async createKey(query: FilterQuery&lt;Application&gt;): Promise&lt;string&gt; {
+    const application &#x3D; await this.applications.findOne(query);
+    if (!application) throw new ApplicationNotFound();
+
+    return application.createKey(this.config.get(&quot;API_KEY_SECRET&quot;) as string);
+  }
+
   async delete(query: FilterQuery&lt;Application&gt;): Promise&lt;void&gt; {
     await this.applications.deleteMany(query);
   }
@@ -1016,13 +1023,6 @@ export class ApplicationsService {
 
   async findOne(query: FilterQuery&lt;Application&gt;): Promise&lt;Application | null&gt; {
     return this.applications.findOne(query);
-  }
-
-  async generateKey(query: FilterQuery&lt;Application&gt;): Promise&lt;string&gt; {
-    const application &#x3D; await this.applications.findOne(query);
-    if (!application) throw new ApplicationNotFound();
-
-    return application.generateKey(this.config.get(&quot;API_KEY_SECRET&quot;) as string);
   }
 
   async updateOne(
