@@ -7,7 +7,7 @@ import { ApplicationsService } from "./applications.service";
 
 import { ApplicationDto } from "./dto/application.dto";
 import { CreateApplicationDto } from "./dto/create-application.dto";
-import { GenerateApplicationKeyDto } from "./dto/generate-application-key.dto";
+import { CreateApplicationKeyDto } from "./dto/create-application-key.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
 
@@ -42,7 +42,7 @@ export class ApplicationsController {
   async createKey(
     @CurrentUser("id") uid: string,
     @Param("id") id: string
-  ): Promise<GenerateApplicationKeyDto> {
+  ): Promise<CreateApplicationKeyDto> {
     const key = await this.applications.createKey({ id, uid });
 
     return { key };
