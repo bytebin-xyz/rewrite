@@ -1,8 +1,11 @@
+import { ApiProperty } from "@nestjs/swagger";
+
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
 import { IsStringPathSafe } from "@/validators/is-string-path-safe.validator";
 
 export class UpdateEntryDto {
+  @ApiProperty({ nullable: true, type: String })
   @IsOptional()
   @IsString()
   folder!: string | null;
