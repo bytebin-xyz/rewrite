@@ -71,12 +71,12 @@ export class UsersController {
 
     await this.files.createEntry({
       deletable: false,
+      folder: null,
       hidden: true,
       id: avatar.id,
-      isDirectory: false,
       isFile: true,
+      isFolder: false,
       name: avatar.filename,
-      parent: null,
       public: true,
       size: avatar.size,
       uid: me.id

@@ -7,22 +7,26 @@ export class EntryDto {
 
   depth!: number;
 
+  folder!: string | null;
+
   @Exclude()
   hidden!: boolean;
 
   id!: string;
 
-  isDirectory!: boolean;
-
   isFile!: boolean;
 
-  name!: string;
+  isFolder!: boolean;
 
-  parent!: string | null;
+  name!: string;
 
   path!: string;
 
   public!: boolean;
+
+  size!: number;
+
+  timestamp!: number;
 
   uid!: string;
 

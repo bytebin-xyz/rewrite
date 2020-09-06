@@ -128,7 +128,7 @@ const MAX_PORT = 65535;
       }
     }),
 
-    ThrottlerModule.forRootAsync({
+    ThrottlerModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         limit: config.get("THROTTLE_LIMIT"),

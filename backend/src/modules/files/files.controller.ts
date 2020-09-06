@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   InternalServerErrorException,
   Logger,
   Param,
   ParseBoolPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -19,16 +21,18 @@ import { ConfigService } from "@nestjs/config";
 
 import { Request, Response } from "express";
 
-import { EntryNotFound, ParentDirectoryNotFound } from "./files.errors";
+import { EntryNotFound, ParentFolderNotFound } from "./files.errors";
 import { FilesService } from "./files.service";
 
-import { CreateDirectoryEntryDto } from "./dto/create-directory-entry.dto";
+import { CreateFolderEntryDto } from "./dto/create-folder-entry.dto";
 import { EntryDto } from "./dto/entry.dto";
 import { UpdateEntryDto } from "./dto/update-entry.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
 import { OptionalAuth } from "@/decorators/optional-auth";
 import { UseScopes } from "@/decorators/scopes.decorator";
+
+import { PaginationDto } from "@/dto/pagination.dto";
 
 import { AuthGuard } from "@/guards/auth.guard";
 
@@ -46,7 +50,7 @@ export class FilesController {
     private readonly storage: StorageService
   ) {}
 
-  @Delete("/:id")
+  @Delete("/:id/delete")
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
     const deleted = await this.files.deleteOne({ id, uid });
@@ -54,43 +58,16 @@ export class FilesController {
     return deleted.toDto();
   }
 
-  @Patch("/:id")
-  @UseScopes(ApplicationScopes.FILES_WRITE)
-  async updateOne(
-    @Body() dto: UpdateEntryDto,
-    @CurrentUser("id") uid: string,
-    @Param("id") id: string
-  ): Promise<EntryDto> {
-    const entry = await this.files.updateOne(
-      { id, uid },
-      { ...dto, deletable: true, hidden: false }
-    );
+  @Get("/:id/details")
+  @UseScopes(ApplicationScopes.FILES_READ)
+  async findOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
+    const entry = await this.files.findOne({ id, uid });
+    if (!entry) throw new EntryNotFound();
 
     return entry.toDto();
   }
 
-  @Post("create-directory")
-  @UseScopes(ApplicationScopes.FILES_WRITE)
-  async createDirectory(
-    @Body() dto: CreateDirectoryEntryDto,
-    @CurrentUser("id") uid: string
-  ): Promise<EntryDto> {
-    const directory = await this.files.createEntry({
-      deletable: true,
-      hidden: false,
-      isDirectory: true,
-      isFile: false,
-      name: dto.name,
-      parent: dto.parent,
-      public: dto.public,
-      size: 0,
-      uid
-    });
-
-    return directory.toDto();
-  }
-
-  @Get("download/:id")
+  @Get("/:id/download")
   @OptionalAuth()
   @UseScopes(ApplicationScopes.FILES_READ)
   async download(
@@ -113,16 +90,68 @@ export class FilesController {
     readable.pipe(res);
   }
 
+  @Patch("/:id/update")
+  @UseScopes(ApplicationScopes.FILES_WRITE)
+  async updateOne(
+    @Body() dto: UpdateEntryDto,
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<EntryDto> {
+    const entry = await this.files.updateOne(
+      { id, uid },
+      { ...dto, deletable: true, hidden: false }
+    );
+
+    return entry.toDto();
+  }
+
+  @Post("create-folder")
+  @UseScopes(ApplicationScopes.FILES_WRITE)
+  async createFolder(
+    @Body() dto: CreateFolderEntryDto,
+    @CurrentUser("id") uid: string
+  ): Promise<EntryDto> {
+    const folder = await this.files.createEntry({
+      deletable: true,
+      folder: dto.folder,
+      hidden: false,
+      isFile: false,
+      isFolder: true,
+      name: dto.name,
+      public: dto.public,
+      size: 0,
+      uid
+    });
+
+    return folder.toDto();
+  }
+
+  @Get("list")
+  @UseScopes(ApplicationScopes.FILES_READ)
+  async list(
+    @CurrentUser("id") uid: string,
+    @Query("cursor", new DefaultValuePipe(0), ParseIntPipe) cursor: number,
+    @Query("folder", new DefaultValuePipe(null)) folder: string | null,
+    @Query("limit", new DefaultValuePipe(50), ParseIntPipe) limit: number
+  ): Promise<PaginationDto<EntryDto>> {
+    const entries = await this.files.list({ folder, uid }, { cursor, limit });
+
+    return {
+      ...entries,
+      items: entries.items.map((entry) => entry.toDto())
+    };
+  }
+
   @Post("upload")
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async upload(
     @CurrentUser("id") uid: string,
-    @Query("folder") folder: string,
+    @Query("folder") folder: string | null,
     @Query("public", ParseBoolPipe) isPublic: boolean,
     @Req() req: Request
   ): Promise<EntryDto[]> {
-    if (!(await this.files.exists({ id: folder, uid }))) {
-      throw new ParentDirectoryNotFound();
+    if (folder && !(await this.files.exists({ id: folder, uid }))) {
+      throw new ParentFolderNotFound();
     }
 
     const files = await this.storage.write(req, {
@@ -134,21 +163,21 @@ export class FilesController {
     });
 
     return Promise.all(
-      files.map(file =>
+      files.map((file) =>
         this.files
           .createEntry({
             deletable: true,
+            folder,
             hidden: false,
             id: file.id,
-            isDirectory: false,
             isFile: true,
+            isFolder: false,
             name: file.filename,
-            parent: folder,
             public: isPublic,
             size: file.size,
             uid
           })
-          .then(file => file.toDto())
+          .then((file) => file.toDto())
       )
     );
   }
