@@ -1,5 +1,6 @@
 import { plainToClass } from "class-transformer";
 
+import { ApiExcludeEndpoint } from "@nestjs/swagger";
 import { Controller, Delete, Get, Param, Session, UseGuards } from "@nestjs/common";
 
 import { SessionsService } from "./sessions.service";
@@ -17,6 +18,7 @@ import { AuthGuard } from "@/guards/auth.guard";
 export class SessionsController {
   constructor(private readonly sessions: SessionsService) {}
 
+  @ApiExcludeEndpoint()
   @Get()
   async getSessions(
     @CurrentUser("id") uid: string,
@@ -32,6 +34,7 @@ export class SessionsController {
     );
   }
 
+  @ApiExcludeEndpoint()
   @Delete("/:id/revoke")
   revoke(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<void> {
     return this.sessions.deleteOne({
@@ -40,6 +43,7 @@ export class SessionsController {
     });
   }
 
+  @ApiExcludeEndpoint()
   @Delete("all")
   revokeAll(@CurrentUser("id") uid: string, @Session() session: ISessionData): Promise<void> {
     return this.sessions.delete({

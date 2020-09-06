@@ -1,3 +1,5 @@
+import { ApiExcludeEndpoint } from "@nestjs/swagger";
+
 import {
   Body,
   Controller,
@@ -46,11 +48,13 @@ import { generateId } from "@/utils/generateId";
 export class AuthController {
   constructor(private readonly auth: AuthService, private readonly mailer: MailerService) {}
 
+  @ApiExcludeEndpoint()
   @Get("activate-account/:token")
   activateAccount(@Param("token") token: string): Promise<void> {
     return this.auth.activateAccount(token);
   }
 
+  @ApiExcludeEndpoint()
   @Post("forgot-password")
   forgotPassword(@Body() { email }: ForgotPasswordDto): void {
     /*
@@ -60,6 +64,7 @@ export class AuthController {
     this.auth.forgotPassword(email);
   }
 
+  @ApiExcludeEndpoint()
   @Post("login")
   @RecaptchaAction("login")
   @RecaptchaScore(0.7)
@@ -94,6 +99,7 @@ export class AuthController {
     return user.toDto();
   }
 
+  @ApiExcludeEndpoint()
   @Delete("logout")
   logout(@Session() session: Express.Session): Promise<void> {
     return new Promise((resolve, reject) =>
@@ -101,6 +107,7 @@ export class AuthController {
     );
   }
 
+  @ApiExcludeEndpoint()
   @Post("register")
   @RecaptchaAction("register")
   @RecaptchaScore(0.7)
@@ -109,6 +116,7 @@ export class AuthController {
     return this.auth.register(email, password, username);
   }
 
+  @ApiExcludeEndpoint()
   @Post("reset-password")
   resetPassword(@Body() { newPassword, token }: ResetPasswordDto): Promise<void> {
     return this.auth.resetPassword(newPassword, token);

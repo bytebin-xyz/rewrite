@@ -1,3 +1,4 @@
+import { ApiExcludeEndpoint } from "@nestjs/swagger";
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 
 import { Throttle } from "nestjs-throttler";
@@ -17,6 +18,7 @@ import { AuthGuard } from "@/guards/auth.guard";
 export class ApplicationsController {
   constructor(private readonly applications: ApplicationsService) {}
 
+  @ApiExcludeEndpoint()
   @Get()
   all(@CurrentUser("id") uid: string): Promise<ApplicationDto[]> {
     return this.applications
@@ -24,6 +26,7 @@ export class ApplicationsController {
       .then(applications => applications.map(application => application.toDto()));
   }
 
+  @ApiExcludeEndpoint()
   @Post()
   @Throttle(25, 60)
   create(
@@ -33,11 +36,13 @@ export class ApplicationsController {
     return this.applications.create({ ...dto, uid }).then(application => application.toDto());
   }
 
+  @ApiExcludeEndpoint()
   @Delete("/:id")
   deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<ApplicationDto> {
     return this.applications.deleteOne({ id, uid }).then(application => application.toDto());
   }
 
+  @ApiExcludeEndpoint()
   @Patch("/:id")
   updateOne(
     @Body() dto: CreateApplicationDto,
@@ -47,6 +52,7 @@ export class ApplicationsController {
     return this.applications.updateOne({ id, uid }, dto).then(application => application.toDto());
   }
 
+  @ApiExcludeEndpoint()
   @Post("/:id/key")
   @Throttle(25, 60)
   async generateKey(

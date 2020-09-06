@@ -1,6 +1,7 @@
 import path from "path";
 import sharp from "sharp";
 
+import { ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
 
 import { Request } from "express";
@@ -25,6 +26,7 @@ import { ApplicationScopes } from "@/modules/applications/enums/application-scop
 import { FilesService } from "@/modules/files/files.service";
 import { StorageService } from "@/modules/storage/storage.service";
 
+@ApiTags("Users")
 @Controller("users")
 @UseGuards(AuthGuard)
 export class UsersController {
@@ -40,11 +42,13 @@ export class UsersController {
     return me.toDto();
   }
 
+  @ApiExcludeEndpoint()
   @Patch("@me")
   updateOne(@Body() dto: UpdateUserDto, @CurrentUser() me: User): Promise<UserDto> {
-    return this.users.updateOne(me, dto).then(user => user.toDto());
+    return this.users.updateOne(me, dto).then((user) => user.toDto());
   }
 
+  @ApiExcludeEndpoint()
   @Post("@me/avatar")
   async updateAvatar(@CurrentUser() me: User, @Req() req: Request): Promise<UserDto> {
     const [avatar] = await this.storage.write(req, {
@@ -61,12 +65,7 @@ export class UsersController {
         files: 1,
         fileSize: 8 * 1024 * 1024
       },
-      transformers: [
-        () =>
-          sharp()
-            .resize(512, 512)
-            .png()
-      ]
+      transformers: [() => sharp().resize(512, 512).png()]
     });
 
     await this.files.createEntry({
@@ -82,14 +81,16 @@ export class UsersController {
       uid: me.id
     });
 
-    return this.users.updateAvatar(me, avatar.id).then(user => user.toDto());
+    return this.users.updateAvatar(me, avatar.id).then((user) => user.toDto());
   }
 
+  @ApiExcludeEndpoint()
   @Post("@me/delete")
   deleteOne(@Body() { password }: DeleteUserDto, @CurrentUser() me: User): Promise<UserDto> {
     return this.users.deleteOne(me, password);
   }
 
+  @ApiExcludeEndpoint()
   @Get("confirm-email/:token")
   confirmEmail(@Param("token") token: string): Promise<void> {
     return this.users.confirmEmail(token);

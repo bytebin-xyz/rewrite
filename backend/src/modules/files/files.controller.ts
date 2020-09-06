@@ -1,3 +1,5 @@
+import { ApiTags } from "@nestjs/swagger";
+
 import {
   Body,
   Controller,
@@ -40,6 +42,7 @@ import { ApplicationScopes } from "@/modules/applications/enums/application-scop
 
 import { StorageService } from "@/modules/storage/storage.service";
 
+@ApiTags("Files")
 @Controller("files")
 @UseGuards(AuthGuard)
 export class FilesController {
