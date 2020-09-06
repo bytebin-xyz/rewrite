@@ -772,11 +772,14 @@
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from &quot;class-validator&quot;;
+        <pre><code class="hljs javascript">import { ApiProperty } from &quot;@nestjs/swagger&quot;;
+
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from &quot;class-validator&quot;;
 
 import { IsStringPathSafe } from &quot;@/validators/is-string-path-safe.validator&quot;;
 
 export class UpdateEntryDto {
+  @ApiProperty({ nullable: true, type: String })
   @IsOptional()
   @IsString()
   folder!: string | null;
