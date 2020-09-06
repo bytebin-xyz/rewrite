@@ -806,7 +806,7 @@ export class UsernameTaken extends ConflictException {
 
 export class UserNotFound extends NotFoundException {
   constructor(query: string) {
-    super(&#x60;User &quot;${query}&quot; does not exist!&#x60;);
+    super(&#x60;User &#x27;${query}&#x27; does not exist!&#x60;);
   }
 }
 </code></pre>
