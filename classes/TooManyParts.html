@@ -771,45 +771,102 @@
 
 
 
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier">Static</span> message</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="modifier-icon fa fa-export"></span><code>message:     <code>string</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier">Static</span> status</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="modifier-icon fa fa-export"></span><code>status:     <code>any</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { BadRequestException, PayloadTooLargeException, UnsupportedMediaTypeException } from &quot;@nestjs/common&quot;;
+        <pre><code class="hljs javascript">import {
+  BadRequestException,
+  HttpStatus,
+  PayloadTooLargeException,
+  UnsupportedMediaTypeException
+} from &quot;@nestjs/common&quot;;
 
 export class FileTooLarge extends PayloadTooLargeException {
+  static message &#x3D; &#x60;${FileTooLarge.name}: The file you tried to upload is too large!&#x60;;
+  static status &#x3D; HttpStatus.PAYLOAD_TOO_LARGE;
+
   constructor(filename: string) {
-    super(&#x60;File &#x27;${filename}&#x27; is too large!&#x60;);
+    super(&#x60;${FileTooLarge.name}: File &#x27;${filename}&#x27; is too large!&#x60;);
   }
 }
 
 export class NoFilesUploaded extends BadRequestException {
+  static message &#x3D; &#x60;${NoFilesUploaded.name}: No files were uploaded!&#x60;;
+  static status &#x3D; HttpStatus.BAD_REQUEST;
+
   constructor() {
-    super(&quot;No files uploaded!&quot;);
+    super(NoFilesUploaded.message);
   }
 }
 
 export class TooManyFields extends BadRequestException {
+  static message &#x3D; &#x60;${TooManyFields.name}: There were too many fields associated with your form!&#x60;;
+  static status &#x3D; HttpStatus.BAD_REQUEST;
+
   constructor() {
-    super(&quot;Too many fields!&quot;);
+    super(TooManyFields.message);
   }
 }
 
 export class TooManyFiles extends BadRequestException {
+  static message &#x3D; &#x60;${TooManyFiles.name}: The amount of files you attempted to upload exceeded the limit!&#x60;;
+  static status &#x3D; HttpStatus.BAD_REQUEST;
+
   constructor() {
-    super(&quot;Too many files!&quot;);
+    super(TooManyFiles.message);
   }
 }
 
 export class TooManyParts extends BadRequestException {
+  static message &#x3D; &#x60;${TooManyParts.name}: Too many parts!&#x60;;
+  static status &#x3D; HttpStatus.BAD_REQUEST;
+
   constructor() {
-    super(&quot;Too many parts!&quot;);
+    super(TooManyParts.name);
   }
 }
 
 export class UnsupportedContentType extends UnsupportedMediaTypeException {
+  static message &#x3D; &#x60;${TooManyParts.name}: Missing or unsupported content type!&#x60;;
+  static status &#x3D; HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+
   constructor() {
-    super(&quot;Missing or unsupported content type!&quot;)
+    super(UnsupportedContentType.message);
   }
-}</code></pre>
+}
+</code></pre>
     </div>
 </div>
 
