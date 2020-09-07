@@ -114,6 +114,9 @@
                                     <a href="../classes/FileTooLarge.html" >FileTooLarge</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../classes/FileUploadDto.html" >FileUploadDto</a>
+                                </li>
+                                <li class="link">
                                     <a href="../classes/ForgotPasswordDto.html" >ForgotPasswordDto</a>
                                 </li>
                                 <li class="link">
@@ -465,6 +468,9 @@
                                            <a href="../classes/FileTooLarge.html" >FileTooLarge</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../classes/FileUploadDto.html" >FileUploadDto</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../classes/ForgotPasswordDto.html" >ForgotPasswordDto</a>
                                        </li>
                                        <li class="link">
@@ -765,47 +771,101 @@
 
 
 
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier">Static</span> message</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="modifier-icon fa fa-export"></span><code>message:     <code>string</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier">Static</span> status</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="modifier-icon fa fa-export"></span><code>status:     <code>any</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { ConflictException, ForbiddenException, NotFoundException } from &quot;@nestjs/common&quot;;
+        <pre><code class="hljs javascript">import {
+  ConflictException,
+  ForbiddenException,
+  HttpStatus,
+  NotFoundException
+} from &quot;@nestjs/common&quot;;
 
 export class EntryAlreadyExists extends ConflictException {
+  static message &#x3D; &#x60;${EntryAlreadyExists.name}: There is already an entry with this name at the current path!&#x60;;
+  static status &#x3D; HttpStatus.CONFLICT;
+
   constructor(name: string, path?: string) {
-    if (path) {
-      super(&#x60;Entry &#x27;${name}&#x27; already exists at &#x27;${path}&#x27;!&#x60;);
-    } else {
-      super(&#x60;Entry &#x27;${name}&#x27; already exists!&#x60;);
-    }
+    path
+      ? super(&#x60;${EntryAlreadyExists.name}: Entry &#x27;${name}&#x27; already exists at &#x27;${path}&#x27;!&#x60;)
+      : super(&#x60;${EntryAlreadyExists.name}: Entry &#x27;${name}&#x27; already exists!&#x60;);
   }
 }
 
 export class EntryNotDeletable extends ForbiddenException {
+  static message &#x3D; &#x60;${EntryNotDeletable.name}: This entry cannot be deleted!&#x60;;
+  static status &#x3D; HttpStatus.FORBIDDEN;
+
   constructor() {
-    super(&quot;This entry cannot be deleted!&quot;);
+    super(EntryNotDeletable.message);
   }
 }
 
 export class EntryNotFound extends NotFoundException {
+  static message &#x3D; &#x60;${EntryNotFound.name}: The entry you are looking for does not exist!&#x60;;
+  static status &#x3D; HttpStatus.NOT_FOUND;
+
   constructor() {
-    super(&quot;Entry does not exist!&quot;);
+    super(EntryNotFound.message);
   }
 }
 
 export class ParentFolderNotFound extends NotFoundException {
+  static message &#x3D; &#x60;${ParentFolderNotFound.name}: The parent folder does not exist!&#x60;;
+  static status &#x3D; HttpStatus.NOT_FOUND;
+
   constructor() {
-    super(&quot;Parent folder does not exist!&quot;);
+    super(ParentFolderNotFound.message);
   }
 }
 
 export class ParentIsChildrenOfItself extends ForbiddenException {
+  static message &#x3D; &#x60;${ParentIsChildrenOfItself.name}: The parent of an entry cannot be a children of itself!&#x60;;
+  static status &#x3D; HttpStatus.FORBIDDEN;
+
   constructor() {
-    super(&quot;The parent of an entry cannot be a children of itself!&quot;);
+    super(ParentIsChildrenOfItself.message);
   }
 }
 
 export class ParentIsItself extends ForbiddenException {
+  static message &#x3D; &#x60;${ParentIsItself.name}: The parent of an entry cannot be itself!&#x60;;
+  static status &#x3D; HttpStatus.FORBIDDEN;
+
   constructor() {
-    super(&quot;The parent of an entry cannot be itself!&quot;);
+    super(ParentIsItself.message);
   }
 }
 </code></pre>
