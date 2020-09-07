@@ -833,9 +833,11 @@
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
         <pre><code class="hljs javascript">import { ApiHideProperty, ApiProperty } from &quot;@nestjs/swagger&quot;;
+
 import { Exclude } from &quot;class-transformer&quot;;
 
 export class UserDto {
+  @ApiHideProperty()
   @Exclude()
   activated!: boolean;
 

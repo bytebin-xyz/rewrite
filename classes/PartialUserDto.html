@@ -758,12 +758,12 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b> email</b>
+                                    <b> admin</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>email:     <code>boolean</code>
+                                    <code>admin:     <code>boolean</code>
             </bcode>
                                 </td>
                             </tr>
@@ -773,12 +773,27 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b> string</b>
+                                    <b> avatar</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>string:     <code>any</code>
+                                    <code>avatar:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> boolean</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>boolean:     <code>any</code>
             </bcode>
                                 </td>
                             </tr>
@@ -787,13 +802,21 @@
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Exclude } from &quot;class-transformer&quot;;
+        <pre><code class="hljs javascript">import { ApiProperty } from &quot;@nestjs/swagger&quot;;
 
-import { UserDto } from &quot;./user.dto&quot;;
+export class PartialUserDto {
+  admin!: boolean;
 
-export class PartialUserDto extends UserDto {
-  @Exclude()
-  email!: string;
+  @ApiProperty({ nullable: true, type: String })
+  avatar!: string | null;
+
+  createdAt!: Date;
+
+  displayName!: string;
+
+  id!: string;
+
+  username!: string;
 }
 </code></pre>
     </div>
