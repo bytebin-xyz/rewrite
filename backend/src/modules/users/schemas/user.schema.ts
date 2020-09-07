@@ -119,18 +119,18 @@ export class User extends Document implements UserDto {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.pre<User>("save", function(next) {
+UserSchema.pre<User>("save", function (next) {
   if (!this.isNew) return next();
 
   generateId(8)
-    .then(id => {
+    .then((id) => {
       this.id = id;
       next();
     })
-    .catch(error => next(error));
+    .catch((error) => next(error));
 });
 
-UserSchema.pre<User>("save", function(next) {
+UserSchema.pre<User>("save", function (next) {
   // Password can be null if user is deleted
   if (!this.password || !this.isModified("password")) return next();
 
@@ -142,7 +142,7 @@ UserSchema.pre<User>("save", function(next) {
   });
 });
 
-UserSchema.methods.comparePassword = function(this: User, password: string): Promise<boolean> {
+UserSchema.methods.comparePassword = function (this: User, password: string): Promise<boolean> {
   return bcrypt.compare(password, this.password);
 };
 
@@ -150,7 +150,7 @@ UserSchema.methods.comparePassword = function(this: User, password: string): Pro
  ** Don't actually delete the user document to prevent recycling display names + usernames
  ** Overwrite type safety of *this* to set email and password to null
  */
-UserSchema.methods.delete = async function(this: any): Promise<User> {
+UserSchema.methods.delete = async function (this: any): Promise<User> {
   this.activated = false;
   this.avatar = null;
   this.deleted = true;
@@ -160,7 +160,7 @@ UserSchema.methods.delete = async function(this: any): Promise<User> {
   return this.save({ validateBeforeSave: false });
 };
 
-UserSchema.methods.toDto = function<T = UserDto>(this: User, cls?: ClassType<T>): T | UserDto {
+UserSchema.methods.toDto = function <T = UserDto>(this: User, cls?: ClassType<T>): T | UserDto {
   const json = this.toJSON();
   const options: ClassTransformOptions = {
     excludePrefixes: ["_"]

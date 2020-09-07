@@ -97,7 +97,7 @@ export class UsersController {
   }
 
   @Get("search/@:username")
-  async search(@Param("username") username: string): Promise<UserDto> {
+  async search(@Param("username") username: string): Promise<PartialUserDto> {
     const user = await this.users.findOne({ username });
     if (!user) throw new UserNotFound(username);
 

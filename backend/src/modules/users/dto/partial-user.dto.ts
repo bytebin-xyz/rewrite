@@ -1,8 +1,16 @@
-import { Exclude } from "class-transformer";
+import { ApiProperty } from "@nestjs/swagger";
 
-import { UserDto } from "./user.dto";
+export class PartialUserDto {
+  admin!: boolean;
 
-export class PartialUserDto extends UserDto {
-  @Exclude()
-  email!: string;
+  @ApiProperty({ nullable: true, type: String })
+  avatar!: string | null;
+
+  createdAt!: Date;
+
+  displayName!: string;
+
+  id!: string;
+
+  username!: string;
 }

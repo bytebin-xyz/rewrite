@@ -1,7 +1,9 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
+
 import { Exclude } from "class-transformer";
 
 export class UserDto {
+  @ApiHideProperty()
   @Exclude()
   activated!: boolean;
 
