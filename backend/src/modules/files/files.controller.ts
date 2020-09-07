@@ -1,4 +1,4 @@
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import {
   Body,
@@ -23,11 +23,20 @@ import { ConfigService } from "@nestjs/config";
 
 import { Request, Response } from "express";
 
-import { EntryNotFound, ParentFolderNotFound } from "./files.errors";
+import {
+  EntryAlreadyExists,
+  EntryNotDeletable,
+  EntryNotFound,
+  ParentFolderNotFound,
+  ParentIsChildrenOfItself,
+  ParentIsItself
+} from "./files.errors";
+
 import { FilesService } from "./files.service";
 
 import { CreateFolderEntryDto } from "./dto/create-folder-entry.dto";
 import { EntryDto } from "./dto/entry.dto";
+import { FileUploadDto } from "./dto/file-upload.dto";
 import { UpdateEntryDto } from "./dto/update-entry.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
@@ -39,6 +48,15 @@ import { PaginationDto } from "@/dto/pagination.dto";
 import { AuthGuard } from "@/guards/auth.guard";
 
 import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
+
+import {
+  FileTooLarge,
+  NoFilesUploaded,
+  TooManyFields,
+  TooManyFiles,
+  TooManyParts,
+  UnsupportedContentType
+} from "@/modules/storage/storage.errors";
 
 import { StorageService } from "@/modules/storage/storage.service";
 
@@ -54,6 +72,8 @@ export class FilesController {
   ) {}
 
   @Delete("/:id/delete")
+  @ApiResponse({ description: EntryNotDeletable.message, status: EntryNotDeletable.status })
+  @ApiResponse({ description: EntryNotFound.message, status: EntryNotFound.status })
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
     const deleted = await this.files.deleteOne({ id, uid });
@@ -62,6 +82,7 @@ export class FilesController {
   }
 
   @Get("/:id/details")
+  @ApiResponse({ description: EntryNotFound.message, status: EntryNotFound.status })
   @UseScopes(ApplicationScopes.FILES_READ)
   async findOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
     const entry = await this.files.findOne({ id, uid });
@@ -71,6 +92,7 @@ export class FilesController {
   }
 
   @Get("/:id/download")
+  @ApiResponse({ description: EntryNotFound.message, status: EntryNotFound.status })
   @OptionalAuth()
   @UseScopes(ApplicationScopes.FILES_READ)
   async download(
@@ -94,6 +116,11 @@ export class FilesController {
   }
 
   @Patch("/:id/update")
+  @ApiResponse({ description: EntryAlreadyExists.message, status: EntryAlreadyExists.status })
+  @ApiResponse({ description: EntryNotFound.message, status: EntryNotFound.status })
+  @ApiResponse({ description: ParentFolderNotFound.message, status: ParentFolderNotFound.status })
+  @ApiResponse({ description: ParentIsChildrenOfItself.message, status: ParentIsChildrenOfItself.status }) // prettier-ignore
+  @ApiResponse({ description: ParentIsItself.message, status: ParentIsItself.status })
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async updateOne(
     @Body() dto: UpdateEntryDto,
@@ -109,6 +136,8 @@ export class FilesController {
   }
 
   @Post("create-folder")
+  @ApiResponse({ description: EntryAlreadyExists.message, status: EntryAlreadyExists.status })
+  @ApiResponse({ description: ParentFolderNotFound.message, status: ParentFolderNotFound.status })
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async createFolder(
     @Body() dto: CreateFolderEntryDto,
@@ -146,6 +175,9 @@ export class FilesController {
   }
 
   @Post("upload")
+  @ApiBody({ type: FileUploadDto })
+  @ApiConsumes("multipart/form-data")
+  @ApiResponse({ description: ParentFolderNotFound.message, status: ParentFolderNotFound.status })
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async upload(
     @CurrentUser("id") uid: string,
