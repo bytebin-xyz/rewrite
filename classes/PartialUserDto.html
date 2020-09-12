@@ -811,17 +811,36 @@
         <pre><code class="hljs javascript">import { ApiProperty } from &quot;@nestjs/swagger&quot;;
 
 export class PartialUserDto {
+  @ApiProperty({
+    description: &quot;Flag that indicates whether this user is an admin or not.&quot;,
+    example: false
+  })
   admin!: boolean;
 
-  @ApiProperty({ nullable: true, type: String })
+  @ApiProperty({
+    description:
+      &quot;The file ID that points to the user&#x27;s avatar. If the user has no avatar, null will be returned.&quot;,
+    nullable: true,
+    type: String
+  })
   avatar!: string | null;
 
+  @ApiProperty({
+    description: &quot;The time of which this user created their account.&quot;,
+    example: new Date()
+  })
   createdAt!: Date;
 
+  @ApiProperty({ description: &quot;The user&#x27;s display name. This can differ from their username.&quot; })
   displayName!: string;
 
+  @ApiProperty({ description: &quot;A unique identifier for this user.&quot; })
   id!: string;
 
+  @ApiProperty({
+    description:
+      &quot;The username for this user. The username is always lowercase and cannot be changed.&quot;
+  })
   username!: string;
 }
 </code></pre>
