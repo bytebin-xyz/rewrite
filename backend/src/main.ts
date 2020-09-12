@@ -43,8 +43,6 @@ const logger = WinstonModule.createLogger({
 
 const MongoStore = connectMongo(session);
 
-const sessionCookieName = "sid.the.science.kid";
-
 (async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger });
   const config = app.get<ConfigService>(ConfigService);
@@ -58,7 +56,6 @@ const sessionCookieName = "sid.the.science.kid";
       .setTitle("Bytebin")
       .setVersion("1.0")
       .addApiKey({ name: "Authorization", type: "apiKey" })
-      .addCookieAuth(sessionCookieName)
       .build()
   );
 
@@ -69,13 +66,16 @@ const sessionCookieName = "sid.the.science.kid";
     origin: `${isDev ? "http" : "https"}://${config.get("FRONTEND_DOMAIN")}`
   });
 
-  app.useGlobalFilters(new InternalServerErrorExceptionFilter(logger)).useGlobalPipes(
-    new ValidationPipe({
-      forbidUnknownValues: true,
-      transform: true,
-      whitelist: true
-    })
-  );
+  // prettier-ignore
+  app
+    .useGlobalFilters(new InternalServerErrorExceptionFilter(logger))
+    .useGlobalPipes(
+      new ValidationPipe({
+        forbidUnknownValues: true,
+        transform: true,
+        whitelist: true
+      })
+    );
 
   app
     .use(
@@ -92,7 +92,7 @@ const sessionCookieName = "sid.the.science.kid";
           maxAge: ms("14d"),
           secure: process.env.NODE_ENV === "production"
         },
-        name: sessionCookieName,
+        name: "sid.the.science.kid",
         resave: false,
         saveUninitialized: false,
         secret: config.get("SESSION_SECRET") as string,
