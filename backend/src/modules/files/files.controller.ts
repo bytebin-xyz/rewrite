@@ -1,4 +1,4 @@
-import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiResponse, ApiTags, refs } from "@nestjs/swagger";
 
 import {
   Body,
@@ -6,6 +6,7 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  HttpStatus,
   InternalServerErrorException,
   Logger,
   Param,
@@ -177,7 +178,15 @@ export class FilesController {
   @Post("upload")
   @ApiBody({ type: FileUploadDto })
   @ApiConsumes("multipart/form-data")
+  @ApiResponse({ description: FileTooLarge.message, status: FileTooLarge.status })
+  @ApiResponse({
+    description: [NoFilesUploaded, TooManyFields, TooManyFiles, TooManyParts]
+      .map((error) => error.message)
+      .join("<br>".repeat(2)),
+    status: HttpStatus.BAD_REQUEST
+  })
   @ApiResponse({ description: ParentFolderNotFound.message, status: ParentFolderNotFound.status })
+  @ApiResponse({ description: UnsupportedContentType.message, status: UnsupportedContentType.status }) // prettier-ignore
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async upload(
     @CurrentUser("id") uid: string,

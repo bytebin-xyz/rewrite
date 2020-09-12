@@ -51,7 +51,7 @@ export class TooManyParts extends BadRequestException {
 }
 
 export class UnsupportedContentType extends UnsupportedMediaTypeException {
-  static message = `${TooManyParts.name}: Missing or unsupported content type!`;
+  static message = `${UnsupportedContentType.name}: Missing or unsupported content type!`;
   static status = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
   constructor() {
