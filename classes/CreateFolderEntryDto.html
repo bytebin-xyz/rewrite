@@ -785,17 +785,24 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from &quot;cla
 import { IsStringPathSafe } from &quot;@/validators/is-string-path-safe.validator&quot;;
 
 export class CreateFolderEntryDto {
-  @ApiProperty({ nullable: true, type: String })
+  @ApiProperty({
+    description:
+      &quot;The ID of the parent folder. To create the entry in the root folder, set the value to null.&quot;,
+    nullable: true,
+    type: String
+  })
   @IsOptional()
   @IsString()
   folder!: string | null;
 
+  @ApiProperty({ description: &quot;The name of this entry.&quot; })
   @IsNotEmpty({ message: &quot;Folder name cannot be empty!&quot; })
   @IsString()
   @IsStringPathSafe()
   @MaxLength(255, { message: &quot;Folder name cannot be greater than $constraint1 characters!&quot; })
   name!: string;
 
+  @ApiProperty({ description: &quot;Flag that indicates whether this entry should be public or not.&quot; })
   @IsBoolean()
   public!: boolean;
 }

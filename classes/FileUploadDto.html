@@ -781,7 +781,7 @@
         <pre><code class="hljs javascript">import { ApiProperty } from &quot;@nestjs/swagger&quot;;
 
 export class FileUploadDto {
-  @ApiProperty({ type: &quot;string&quot;, format: &quot;binary&quot; })
+  @ApiProperty({ format: &quot;binary&quot;, type: &quot;string&quot; })
   file: any;
 }
 </code></pre>

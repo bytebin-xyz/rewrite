@@ -873,37 +873,82 @@
 import { Exclude } from &quot;class-transformer&quot;;
 
 export class EntryDto {
+  @ApiProperty({
+    description: &quot;The time of which this entry was created.&quot;,
+    example: new Date()
+  })
   createdAt!: Date;
 
+  @ApiProperty({ description: &quot;Flag that indicates whether this entry can be deleted.&quot; })
   deletable!: boolean;
 
+  @ApiProperty({
+    description:
+      &quot;The depth of where this entry located in the user&#x27;s filesystem. It will always return an integer greater than 0.&quot;,
+    example: 1,
+    minimum: 1
+  })
   depth!: number;
 
-  @ApiProperty({ nullable: true, type: String })
+  @ApiProperty({
+    description:
+      &quot;The ID of the parent folder. If the parent is the root folder, then null will be returned.&quot;,
+    nullable: true,
+    type: String
+  })
   folder!: string | null;
 
   @ApiHideProperty()
   @Exclude()
   hidden!: boolean;
 
+  @ApiProperty({ description: &quot;A unique identifier for this entry.&quot; })
   id!: string;
 
+  @ApiProperty({
+    description: &quot;Flag that indicates whether this entry is a file.&quot;,
+    example: false
+  })
   isFile!: boolean;
 
+  @ApiProperty({
+    description: &quot;Flag that indicates whether this entry is a folder.&quot;,
+    example: true
+  })
   isFolder!: boolean;
 
+  @ApiProperty({ description: &quot;The name of this entry.&quot; })
   name!: string;
 
+  @ApiProperty({
+    description:
+      &quot;The path to this entry in the user&#x27;s filesystem. It will always start with a forward slash.&quot;,
+    example: &quot;/hello&quot;
+  })
   path!: string;
 
+  @ApiProperty({ description: &quot;Flag that indicates whether this entry is public or not.&quot; })
   public!: boolean;
 
+  @ApiProperty({
+    description:
+      &quot;The size of this entry in bytes. If the entry is a folder, the size will always be 0.&quot;
+  })
   size!: number;
 
+  @ApiProperty({
+    description: &quot;The UNIX timestamp of when this entry was last modified.&quot;,
+    example: Date.now()
+  })
   timestamp!: number;
 
+  @ApiProperty({ description: &quot;The ID of the user that created this entry.&quot; })
   uid!: string;
 
+  @ApiProperty({
+    description: &quot;The time of which this entry was last modified.&quot;,
+    example: new Date()
+  })
   updatedAt!: Date;
 }
 </code></pre>
