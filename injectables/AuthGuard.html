@@ -962,7 +962,11 @@ export class AuthGuard implements CanActivate {
   }
 
   private async _handleSession(req: IRequest) {
-    if (!req.session) throw new InternalServerErrorException(&quot;Failed to get session data!&quot;);
+    if (!req.session) {
+      throw new InternalServerErrorException(
+        &#x60;Failed to get session data! req.session was: ${req.session}&#x60;
+      );
+    }
 
     const user &#x3D; req.session.uid ? await this.users.findOne({ id: req.session.uid }) : null;
 
