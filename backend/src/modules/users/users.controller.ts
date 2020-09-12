@@ -43,12 +43,6 @@ export class UsersController {
   }
 
   @ApiExcludeEndpoint()
-  @Patch("@me")
-  updateOne(@Body() dto: UpdateUserDto, @CurrentUser() me: User): Promise<UserDto> {
-    return this.users.updateOne(me, dto).then((user) => user.toDto());
-  }
-
-  @ApiExcludeEndpoint()
   @Post("@me/avatar")
   async updateAvatar(@CurrentUser() me: User, @Req() req: Request): Promise<UserDto> {
     const [avatar] = await this.storage.write(req, {
@@ -88,6 +82,12 @@ export class UsersController {
   @Post("@me/delete")
   deleteOne(@Body() { password }: DeleteUserDto, @CurrentUser() me: User): Promise<UserDto> {
     return this.users.deleteOne(me, password);
+  }
+
+  @ApiExcludeEndpoint()
+  @Patch("@me/update")
+  updateOne(@Body() dto: UpdateUserDto, @CurrentUser() me: User): Promise<UserDto> {
+    return this.users.updateOne(me, dto).then((user) => user.toDto());
   }
 
   @ApiExcludeEndpoint()
