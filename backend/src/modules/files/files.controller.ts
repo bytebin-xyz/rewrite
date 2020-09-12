@@ -184,10 +184,10 @@ export class FilesController {
   @Post("upload")
   @ApiBody({ type: FileUploadDto })
   @ApiConsumes("multipart/form-data")
-  @ApiResponse({ description: FileTooLarge.message, status: FileTooLarge.status })
+  @ApiResponse({ description: FileTooLarge.description, status: FileTooLarge.status })
   @ApiResponse({
     description: [NoFilesUploaded, TooManyFields, TooManyFiles, TooManyParts]
-      .map((error) => error.message)
+      .map((error) => error.description)
       .join("<br>".repeat(2)),
     status: HttpStatus.BAD_REQUEST
   })
@@ -195,7 +195,7 @@ export class FilesController {
     description: ParentFolderNotFound.description,
     status: ParentFolderNotFound.status
   })
-  @ApiResponse({ description: UnsupportedContentType.message, status: UnsupportedContentType.status }) // prettier-ignore
+  @ApiResponse({ description: UnsupportedContentType.description, status: UnsupportedContentType.status }) // prettier-ignore
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async upload(
     @CurrentUser("id") uid: string,
