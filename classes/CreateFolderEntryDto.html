@@ -787,7 +787,7 @@ import { IsStringPathSafe } from &quot;@/validators/is-string-path-safe.validato
 export class CreateFolderEntryDto {
   @ApiProperty({
     description:
-      &quot;The ID of the parent folder. To create the entry in the root folder, set the value to null.&quot;,
+      &quot;The ID of the parent folder. You can set the value as null to create it in the root folder.&quot;,
     nullable: true,
     type: String
   })
@@ -795,14 +795,14 @@ export class CreateFolderEntryDto {
   @IsString()
   folder!: string | null;
 
-  @ApiProperty({ description: &quot;The name of this entry.&quot; })
+  @ApiProperty({ description: &quot;The name of this folder.&quot; })
   @IsNotEmpty({ message: &quot;Folder name cannot be empty!&quot; })
   @IsString()
   @IsStringPathSafe()
   @MaxLength(255, { message: &quot;Folder name cannot be greater than $constraint1 characters!&quot; })
   name!: string;
 
-  @ApiProperty({ description: &quot;Flag that indicates whether this entry should be public or not.&quot; })
+  @ApiProperty({ description: &quot;Flag that indicates whether this folder should be public or not.&quot; })
   @IsBoolean()
   public!: boolean;
 }
