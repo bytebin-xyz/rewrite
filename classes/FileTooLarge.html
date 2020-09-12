@@ -777,6 +777,21 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b><span class="modifier">Static</span> description</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="modifier-icon fa fa-export"></span><code>description:     <code>string</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b><span class="modifier">Static</span> message</b>
                                 </td>
                             </tr>
@@ -786,6 +801,11 @@
             </bcode>
                                 </td>
                             </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>The file(s) you tried to upload is too large!</code>
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -814,56 +834,80 @@
 } from &quot;@nestjs/common&quot;;
 
 export class FileTooLarge extends PayloadTooLargeException {
-  static message &#x3D; &#x60;${FileTooLarge.name}: The file you tried to upload is too large!&#x60;;
+  static message &#x3D; &quot;The file(s) you tried to upload is too large!&quot;;
   static status &#x3D; HttpStatus.PAYLOAD_TOO_LARGE;
 
   constructor(filename: string) {
     super(&#x60;${FileTooLarge.name}: File &#x27;${filename}&#x27; is too large!&#x60;);
   }
+
+  static get description(): string {
+    return &#x60;${FileTooLarge.name}: ${FileTooLarge.message}&#x60;;
+  }
 }
 
 export class NoFilesUploaded extends BadRequestException {
-  static message &#x3D; &#x60;${NoFilesUploaded.name}: No files were uploaded!&#x60;;
+  static message &#x3D; &quot;You did not include any files to upload!&quot;;
   static status &#x3D; HttpStatus.BAD_REQUEST;
 
   constructor() {
     super(NoFilesUploaded.message);
   }
+
+  static get description(): string {
+    return &#x60;${NoFilesUploaded.name}: ${NoFilesUploaded.message}&#x60;;
+  }
 }
 
 export class TooManyFields extends BadRequestException {
-  static message &#x3D; &#x60;${TooManyFields.name}: There were too many fields associated with your form!&#x60;;
+  static message &#x3D; &quot;You have exceeded the maximum amont of fields per request!&quot;;
   static status &#x3D; HttpStatus.BAD_REQUEST;
 
   constructor() {
     super(TooManyFields.message);
   }
+
+  static get description(): string {
+    return &#x60;${TooManyFields.name}: ${TooManyFields.message}&#x60;;
+  }
 }
 
 export class TooManyFiles extends BadRequestException {
-  static message &#x3D; &#x60;${TooManyFiles.name}: The amount of files you attempted to upload exceeded the limit!&#x60;;
+  static message &#x3D; &quot;You have exceeded the maximum amount of files you can upload per request!&quot;;
   static status &#x3D; HttpStatus.BAD_REQUEST;
 
   constructor() {
     super(TooManyFiles.message);
   }
+
+  static get description(): string {
+    return &#x60;${TooManyFiles.name}: ${TooManyFiles.message}&#x60;;
+  }
 }
 
 export class TooManyParts extends BadRequestException {
-  static message &#x3D; &#x60;${TooManyParts.name}: Too many parts!&#x60;;
+  static message &#x3D; &quot;You have exceeded the maximum amount of parts per request!&quot;;
   static status &#x3D; HttpStatus.BAD_REQUEST;
 
   constructor() {
     super(TooManyParts.name);
   }
+
+  static get description(): string {
+    return &#x60;${TooManyParts.name}: ${TooManyParts.message}&#x60;;
+  }
 }
 
 export class UnsupportedContentType extends UnsupportedMediaTypeException {
-  static message &#x3D; &#x60;${UnsupportedContentType.name}: Missing or unsupported content type!&#x60;;
+  static message &#x3D; &quot;Missing or unsupported content type!&quot;;
   static status &#x3D; HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
   constructor() {
     super(UnsupportedContentType.message);
+  }
+
+  static get description(): string {
+    return &#x60;${UnsupportedContentType.name}: ${UnsupportedContentType.message}&#x60;;
   }
 }
 </code></pre>
