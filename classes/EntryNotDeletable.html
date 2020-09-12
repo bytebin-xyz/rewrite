@@ -777,6 +777,21 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b><span class="modifier">Static</span> description</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="modifier-icon fa fa-export"></span><code>description:     <code>string</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b><span class="modifier">Static</span> message</b>
                                 </td>
                             </tr>
@@ -786,6 +801,11 @@
             </bcode>
                                 </td>
                             </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>There is already an entry with this name at the current path!</code>
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -814,58 +834,82 @@
 } from &quot;@nestjs/common&quot;;
 
 export class EntryAlreadyExists extends ConflictException {
-  static message &#x3D; &#x60;${EntryAlreadyExists.name}: There is already an entry with this name at the current path!&#x60;;
+  static message &#x3D; &quot;There is already an entry with this name at the current path!&quot;;
   static status &#x3D; HttpStatus.CONFLICT;
 
   constructor(name: string, path?: string) {
     path
-      ? super(&#x60;${EntryAlreadyExists.name}: Entry &#x27;${name}&#x27; already exists at &#x27;${path}&#x27;!&#x60;)
-      : super(&#x60;${EntryAlreadyExists.name}: Entry &#x27;${name}&#x27; already exists!&#x60;);
+      ? super(&#x60;Entry &#x27;${name}&#x27; already exists at &#x27;${path}&#x27;!&#x60;)
+      : super(&#x60;Entry &#x27;${name}&#x27; already exists!&#x60;);
+  }
+
+  static get description(): string {
+    return &#x60;${EntryAlreadyExists.name}: ${EntryAlreadyExists.message}&#x60;;
   }
 }
 
 export class EntryNotDeletable extends ForbiddenException {
-  static message &#x3D; &#x60;${EntryNotDeletable.name}: This entry cannot be deleted!&#x60;;
+  static message &#x3D; &quot;This entry cannot be deleted!&quot;;
   static status &#x3D; HttpStatus.FORBIDDEN;
 
   constructor() {
     super(EntryNotDeletable.message);
   }
+
+  static get description(): string {
+    return &#x60;${EntryNotDeletable.name}: ${EntryNotDeletable.message}&#x60;;
+  }
 }
 
 export class EntryNotFound extends NotFoundException {
-  static message &#x3D; &#x60;${EntryNotFound.name}: The entry you are looking for does not exist!&#x60;;
+  static message &#x3D; &quot;The entry you are looking for does not exist!&quot;;
   static status &#x3D; HttpStatus.NOT_FOUND;
 
   constructor() {
     super(EntryNotFound.message);
   }
+
+  static get description(): string {
+    return &#x60;${EntryNotFound.name}: ${EntryNotFound.message}&#x60;;
+  }
 }
 
 export class ParentFolderNotFound extends NotFoundException {
-  static message &#x3D; &#x60;${ParentFolderNotFound.name}: The parent folder does not exist!&#x60;;
+  static message &#x3D; &quot;The parent folder does not exist!&quot;;
   static status &#x3D; HttpStatus.NOT_FOUND;
 
   constructor() {
     super(ParentFolderNotFound.message);
   }
+
+  static get description(): string {
+    return &#x60;${ParentFolderNotFound.name}: ${ParentFolderNotFound.message}&#x60;;
+  }
 }
 
 export class ParentIsChildrenOfItself extends ForbiddenException {
-  static message &#x3D; &#x60;${ParentIsChildrenOfItself.name}: The parent of an entry cannot be a children of itself!&#x60;;
+  static message &#x3D; &quot;The parent of an entry cannot be a children of itself!&quot;;
   static status &#x3D; HttpStatus.FORBIDDEN;
 
   constructor() {
     super(ParentIsChildrenOfItself.message);
   }
+
+  static get description(): string {
+    return &#x60;${ParentIsChildrenOfItself.name}: ${ParentIsChildrenOfItself.message}&#x60;;
+  }
 }
 
 export class ParentIsItself extends ForbiddenException {
-  static message &#x3D; &#x60;${ParentIsItself.name}: The parent of an entry cannot be itself!&#x60;;
+  static message &#x3D; &quot;The parent of an entry cannot be itself!&quot;;
   static status &#x3D; HttpStatus.FORBIDDEN;
 
   constructor() {
     super(ParentIsItself.message);
+  }
+
+  static get description(): string {
+    return &#x60;${ParentIsItself.name}: ${ParentIsItself.message}&#x60;;
   }
 }
 </code></pre>
