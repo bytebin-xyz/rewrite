@@ -1,6 +1,6 @@
 import path from "path";
 
-import { ApiTags } from "@nestjs/swagger";
+import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { Controller, Get } from "@nestjs/common";
 
 import { ConfigService } from "@nestjs/config";
@@ -16,6 +16,7 @@ import {
   MongooseHealthIndicator
 } from "@nestjs/terminus";
 
+@ApiSecurity("api_key")
 @ApiTags("Health")
 @Controller("health")
 export class HealthController {

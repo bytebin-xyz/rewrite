@@ -1,4 +1,4 @@
-import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
 
 import {
   Body,
@@ -61,6 +61,7 @@ import {
 
 import { StorageService } from "@/modules/storage/storage.service";
 
+@ApiSecurity("api_key")
 @ApiTags("Files")
 @Controller("files")
 @UseGuards(AuthGuard)

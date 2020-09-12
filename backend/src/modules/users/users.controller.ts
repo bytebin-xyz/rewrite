@@ -1,7 +1,7 @@
 import path from "path";
 import sharp from "sharp";
 
-import { ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger";
+import { ApiExcludeEndpoint, ApiBearerAuth, ApiTags, ApiSecurity } from "@nestjs/swagger";
 import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
 
 import { Request } from "express";
@@ -26,6 +26,7 @@ import { ApplicationScopes } from "@/modules/applications/enums/application-scop
 import { FilesService } from "@/modules/files/files.service";
 import { StorageService } from "@/modules/storage/storage.service";
 
+@ApiSecurity("api_key")
 @ApiTags("Users")
 @Controller("users")
 @UseGuards(AuthGuard)
