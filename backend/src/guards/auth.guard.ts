@@ -59,7 +59,7 @@ export class AuthGuard implements CanActivate {
 
     const application = await this.applications.findOne({ id });
 
-    if (!application || !application.compareKey(key, this.config.get("API_SECRET") as string)) {
+    if (!application || !application.compareKey(key, this.config.get("API_KEY_SECRET") as string)) {
       throw new InvalidAPIKey();
     }
 
