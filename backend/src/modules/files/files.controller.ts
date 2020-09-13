@@ -1,4 +1,4 @@
-import { ApiBody, ApiConsumes, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiResponse, ApiQuery, ApiSecurity, ApiTags } from "@nestjs/swagger";
 
 import {
   Body,
@@ -161,6 +161,9 @@ export class FilesController {
   }
 
   @Get("list")
+  @ApiQuery({ name: "cursor", required: false })
+  @ApiQuery({ name: "folder", required: false })
+  @ApiQuery({ name: "limit", required: false })
   @UseScopes(ApplicationScopes.FILES_READ)
   async list(
     @CurrentUser("id") uid: string,
@@ -179,6 +182,8 @@ export class FilesController {
   @Post("upload")
   @ApiBody({ type: FileUploadDto })
   @ApiConsumes("multipart/form-data")
+  @ApiQuery({ name: "folder", required: false })
+  @ApiQuery({ name: "public", required: false })
   @ApiResponse({ description: FileTooLarge.description, status: FileTooLarge.status })
   @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
   @ApiResponse({ description: UnsupportedContentType.description, status: UnsupportedContentType.status }) // prettier-ignore
