@@ -1,7 +1,7 @@
 import path from "path";
 import sharp from "sharp";
 
-import { ApiExcludeEndpoint, ApiTags, ApiSecurity } from "@nestjs/swagger";
+import { ApiExcludeEndpoint, ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
 
 import { Request } from "express";
