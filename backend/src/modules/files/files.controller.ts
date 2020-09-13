@@ -120,10 +120,7 @@ export class FilesController {
   @Patch("/:id/update")
   @ApiResponse({ description: EntryAlreadyExists.description, status: EntryAlreadyExists.status })
   @ApiResponse({ description: EntryNotFound.description, status: EntryNotFound.status })
-  @ApiResponse({
-    description: ParentFolderNotFound.description,
-    status: ParentFolderNotFound.status
-  })
+  @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
   @ApiResponse({ description: ParentIsChildrenOfItself.description, status: ParentIsChildrenOfItself.status }) // prettier-ignore
   @ApiResponse({ description: ParentIsItself.description, status: ParentIsItself.status })
   @UseScopes(ApplicationScopes.FILES_WRITE)
@@ -142,10 +139,7 @@ export class FilesController {
 
   @Post("create-folder")
   @ApiResponse({ description: EntryAlreadyExists.description, status: EntryAlreadyExists.status })
-  @ApiResponse({
-    description: ParentFolderNotFound.description,
-    status: ParentFolderNotFound.status
-  })
+  @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async createFolder(
     @Body() dto: CreateFolderEntryDto,
@@ -186,22 +180,19 @@ export class FilesController {
   @ApiBody({ type: FileUploadDto })
   @ApiConsumes("multipart/form-data")
   @ApiResponse({ description: FileTooLarge.description, status: FileTooLarge.status })
+  @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
+  @ApiResponse({ description: UnsupportedContentType.description, status: UnsupportedContentType.status }) // prettier-ignore
   @ApiResponse({
     description: [NoFilesUploaded, TooManyFields, TooManyFiles, TooManyParts]
       .map((error) => error.description)
       .join("<br>".repeat(2)),
     status: HttpStatus.BAD_REQUEST
   })
-  @ApiResponse({
-    description: ParentFolderNotFound.description,
-    status: ParentFolderNotFound.status
-  })
-  @ApiResponse({ description: UnsupportedContentType.description, status: UnsupportedContentType.status }) // prettier-ignore
   @UseScopes(ApplicationScopes.FILES_WRITE)
   async upload(
     @CurrentUser("id") uid: string,
-    @Query("folder") folder: string | null,
-    @Query("public", ParseBoolPipe) isPublic: boolean,
+    @Query("folder", new DefaultValuePipe(null)) folder: string | null,
+    @Query("public", new DefaultValuePipe(false), ParseBoolPipe) isPublic: boolean,
     @Req() req: Request
   ): Promise<EntryDto[]> {
     if (folder && !(await this.files.exists({ id: folder, uid }))) {
