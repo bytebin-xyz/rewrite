@@ -76,7 +76,7 @@ export class FilesController {
   @Delete("/:id/delete")
   @ApiResponse({ description: EntryNotDeletable.description, status: EntryNotDeletable.status })
   @ApiResponse({ description: EntryNotFound.description, status: EntryNotFound.status })
-  @UseScopes(ApplicationScopes.FILES_WRITE)
+  @UseScopes(ApplicationScopes.FILES_DELETE)
   async deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
     const deleted = await this.files.deleteOne({ id, uid });
 
@@ -96,7 +96,7 @@ export class FilesController {
   @Get("/:id/download")
   @ApiResponse({ description: EntryNotFound.description, status: EntryNotFound.status })
   @OptionalAuth()
-  @UseScopes(ApplicationScopes.FILES_READ)
+  @UseScopes(ApplicationScopes.FILES_DOWNLOAD)
   async download(
     @CurrentUser("id") uid: string | undefined,
     @Param("id") id: string,
@@ -123,7 +123,7 @@ export class FilesController {
   @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
   @ApiResponse({ description: ParentIsChildrenOfItself.description, status: ParentIsChildrenOfItself.status }) // prettier-ignore
   @ApiResponse({ description: ParentIsItself.description, status: ParentIsItself.status })
-  @UseScopes(ApplicationScopes.FILES_WRITE)
+  @UseScopes(ApplicationScopes.FILES_UPDATE)
   async updateOne(
     @Body() dto: UpdateEntryDto,
     @CurrentUser("id") uid: string,
@@ -140,7 +140,7 @@ export class FilesController {
   @Post("create-folder")
   @ApiResponse({ description: EntryAlreadyExists.description, status: EntryAlreadyExists.status })
   @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
-  @UseScopes(ApplicationScopes.FILES_WRITE)
+  @UseScopes(ApplicationScopes.FILES_CREATE)
   async createFolder(
     @Body() dto: CreateFolderEntryDto,
     @CurrentUser("id") uid: string
@@ -188,7 +188,7 @@ export class FilesController {
       .join("<br>".repeat(2)),
     status: HttpStatus.BAD_REQUEST
   })
-  @UseScopes(ApplicationScopes.FILES_WRITE)
+  @UseScopes(ApplicationScopes.FILES_CREATE)
   async upload(
     @CurrentUser("id") uid: string,
     @Query("folder", new DefaultValuePipe(null)) folder: string | null,
