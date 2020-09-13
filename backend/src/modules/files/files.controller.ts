@@ -1,4 +1,4 @@
-import { ApiBody, ApiConsumes, ApiResponse, ApiQuery, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
 
 import {
   Body,
