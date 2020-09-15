@@ -12,7 +12,10 @@ import { Reflector } from "@nestjs/core";
 
 import { IRequest } from "@/interfaces/request.interface";
 
-import { InsufficientScopes, InvalidAPIKey } from "@/modules/applications/applications.errors";
+import {
+  InsufficientScopes,
+  InvalidApplicationKey
+} from "@/modules/applications/applications.errors";
 import { UserNotActivated, UserNotLoggedIn } from "@/modules/auth/auth.errors";
 
 import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
@@ -52,15 +55,18 @@ export class AuthGuard implements CanActivate {
 
   private async _handleAPIKey(req: IRequest, scopes?: ApplicationScopes[]) {
     const key = req.headers.authorization && atob(req.headers.authorization);
-    if (!key) throw new InvalidAPIKey();
+    if (!key) throw new InvalidApplicationKey();
 
     const [id, token] = key.split(".");
-    if (!id || !token) throw new InvalidAPIKey();
+    if (!id || !token) throw new InvalidApplicationKey();
 
     const application = await this.applications.findOne({ id });
 
-    if (!application || !application.compareKey(key, this.config.get("API_KEY_SECRET") as string)) {
-      throw new InvalidAPIKey();
+    if (
+      !application ||
+      !application.compareKey(key, this.config.get("APPLICATION_KEY_SECRET") as string)
+    ) {
+      throw new InvalidApplicationKey();
     }
 
     // Only allow routes that specify scopes to allow the usage of an API key.
@@ -69,7 +75,7 @@ export class AuthGuard implements CanActivate {
     }
 
     const user = await this.users.findOne({ id: application.uid });
-    if (!user) throw new InvalidAPIKey();
+    if (!user) throw new InvalidApplicationKey();
 
     await application.updateOne({ lastUsed: new Date() });
 

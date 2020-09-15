@@ -26,7 +26,7 @@ const MAX_PORT = 65535;
     ConfigModule.forRoot({
       envFilePath: `.env.development`,
       validationSchema: Joi.object({
-        API_KEY_SECRET: Joi.string().required(),
+        APPLICATION_KEY_SECRET: Joi.string().required(),
 
         BACKEND_DOMAIN: Joi.string().required(),
         FRONTEND_DOMAIN: Joi.string().required(),
@@ -34,58 +34,36 @@ const MAX_PORT = 65535;
         MAX_FILE_SIZE: Joi.number()
           .min(1)
           .default(25 * 1024 * 1024),
-        MAX_FILES_PER_UPLOAD: Joi.number()
-          .min(1)
-          .default(5),
+        MAX_FILES_PER_UPLOAD: Joi.number().min(1).default(5),
 
         MONGO_DB_NAME: Joi.string().default("bytebin"),
         MONGO_HOST: Joi.string().default("localhost"),
         MONGO_PASSWORD: Joi.string().allow(""),
-        MONGO_POOL_SIZE: Joi.number()
-          .min(1)
-          .default(5),
-        MONGO_PORT: Joi.number()
-          .min(MIN_PORT)
-          .max(MAX_PORT)
-          .default(27017),
+        MONGO_POOL_SIZE: Joi.number().min(1).default(5),
+        MONGO_PORT: Joi.number().min(MIN_PORT).max(MAX_PORT).default(27017),
         MONGO_USERNAME: Joi.string().allow(""),
 
-        NODE_ENV: Joi.string()
-          .valid("development", "production")
-          .default("development"),
+        NODE_ENV: Joi.string().valid("development", "production").default("development"),
 
-        PORT: Joi.number()
-          .min(MIN_PORT)
-          .max(MAX_PORT)
-          .default(3000),
+        PORT: Joi.number().min(MIN_PORT).max(MAX_PORT).default(3000),
 
         RECAPTCHA_SECRET: Joi.string().required(),
 
         REDIS_HOST: Joi.string().default("localhost"),
-        REDIS_PORT: Joi.number()
-          .min(MIN_PORT)
-          .max(MAX_PORT)
-          .default(6379),
+        REDIS_PORT: Joi.number().min(MIN_PORT).max(MAX_PORT).default(6379),
 
         SESSION_SECRET: Joi.string().required(),
 
         SMTP_FROM: Joi.string().required(),
         SMTP_HOST: Joi.string().required(),
         SMTP_PASSWORD: Joi.string().required(),
-        SMTP_PORT: Joi.number()
-          .min(MIN_PORT)
-          .max(MAX_PORT)
-          .default(465),
+        SMTP_PORT: Joi.number().min(MIN_PORT).max(MAX_PORT).default(465),
         SMTP_SECURE: Joi.boolean().default(true),
         SMTP_TLS: Joi.boolean().default(true),
         SMTP_USERNAME: Joi.string().required(),
 
-        THROTTLE_LIMIT: Joi.number()
-          .min(0)
-          .default(250),
-        THROTTLE_TTL: Joi.number()
-          .min(0)
-          .default(60),
+        THROTTLE_LIMIT: Joi.number().min(0).default(250),
+        THROTTLE_TTL: Joi.number().min(0).default(60),
 
         UPLOADS_DIRECTORY: Joi.string().required()
       })

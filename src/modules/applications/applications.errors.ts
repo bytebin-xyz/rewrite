@@ -22,9 +22,9 @@ export class InsufficientScopes extends ForbiddenException {
   }
 }
 
-export class InvalidAPIKey extends UnauthorizedException {
+export class InvalidApplicationKey extends UnauthorizedException {
   constructor() {
-    super("Invalid API Key!");
+    super("Invalid application key!");
   }
 }
 
