@@ -1,3 +1,5 @@
+import path from "path";
+
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { InjectQueue } from "@nestjs/bull";
@@ -120,16 +122,15 @@ export class FilesService {
     return this.entries.findOne(query, undefined, options).collation(ENTRY_COLLATION_OPTIONS);
   }
 
-  async hasDuplicates(filename: string, query: FilterQuery<Omit<Entry, "name">>): Promise<number> {
-    const parts = filename.split(".");
-    const extension = parts[parts.length - 1];
-    const name = parts.slice(0, parts.length - 1).join(".");
+  async hasDuplicates(entryName: string, query: FilterQuery<Omit<Entry, "name">>): Promise<number> {
+    const { ext, name } = path.parse(entryName);
 
-    // Regex for finding entries with a duplicate index i.e. filename (1..n).ext
-    const regexp = new RegExp(`${name}( \\([0-9]+\\))+\\.${extension}`);
+    const regexp = ext
+      ? new RegExp(`${name}( \\([0-9]+\\))+\\.${ext}`)
+      : new RegExp(`${name}( \\([0-9]+\\))+`);
 
     return this.entries
-      .countDocuments({ $or: [{ name: filename }, { name: regexp }], ...query })
+      .countDocuments({ $or: [{ name }, { name: regexp }], ...query })
       .collation(ENTRY_COLLATION_OPTIONS);
   }
 
@@ -183,15 +184,12 @@ export class FilesService {
     return entry.save();
   }
 
-  private _renameWithIndex(filename: string, index: number): string {
-    if (index <= 0) return filename;
-    if (!filename.includes(".")) return `${filename} (${index})`;
+  private _renameWithIndex(entryName: string, index: number): string {
+    if (index <= 0) return entryName;
 
-    const parts = filename.split(".");
+    const { ext, name } = path.parse(entryName);
 
-    parts[parts.length - 2] += ` (${index})`;
-
-    return parts.join(".").trim();
+    return path.format({ ext, name: `${name} (${index})` });
   }
 
   private _validateParent(entry: Entry, folder?: Entry | null): Entry {
