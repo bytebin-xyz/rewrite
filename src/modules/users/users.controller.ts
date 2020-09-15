@@ -38,7 +38,7 @@ export class UsersController {
   ) {}
 
   @Get("@me")
-  @UseScopes(ApplicationScopes.USERS_READ)
+  @UseScopes(ApplicationScopes.USER_EMAIL, ApplicationScopes.USER_IDENTIFY)
   me(@CurrentUser() me: User): UserDto {
     return me.toDto();
   }
@@ -83,6 +83,12 @@ export class UsersController {
   @Post("@me/delete")
   deleteOne(@Body() { password }: DeleteUserDto, @CurrentUser() me: User): Promise<UserDto> {
     return this.users.deleteOne(me, password);
+  }
+
+  @Get("@me/identity")
+  @UseScopes(ApplicationScopes.USER_IDENTIFY)
+  identify(@CurrentUser() me: User): PartialUserDto {
+    return me.toDto(PartialUserDto);
   }
 
   @ApiExcludeEndpoint()
