@@ -16,10 +16,7 @@ import { btoa } from "@/utils/btoa";
 import { generateId } from "@/utils/generateId";
 
 const HMAC_SHA256 = (data: crypto.BinaryLike, secret: string) =>
-  crypto
-    .createHmac("sha256", secret)
-    .update(data)
-    .digest("hex");
+  crypto.createHmac("sha256", secret).update(data).digest("hex");
 
 @Schema({
   id: false,
@@ -96,18 +93,18 @@ export class Application extends Document implements ApplicationDto {
 
 export const ApplicationSchema = SchemaFactory.createForClass(Application);
 
-ApplicationSchema.pre<Application>("save", function(next) {
+ApplicationSchema.pre<Application>("save", function (next) {
   if (!this.isNew) return next();
 
   generateId(9)
-    .then(id => {
+    .then((id) => {
       this.id = id;
       next();
     })
-    .catch(error => next(error));
+    .catch((error) => next(error));
 });
 
-ApplicationSchema.methods.compareKey = function(
+ApplicationSchema.methods.compareKey = function (
   this: Application,
   key: string,
   secret: string
@@ -117,7 +114,7 @@ ApplicationSchema.methods.compareKey = function(
   return crypto.timingSafeEqual(Buffer.from(HMAC_SHA256(key, secret)), Buffer.from(this.key));
 };
 
-ApplicationSchema.methods.createKey = async function(
+ApplicationSchema.methods.createKey = async function (
   this: Application,
   secret: string
 ): Promise<string> {
@@ -137,14 +134,14 @@ ApplicationSchema.methods.createKey = async function(
   return btoa(key);
 };
 
-ApplicationSchema.methods.hasSufficientScopes = function(
+ApplicationSchema.methods.hasSufficientScopes = function (
   this: Application,
   scopes: ApplicationScopes[]
 ) {
-  return scopes.every(scope => this.scopes.includes(scope));
+  return scopes.every((scope) => this.scopes.includes(scope));
 };
 
-ApplicationSchema.methods.toDto = function(this: Application): ApplicationDto {
+ApplicationSchema.methods.toDto = function (this: Application): ApplicationDto {
   return plainToClass(ApplicationDto, this.toJSON(), {
     excludePrefixes: ["_"]
   });
