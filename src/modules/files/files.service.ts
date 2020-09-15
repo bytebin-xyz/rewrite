@@ -126,11 +126,11 @@ export class FilesService {
     const { ext, name } = path.parse(entryName);
 
     const regexp = ext
-      ? new RegExp(`${name}( \\([0-9]+\\))+\\.${ext}`)
+      ? new RegExp(`${name}( \\([0-9]+\\))+\\${ext}`)
       : new RegExp(`${name}( \\([0-9]+\\))+`);
 
     return this.entries
-      .countDocuments({ $or: [{ name }, { name: regexp }], ...query })
+      .countDocuments({ $or: [{ name: name + ext }, { name: regexp }], ...query })
       .collation(ENTRY_COLLATION_OPTIONS);
   }
 
