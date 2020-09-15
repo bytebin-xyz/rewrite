@@ -5,5 +5,6 @@ export enum ApplicationScopes {
   FILES_READ = "files:read",
   FILES_UPDATE = "files:update",
 
-  USERS_READ = "users:read"
+  USER_EMAIL = "user:email",
+  USER_IDENTIFY = "user:identify"
 }
