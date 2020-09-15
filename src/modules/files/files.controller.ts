@@ -196,11 +196,15 @@ export class FilesController {
   @UseScopes(ApplicationScopes.FILES_CREATE)
   async upload(
     @CurrentUser("id") uid: string,
-    @Query("folder", new DefaultValuePipe(null)) folder: string | null,
+    @Query("folder", new DefaultValuePipe(null)) folderPath: string | null,
     @Query("public", new DefaultValuePipe(false), ParseBoolPipe) isPublic: boolean,
     @Req() req: Request
   ): Promise<EntryDto[]> {
-    if (folder && !(await this.files.exists({ id: folder, uid }))) {
+    const folder = folderPath
+      ? await this.files.findOne({ isFolder: true, path: folderPath, uid })
+      : null;
+
+    if (folder && !(await this.files.exists({ id: folder.id, uid }))) {
       throw new ParentFolderNotFound();
     }
 
@@ -212,23 +216,25 @@ export class FilesController {
       }
     });
 
-    return Promise.all(
-      files.map((file) =>
-        this.files
-          .createEntry({
-            deletable: true,
-            folder,
-            hidden: false,
-            id: file.id,
-            isFile: true,
-            isFolder: false,
-            name: file.filename,
-            public: isPublic,
-            size: file.size,
-            uid
-          })
-          .then((file) => file.toDto())
-      )
-    );
+    const entries = [];
+
+    for (const file of files) {
+      const entry = await this.files.createEntry({
+        deletable: true,
+        folder: folder && folder.id,
+        hidden: false,
+        id: file.id,
+        isFile: true,
+        isFolder: false,
+        name: file.filename,
+        public: isPublic,
+        size: file.size,
+        uid
+      });
+
+      entries.push(entry.toDto());
+    }
+
+    return entries;
   }
 }
