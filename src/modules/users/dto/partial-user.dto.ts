@@ -1,6 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
+
+import { Exclude } from "class-transformer";
 
 export class PartialUserDto {
+  @ApiHideProperty()
+  @Exclude()
+  activated!: boolean;
+
   @ApiProperty({
     description: "Flag that indicates whether this user is an admin or not.",
     example: false
@@ -21,11 +27,31 @@ export class PartialUserDto {
   })
   createdAt!: Date;
 
+  @ApiHideProperty()
+  @Exclude()
+  deleted!: boolean;
+
   @ApiProperty({ description: "The user's display name. This can differ from their username." })
   displayName!: string;
 
+  @ApiHideProperty()
+  @Exclude()
+  email!: string;
+
+  @ApiHideProperty()
+  @Exclude()
+  expiresAt!: Date | null;
+
   @ApiProperty({ description: "A unique identifier for this user." })
   id!: string;
+
+  @ApiHideProperty()
+  @Exclude()
+  password!: string;
+
+  @ApiHideProperty()
+  @Exclude()
+  updatedAt!: Date;
 
   @ApiProperty({
     description:
