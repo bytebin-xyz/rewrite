@@ -85,7 +85,7 @@ export class UsersController {
     return this.users.deleteOne(me, password);
   }
 
-  @Get("@me/identity")
+  @Get("@me/identify")
   @UseScopes(ApplicationScopes.USER_IDENTIFY)
   identify(@CurrentUser() me: User): PartialUserDto {
     return me.toDto(PartialUserDto);
