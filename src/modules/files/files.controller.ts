@@ -204,7 +204,7 @@ export class FilesController {
       ? await this.files.findOne({ isFolder: true, path: folderPath, uid })
       : null;
 
-    if (!folder && folderPath) throw new ParentFolderNotFound();
+    if (folderPath && !folder) throw new ParentFolderNotFound();
 
     const files = await this.storage.write(req, {
       field: "file",

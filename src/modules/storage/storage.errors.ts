@@ -10,7 +10,7 @@ export class FileTooLarge extends PayloadTooLargeException {
   static status = HttpStatus.PAYLOAD_TOO_LARGE;
 
   constructor(filename: string) {
-    super(`${FileTooLarge.name}: File '${filename}' is too large!`);
+    super(`File '${filename}' is too large!`);
   }
 
   static get description(): string {
