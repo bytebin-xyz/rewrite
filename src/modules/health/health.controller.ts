@@ -1,13 +1,10 @@
 import path from "path";
 
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
-import { Controller, Get } from "@nestjs/common";
-
-import { ConfigService } from "@nestjs/config";
+import { Controller, Get, UseGuards } from "@nestjs/common";
 
 import {
   DiskHealthIndicator,
-  DNSHealthIndicator,
   HealthCheck,
   HealthCheckResult,
   HealthCheckService,
@@ -16,21 +13,25 @@ import {
   MongooseHealthIndicator
 } from "@nestjs/terminus";
 
+import { UseScopes } from "@/decorators/use-scopes.decorator";
+
+import { AuthGuard } from "@/guards/auth.guard";
+
 @ApiSecurity("api_key")
 @ApiTags("Health")
 @Controller("health")
+@UseGuards(AuthGuard)
 export class HealthController {
   constructor(
-    private readonly config: ConfigService,
     private readonly db: MongooseHealthIndicator,
     private readonly disk: DiskHealthIndicator,
-    private readonly dns: DNSHealthIndicator,
     private readonly health: HealthCheckService,
     private readonly memory: MemoryHealthIndicator
   ) {}
 
   @Get()
   @HealthCheck()
+  @UseScopes()
   readiness(): Promise<HealthCheckResult> {
     return this.health.check([
       (): Promise<HealthIndicatorResult> => this.db.pingCheck("database", { timeout: 2000 }),
@@ -40,9 +41,6 @@ export class HealthController {
           path: path.parse(__dirname).root,
           thresholdPercent: 0.9
         }),
-
-      (): Promise<HealthIndicatorResult> =>
-        this.dns.pingCheck("web", `http://${this.config.get("FRONTEND_DOMAIN")}` || ""),
 
       (): Promise<HealthIndicatorResult> => this.memory.checkRSS("memory", 200 * 1024 * 1024)
     ]);

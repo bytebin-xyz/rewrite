@@ -17,7 +17,7 @@ import { UserDto } from "./dto/user.dto";
 import { User } from "./schemas/user.schema";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
-import { UseScopes } from "@/decorators/scopes.decorator";
+import { UseScopes } from "@/decorators/use-scopes.decorator";
 
 import { AuthGuard } from "@/guards/auth.guard";
 

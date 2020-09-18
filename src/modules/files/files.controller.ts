@@ -39,10 +39,11 @@ import { CreateFolderEntryDto } from "./dto/create-folder-entry.dto";
 import { EntryDto } from "./dto/entry.dto";
 import { FileUploadDto } from "./dto/file-upload.dto";
 import { UpdateEntryDto } from "./dto/update-entry.dto";
+import { UploadLimitsDto } from "./dto/upload-limits.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
 import { OptionalAuth } from "@/decorators/optional-auth";
-import { UseScopes } from "@/decorators/scopes.decorator";
+import { UseScopes } from "@/decorators/use-scopes.decorator";
 
 import { PaginationDto } from "@/dto/pagination.dto";
 
@@ -158,6 +159,15 @@ export class FilesController {
     });
 
     return folder.toDto();
+  }
+
+  @Get("limits")
+  @UseScopes()
+  limits(): UploadLimitsDto {
+    return {
+      maxFileSize: this.config.get("MAX_FILE_SIZE") as number,
+      maxFilesPerUpload: this.config.get("MAX_FILES_PER_UPLOAD") as number
+    };
   }
 
   @Get("list")

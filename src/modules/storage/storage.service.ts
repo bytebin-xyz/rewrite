@@ -58,7 +58,8 @@ export class StorageService implements OnApplicationBootstrap {
   async write(req: IncomingMessage, options: WriteOptions): Promise<UploadedFile[]> {
     const busboy = this._createBusboy(req, options.limits);
 
-    const files: UploadedFile[] = [];
+    const filesDetected: string[] = [];
+    const filesWritten: UploadedFile[] = [];
 
     const filter = (
       file: IncomingFile,
@@ -74,22 +75,30 @@ export class StorageService implements OnApplicationBootstrap {
     return new Promise((resolve, reject) => {
       const writeCounter = new Counter();
 
-      const abort = (error: Error) => {
+      const abort = (error?: Error) => {
         if (aborting) return;
 
         aborting = true;
 
-        writeCounter.whenItEqualsTo(0, () => {
-          settle(files.map(file => this.delete(file.id)))
-            .then(() => reject(error))
+        if (!error && filesDetected.length) {
+          // If the client cancelled the upload
+          settle(filesDetected.map((id) => this.delete(id)))
+            .then(() => resolve([]))
             .catch(reject);
-        });
+        } else {
+          // There was an error with writing or is a busboy error
+          writeCounter.whenItEqualsTo(0, () => {
+            settle(filesWritten.map((file) => this.delete(file.id)))
+              .then(() => reject(error))
+              .catch(reject);
+          });
+        }
       };
 
       const done = () => {
         if (!aborting && finished && writeCounter.is(0)) {
-          if (!files.length) reject(new NoFilesUploaded());
-          else resolve(files);
+          if (!filesWritten.length) reject(new NoFilesUploaded());
+          else resolve(filesWritten);
         }
       };
 
@@ -117,6 +126,7 @@ export class StorageService implements OnApplicationBootstrap {
             }
           }
 
+          filesDetected.push(id);
           pipeline.push(writable);
 
           readable.on("limit", () => abort(new FileTooLarge(filename)));
@@ -124,7 +134,7 @@ export class StorageService implements OnApplicationBootstrap {
           pump(pipeline, (err?: Error) => {
             if (err) abort(err);
 
-            files.push({ ...metadata, id, size: meter.size });
+            filesWritten.push({ ...metadata, id, size: meter.size });
 
             writeCounter.decrement();
 
@@ -142,6 +152,11 @@ export class StorageService implements OnApplicationBootstrap {
           finished = true;
           done();
         });
+
+      req.on("aborted", () => {
+        busboy.end(); // release the files so that they will be deleted from filesystem
+        abort();
+      });
 
       req.pipe(busboy);
     });

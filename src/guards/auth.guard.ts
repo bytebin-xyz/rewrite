@@ -16,6 +16,7 @@ import {
   InsufficientScopes,
   InvalidApplicationKey
 } from "@/modules/applications/applications.errors";
+
 import { UserNotActivated, UserNotLoggedIn } from "@/modules/auth/auth.errors";
 
 import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
@@ -69,8 +70,8 @@ export class AuthGuard implements CanActivate {
       throw new InvalidApplicationKey();
     }
 
-    // Only allow routes that specify scopes to allow the usage of an API key.
-    if (!scopes || !scopes.length || !application.hasSufficientScopes(scopes)) {
+    // Only allow routes that has UseScopes() to allow the usage of an application key
+    if (!scopes || !application.hasSufficientScopes(scopes)) {
       throw new InsufficientScopes();
     }
 
