@@ -80,7 +80,7 @@ export class StorageService implements OnApplicationBootstrap {
 
         aborting = true;
 
-        if (!error && filesDetected.length) {
+        if (!error) {
           // If the client cancelled the upload
           settle(filesDetected.map((id) => this.delete(id)))
             .then(() => resolve([]))
