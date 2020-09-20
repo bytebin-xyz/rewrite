@@ -1,4 +1,4 @@
-import { UI as BullUI } from "bull-board";
+import { UI } from "bull-board";
 
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 
@@ -15,7 +15,7 @@ import { AdminMiddleware } from "@/middlewares/admin.middleware";
 export class AdminModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer
-      .apply(AdminMiddleware, BullUI)
+      .apply(AdminMiddleware, UI)
       .forRoutes({ method: RequestMethod.ALL, path: "/admin/queues" });
   }
 }

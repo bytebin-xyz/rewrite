@@ -1,6 +1,7 @@
-import ejs from "ejs";
-import fs from "fs";
-import mjml2html from "mjml";
+import * as ejs from "ejs";
+import * as fs from "fs";
+
+import mjml2html = require("mjml");
 
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
@@ -27,7 +28,7 @@ export class MailerService {
   }
 
   async render(template: fs.PathLike, data: Record<string, unknown>): Promise<string> {
-    const mjml = await fs.promises.readFile(template).then(buffer => buffer.toString());
+    const mjml = await fs.promises.readFile(template).then((buffer) => buffer.toString());
     return ejs.render(this.transpileMJML(mjml), data, { async: true });
   }
 

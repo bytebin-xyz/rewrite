@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import * as nodemailer from "nodemailer";
 
 import { Inject, Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { Process, Processor } from "@nestjs/bull";

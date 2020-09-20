@@ -1,4 +1,4 @@
-import path from "path";
+import * as path from "path";
 
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";

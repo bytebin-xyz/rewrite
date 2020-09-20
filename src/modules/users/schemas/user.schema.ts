@@ -1,5 +1,6 @@
-import bcrypt from "bcrypt";
-import ms from "ms";
+import * as bcrypt from "bcrypt";
+
+import ms = require("ms");
 
 import { ClassTransformOptions, plainToClass } from "class-transformer";
 import { ClassType } from "class-transformer/ClassTransformer";

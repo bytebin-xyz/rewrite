@@ -1,4 +1,4 @@
-import ms from "ms";
+import ms = require("ms");
 
 import { Document } from "mongoose";
 
@@ -40,13 +40,13 @@ export class PasswordReset extends Document {
 
 export const PasswordResetSchema = SchemaFactory.createForClass(PasswordReset);
 
-PasswordResetSchema.pre<PasswordReset>("save", function(next) {
+PasswordResetSchema.pre<PasswordReset>("save", function (next) {
   if (!this.isNew) return next();
 
   generateId(32)
-    .then(token => {
+    .then((token) => {
       this.token = token;
       next();
     })
-    .catch(error => next(error));
+    .catch((error) => next(error));
 });

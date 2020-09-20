@@ -1,4 +1,4 @@
-import ms from "ms";
+import ms = require("ms");
 
 import { isEmail } from "class-validator";
 
@@ -50,13 +50,13 @@ export class EmailConfirmation extends Document {
 
 export const EmailConfirmationSchema = SchemaFactory.createForClass(EmailConfirmation);
 
-EmailConfirmationSchema.pre<EmailConfirmation>("save", function(next) {
+EmailConfirmationSchema.pre<EmailConfirmation>("save", function (next) {
   if (!this.isNew) return next();
 
   generateId(32)
-    .then(token => {
+    .then((token) => {
       this.token = token;
       next();
     })
-    .catch(error => next(error));
+    .catch((error) => next(error));
 });

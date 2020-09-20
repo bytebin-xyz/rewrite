@@ -1,6 +1,6 @@
-import { ISessionData } from "../../sessions/interfaces/session-data.interface";
-
 import { SendMailOptions } from "@/modules/mailer/interfaces/send-mail-options.interface";
+
+import { ISessionData } from "@/modules/sessions/interfaces/session-data.interface";
 
 export const successfulLogin = (
   to: string,

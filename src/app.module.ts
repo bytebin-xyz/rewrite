@@ -1,4 +1,4 @@
-import Joi from "@hapi/joi";
+import * as Joi from "@hapi/joi";
 
 import { APP_GUARD } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";

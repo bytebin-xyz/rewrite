@@ -1,9 +1,10 @@
-import connectMongo from "connect-mongo";
-import helmet from "helmet";
-import morgan from "morgan";
-import ms from "ms";
-import session from "express-session";
-import winston from "winston";
+import * as connectMongo from "connect-mongo";
+import * as helmet from "helmet";
+import * as morgan from "morgan";
+import * as session from "express-session";
+import * as winston from "winston";
+
+import ms = require("ms");
 
 import "winston-daily-rotate-file";
 

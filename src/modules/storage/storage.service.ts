@@ -1,7 +1,7 @@
-import os from "os";
-import pump from "pump";
+import * as os from "os";
+import * as pump from "pump";
 
-import Busboy from "busboy";
+import * as Busboy from "busboy";
 
 import { IncomingMessage } from "http";
 import { Readable } from "stream";

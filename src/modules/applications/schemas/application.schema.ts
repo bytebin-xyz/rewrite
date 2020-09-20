@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 import { isAlphanumeric } from "class-validator";
 

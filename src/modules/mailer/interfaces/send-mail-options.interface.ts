@@ -1,10 +1,10 @@
-import fs from "fs";
+import { PathLike } from "fs";
 
-import Mail from "nodemailer/lib/mailer";
+import { Options } from "nodemailer/lib/mailer";
 
-export interface SendMailOptions extends Mail.Options {
+export interface SendMailOptions extends Options {
   mjml?: {
     data?: Record<string, unknown>;
-    template: fs.PathLike;
+    template: PathLike;
   };
 }
