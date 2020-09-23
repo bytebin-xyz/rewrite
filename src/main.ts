@@ -4,6 +4,8 @@ import * as morgan from "morgan";
 import * as session from "express-session";
 import * as winston from "winston";
 
+import { URL } from "url";
+
 import ms = require("ms");
 
 import "winston-daily-rotate-file";
@@ -15,7 +17,6 @@ import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import { WinstonModule, utilities as WinstonUtilities } from "nest-winston";
 
-import { Connection } from "mongoose";
 import { getConnectionToken } from "@nestjs/mongoose";
 
 import { AppModule } from "./app.module";
@@ -48,8 +49,11 @@ const MongoStore = connectMongo(session);
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger });
   const config = app.get<ConfigService>(ConfigService);
 
-  const isDev = config.get<string>("NODE_ENV") === "development";
+  const backendDomain = config.get("BACKEND_DOMAIN") as string;
+  const frontendDomain = config.get("FRONTEND_DOMAIN") as string;
+  const isDev = config.get("NODE_ENV") === "development";
   const port = config.get("PORT") as number;
+  const sessionSecret = config.get("SESSION_SECRET") as string;
 
   const swagger = SwaggerModule.createDocument(
     app,
@@ -64,7 +68,7 @@ const MongoStore = connectMongo(session);
 
   app.enableCors({
     credentials: true,
-    origin: `${isDev ? "http" : "https"}://${config.get("FRONTEND_DOMAIN")}`
+    origin: `${isDev ? "http" : "https"}://${frontendDomain}`
   });
 
   // prettier-ignore
@@ -90,15 +94,17 @@ const MongoStore = connectMongo(session);
     .use(
       session({
         cookie: {
+          domain: new URL(backendDomain).hostname,
           maxAge: ms("14d"),
-          secure: process.env.NODE_ENV === "production"
+          sameSite: "strict",
+          secure: !isDev
         },
         name: "sid.the.science.kid",
         resave: false,
         saveUninitialized: false,
-        secret: config.get("SESSION_SECRET") as string,
+        secret: sessionSecret,
         store: new MongoStore({
-          mongooseConnection: app.get<Connection>(getConnectionToken()),
+          mongooseConnection: app.get(getConnectionToken()),
           stringify: false
         })
       })

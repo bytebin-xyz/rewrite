@@ -50,7 +50,7 @@ export class RecaptchaGuard implements CanActivate {
         })
       )
       .toPromise()
-      .then(res => {
+      .then((res) => {
         const body = res.data;
         const errorCodes = body["error-codes"];
         const filterFn = (errorMessage: string) => errorMessage.endsWith("secret");
@@ -61,7 +61,7 @@ export class RecaptchaGuard implements CanActivate {
 
         return { error: errorCodes.filter(filterFn).join(", ") };
       })
-      .catch(error => ({ error }));
+      .catch((error) => ({ error }));
 
     if (result.error) {
       throw new InternalServerErrorException(result.error);
