@@ -8,7 +8,7 @@ import { EntryDto } from "../dto/entry.dto";
 
 import { generateId } from "@/utils/generateId";
 
-import { PATH_SAFE_REGEX } from "@/validators/is-string-path-safe.validator";
+import { IsStringPathSafeConstraint } from "@/validators/is-string-path-safe.validator";
 
 @Schema({
   id: false,
@@ -61,7 +61,7 @@ export class Entry extends Document implements EntryDto {
     maxlength: 255,
     required: true,
     trim: true,
-    validate: (value: string) => !PATH_SAFE_REGEX.test(value)
+    validate: (value: string) => IsStringPathSafeConstraint.validate(value)
   })
   name!: string;
 

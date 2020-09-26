@@ -37,8 +37,8 @@ import { FilesService } from "./files.service";
 
 import { CreateFolderEntryDto } from "./dto/create-folder-entry.dto";
 import { EntryDto } from "./dto/entry.dto";
-import { FileUploadDto } from "./dto/file-upload.dto";
 import { UpdateEntryDto } from "./dto/update-entry.dto";
+import { UploadFileDto } from "./dto/upload-file.dto";
 import { UploadLimitsDto } from "./dto/upload-limits.dto";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
@@ -61,6 +61,8 @@ import {
 } from "@/modules/storage/storage.errors";
 
 import { StorageService } from "@/modules/storage/storage.service";
+
+import { UNSAFE_PATH_REGEX } from "@/validators/is-string-path-safe.validator";
 
 @ApiSecurity("api_key")
 @ApiTags("Files")
@@ -130,9 +132,20 @@ export class FilesController {
     @CurrentUser("id") uid: string,
     @Param("id") id: string
   ): Promise<EntryDto> {
+    const folder = dto.folder
+      ? await this.files.findOne({ isFolder: true, path: dto.folder, uid })
+      : null;
+
+    if (!folder && dto.folder) throw new ParentFolderNotFound();
+
     const entry = await this.files.updateOne(
       { id, uid },
-      { ...dto, deletable: true, hidden: false }
+      {
+        ...dto,
+        deletable: true,
+        folder: folder && folder.id,
+        hidden: false
+      }
     );
 
     return entry.toDto();
@@ -146,9 +159,15 @@ export class FilesController {
     @Body() dto: CreateFolderEntryDto,
     @CurrentUser("id") uid: string
   ): Promise<EntryDto> {
+    const parent = dto.path
+      ? await this.files.findOne({ isFolder: true, path: dto.path, uid })
+      : null;
+
+    if (!parent && dto.path) throw new ParentFolderNotFound();
+
     const folder = await this.files.createEntry({
       deletable: true,
-      folder: dto.folder,
+      folder: parent && parent.id,
       hidden: false,
       isFile: false,
       isFolder: true,
@@ -172,16 +191,19 @@ export class FilesController {
 
   @Get("list")
   @ApiQuery({ name: "cursor", required: false })
-  @ApiQuery({ name: "folder", required: false })
   @ApiQuery({ name: "limit", required: false })
+  @ApiQuery({ name: "path", required: false })
   @UseScopes(ApplicationScopes.FILES_READ)
   async list(
     @CurrentUser("id") uid: string,
     @Query("cursor", new DefaultValuePipe(0), ParseIntPipe) cursor: number,
-    @Query("folder", new DefaultValuePipe(null)) folder: string | null,
-    @Query("limit", new DefaultValuePipe(50), ParseIntPipe) limit: number
+    @Query("limit", new DefaultValuePipe(50), ParseIntPipe) limit: number,
+    @Query("path", new DefaultValuePipe(null)) path: string | null
   ): Promise<PaginationDto<EntryDto>> {
-    const entries = await this.files.list({ folder, uid }, { cursor, limit });
+    const folder = path ? await this.files.findOne({ isFolder: true, path, uid }) : null;
+    if (!folder && path) throw new EntryNotFound();
+
+    const entries = await this.files.list({ folder: folder && folder.id }, { cursor, limit });
 
     return {
       ...entries,
@@ -190,9 +212,9 @@ export class FilesController {
   }
 
   @Post("upload")
-  @ApiBody({ type: FileUploadDto })
+  @ApiBody({ type: UploadFileDto })
   @ApiConsumes("multipart/form-data")
-  @ApiQuery({ name: "folder", required: false })
+  @ApiQuery({ name: "path", required: false })
   @ApiQuery({ name: "public", required: false })
   @ApiResponse({ description: FileTooLarge.description, status: FileTooLarge.status })
   @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
@@ -206,15 +228,12 @@ export class FilesController {
   @UseScopes(ApplicationScopes.FILES_CREATE)
   async upload(
     @CurrentUser("id") uid: string,
-    @Query("folder", new DefaultValuePipe(null)) folderPath: string | null,
+    @Query("path", new DefaultValuePipe(null)) path: string | null,
     @Query("public", new DefaultValuePipe(false), ParseBoolPipe) isPublic: boolean,
     @Req() req: Request
   ): Promise<EntryDto[]> {
-    const folder = folderPath
-      ? await this.files.findOne({ isFolder: true, path: folderPath, uid })
-      : null;
-
-    if (folderPath && !folder) throw new ParentFolderNotFound();
+    const folder = path ? await this.files.findOne({ isFolder: true, path, uid }) : null;
+    if (!folder && path) throw new ParentFolderNotFound();
 
     const files = await this.storage.write(req, {
       field: "file",
@@ -234,7 +253,7 @@ export class FilesController {
         id: file.id,
         isFile: true,
         isFolder: false,
-        name: file.filename,
+        name: file.filename.replace(UNSAFE_PATH_REGEX, ""), // Make sure theres no illegal characters
         public: isPublic,
         size: file.size,
         uid

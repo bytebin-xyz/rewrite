@@ -103,7 +103,7 @@ export class AuthController {
   @Delete("logout")
   logout(@Session() session: Express.Session): Promise<void> {
     return new Promise((resolve, reject) =>
-      session.destroy(error => (error ? reject(error) : resolve()))
+      session.destroy((error) => (error ? reject(error) : resolve()))
     );
   }
 

@@ -1,19 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
+import { Transform } from "class-transformer";
 
 import { IsStringPathSafe } from "@/validators/is-string-path-safe.validator";
 
 export class UpdateEntryDto {
   @ApiProperty({
     description:
-      "The ID of the parent folder. To move the entry to the root folder, set the value to null.",
+      "The path of the parent folder. If not specified, it will be moved to the root folder.",
     nullable: true,
     type: String
   })
   @IsOptional()
   @IsString()
-  folder!: string | null;
+  @Transform((value: string) => (value === "/" ? null : value))
+  folder: string | null = null;
 
   @ApiProperty({ description: "The name of this entry." })
   @IsNotEmpty({ message: "Entry name cannot be empty!" })
