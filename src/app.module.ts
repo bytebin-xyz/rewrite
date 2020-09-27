@@ -36,7 +36,7 @@ const MAX_PORT = 65535;
           .default(25 * 1024 * 1024),
         MAX_FILES_PER_UPLOAD: Joi.number().min(1).default(5),
 
-        MONGO_DB_NAME: Joi.string().default("bytebin"),
+        MONGO_DB_NAME: Joi.string().default("quicksend"),
         MONGO_HOST: Joi.string().default("localhost"),
         MONGO_PASSWORD: Joi.string().allow(""),
         MONGO_POOL_SIZE: Joi.number().min(1).default(5),

@@ -20,7 +20,7 @@ export const successfulLogin = (
       },
       template: "./templates/successful-login.mjml"
     },
-    subject: "Bytebin - Successful Login",
+    subject: "Quicksend - Successful Login",
     text: [
       `Hey ${data.displayName},\n`,
       `This email was sent because a new login has occurred on your account at ${time}.\n`,

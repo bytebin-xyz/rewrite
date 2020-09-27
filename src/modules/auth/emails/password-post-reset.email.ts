@@ -8,7 +8,7 @@ export const passwordResetted = (
     data,
     template: "./templates/password-post-reset.mjml"
   },
-  subject: "Bytebin - Your password has been reset",
+  subject: "Quicksend - Your password has been reset",
   text: [
     `Hey ${data.displayName},\n`,
     "Your password has been reset.",

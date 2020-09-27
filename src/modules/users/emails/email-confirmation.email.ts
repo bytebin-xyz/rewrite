@@ -8,7 +8,7 @@ export const emailConfirmation = (
     data,
     template: "./templates/email-confirmation.mjml"
   },
-  subject: "Bytebin - Please confirm your email address",
+  subject: "Quicksend - Please confirm your email address",
   text: [
     `Hey ${data.displayName}\n`,
     "To confirm your email address, please visit the link below.",

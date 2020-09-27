@@ -8,7 +8,7 @@ export const userActivation = (
     data,
     template: "./templates/user-activation.mjml"
   },
-  subject: "Bytebin - Activate your account",
+  subject: "Quicksend - Activate your account",
   text: [
     `Hey ${data.displayName},\n`,
     "To finish up the registration process, please activate your account by visiting the link below",

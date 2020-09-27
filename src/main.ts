@@ -36,7 +36,7 @@ const logger = WinstonModule.createLogger({
     new winston.transports.DailyRotateFile({
       datePattern: "YYYY-MM-DD-HH",
       dirname: "logs",
-      filename: "bytebin-%DATE%.log",
+      filename: "quicksend-%DATE%.log",
       level: "silly",
       maxFiles: "30d"
     })

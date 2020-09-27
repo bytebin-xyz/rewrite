@@ -8,7 +8,7 @@ export const passwordReset = (
     data,
     template: "./templates/password-reset-request.mjml"
   },
-  subject: "Bytebin - Password reset requested",
+  subject: "Quicksend - Password reset requested",
   text: [
     `Hey ${data.displayName},\n`,
     "To reset your password, please visit the link below.",

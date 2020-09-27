@@ -1,6 +1,6 @@
-import { UI } from "bull-board";
-
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
+
+import { UI } from "bull-board";
 
 import { AdminController } from "./admin.controller";
 import { AdminService } from "./admin.service";
