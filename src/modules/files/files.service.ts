@@ -216,7 +216,7 @@ export class FilesService {
         });
 
         if (copies <= 1) {
-          // If there is only reference, mark the file to be deleted
+          // If this is the only reference, mark the file to be deleted
           await this.filesModel.updateOne(
             { writtenTo: file.writtenTo },
             { "state.isDeleted": true }
