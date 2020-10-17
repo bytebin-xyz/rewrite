@@ -13,7 +13,9 @@ export class RegisterDto {
   @IsString()
   email!: string;
 
-  @MinLength(8, { message: "Your password must be at least $constraint1 characters long!" })
+  @MinLength(8, {
+    message: "Your password must be at least $constraint1 characters long!"
+  })
   @IsNotEmpty({ message: "Password cannot be empty!" })
   @IsString()
   password!: string;
@@ -25,6 +27,8 @@ export class RegisterDto {
   @IsAlphanumeric(undefined, { message: "Usernames must be alphanumeric!" })
   @IsNotEmpty({ message: "Username cannot be empty!" })
   @IsString()
-  @MaxLength(32, { message: "Usernames cannot be longer than $constraint1 characters!" })
+  @MaxLength(32, {
+    message: "Usernames cannot be longer than $constraint1 characters!"
+  })
   username!: string;
 }

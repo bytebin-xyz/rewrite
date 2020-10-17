@@ -6,6 +6,7 @@ import { Readable, Writable } from "stream";
 import { StorageEngine } from "../interfaces/storage-engine.interface";
 
 import { chunk } from "@/utils/chunk";
+import { generateId } from "@/utils/generateId";
 
 export interface DiskStorageEngineOptions {
   directory: string;
@@ -18,6 +19,22 @@ export class DiskStorage implements StorageEngine {
     }
   }
 
+  createIdentifier(): Promise<string> {
+    return generateId(8);
+  }
+
+  createReadable(id: string): Readable {
+    return fs.createReadStream(this._getLocationOnDisk(id));
+  }
+
+  async createWritable(id: string): Promise<Writable> {
+    await fs.promises.mkdir(this._getDestinationOnDisk(id), {
+      recursive: true
+    });
+
+    return fs.createWriteStream(this._getLocationOnDisk(id));
+  }
+
   async delete(id: string): Promise<void> {
     try {
       await fs.promises.unlink(this._getLocationOnDisk(id));
@@ -28,17 +45,11 @@ export class DiskStorage implements StorageEngine {
     }
   }
 
-  createReadable(id: string): Readable {
-    return fs.createReadStream(this._getLocationOnDisk(id));
-  }
-
-  async createWritable(id: string): Promise<Writable> {
-    await fs.promises.mkdir(this._getDestinationOnDisk(id), { recursive: true });
-    return fs.createWriteStream(this._getLocationOnDisk(id));
-  }
-
   private _getDestinationOnDisk(id: string) {
-    return path.join(this.options.directory, chunk.string(id.slice(0, -1), 2).join(path.sep));
+    return path.join(
+      this.options.directory,
+      chunk.string(id.slice(0, -1), 2).join(path.sep)
+    );
   }
 
   private _getLocationOnDisk(id: string) {

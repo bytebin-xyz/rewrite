@@ -5,19 +5,24 @@ import { Process, Processor } from "@nestjs/bull";
 
 import { Job } from "bull";
 
-import { NODEMAILER_MODULE_OPTIONS } from "./mailer.constants";
+import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
 
 import { MailerOptions } from "./interfaces/mailer-module-options.interface";
 import { SendMailOptions } from "./interfaces/send-mail-options.interface";
 
+import { config } from "@/config";
+
 @Injectable()
-@Processor("emails")
+@Processor("mailer")
 export class MailerProcessor implements OnApplicationBootstrap {
   private readonly transporter = nodemailer.createTransport(this.options, {
-    from: `Bytebin <${this.options.from}>`
+    from: `${config.get("branding")} <${this.options.from}>`
   });
 
-  constructor(@Inject(NODEMAILER_MODULE_OPTIONS) private readonly options: MailerOptions) {}
+  constructor(
+    @Inject(MAILER_MODULE_OPTIONS)
+    private readonly options: MailerOptions
+  ) {}
 
   async onApplicationBootstrap(): Promise<void> {
     await this.transporter.verify();

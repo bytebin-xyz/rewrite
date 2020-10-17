@@ -1,5 +1,7 @@
 import { SendMailOptions } from "@/modules/mailer/interfaces/send-mail-options.interface";
 
+import { config } from "@/config";
+
 export const userActivation = (
   to: string,
   data: { displayName: string; link: string }
@@ -8,7 +10,7 @@ export const userActivation = (
     data,
     template: "./templates/user-activation.mjml"
   },
-  subject: "Quicksend - Activate your account",
+  subject: `${config.get("branding")} - Activate your account`,
   text: [
     `Hey ${data.displayName},\n`,
     "To finish up the registration process, please activate your account by visiting the link below",

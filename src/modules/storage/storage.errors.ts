@@ -45,7 +45,8 @@ export class TooManyFields extends BadRequestException {
 }
 
 export class TooManyFiles extends BadRequestException {
-  static message = "You have exceeded the maximum amount of files you can upload per request!";
+  static message =
+    "You have exceeded the maximum amount of files you can upload per request!";
   static status = HttpStatus.BAD_REQUEST;
 
   constructor() {

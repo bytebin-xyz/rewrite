@@ -74,7 +74,7 @@ export class Application extends Document implements ApplicationDto {
     enum: Object.values(ApplicationScopes),
     type: [String]
   })
-  scopes!: Types.Array<ApplicationScopes>;
+  scopes!: Types.Array<ApplicationScopes> & ApplicationScopes[];
 
   @Prop({
     lowercase: true,
@@ -111,7 +111,10 @@ ApplicationSchema.methods.compareKey = function (
 ): boolean {
   if (!this.key) return false;
 
-  return crypto.timingSafeEqual(Buffer.from(HMAC_SHA256(key, secret)), Buffer.from(this.key));
+  return crypto.timingSafeEqual(
+    Buffer.from(HMAC_SHA256(key, secret)),
+    Buffer.from(this.key)
+  );
 };
 
 ApplicationSchema.methods.createKey = async function (

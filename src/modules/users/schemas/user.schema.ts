@@ -143,7 +143,10 @@ UserSchema.pre<User>("save", function (next) {
   });
 });
 
-UserSchema.methods.comparePassword = function (this: User, password: string): Promise<boolean> {
+UserSchema.methods.comparePassword = function (
+  this: User,
+  password: string
+): Promise<boolean> {
   return bcrypt.compare(password, this.password);
 };
 
@@ -161,11 +164,16 @@ UserSchema.methods.delete = async function (this: any): Promise<User> {
   return this.save({ validateBeforeSave: false });
 };
 
-UserSchema.methods.toDto = function <T = UserDto>(this: User, cls?: ClassType<T>): T | UserDto {
+UserSchema.methods.toDto = function <T = UserDto>(
+  this: User,
+  cls?: ClassType<T>
+): T | UserDto {
   const json = this.toJSON();
   const options: ClassTransformOptions = {
     excludePrefixes: ["_"]
   };
 
-  return cls ? plainToClass(cls, json, options) : plainToClass(UserDto, json, options);
+  return cls
+    ? plainToClass(cls, json, options)
+    : plainToClass(UserDto, json, options);
 };

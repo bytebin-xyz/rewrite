@@ -1,5 +1,7 @@
 import { SendMailOptions } from "@/modules/mailer/interfaces/send-mail-options.interface";
 
+import { config } from "@/config";
+
 export const passwordChangedEmail = (
   to: string,
   data: { displayName: string; link: string }
@@ -8,7 +10,7 @@ export const passwordChangedEmail = (
     data,
     template: "./templates/password-changed.mjml"
   },
-  subject: "Quicksend - Password Changed",
+  subject: `${config.get("branding")} - Password Changed`,
   text: [
     `Hey ${data.displayName}\n`,
     "Your password has been changed.",

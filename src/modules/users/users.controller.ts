@@ -2,7 +2,17 @@ import * as path from "path";
 import * as sharp from "sharp";
 
 import { ApiExcludeEndpoint, ApiSecurity, ApiTags } from "@nestjs/swagger";
-import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
+
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards
+} from "@nestjs/common";
 
 import { Request } from "express";
 
@@ -23,7 +33,6 @@ import { AuthGuard } from "@/guards/auth.guard";
 
 import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
 
-import { FilesService } from "@/modules/files/files.service";
 import { StorageService } from "@/modules/storage/storage.service";
 
 @ApiSecurity("api_key")
@@ -32,7 +41,6 @@ import { StorageService } from "@/modules/storage/storage.service";
 @UseGuards(AuthGuard)
 export class UsersController {
   constructor(
-    private readonly files: FilesService,
     private readonly storage: StorageService,
     private readonly users: UsersService
   ) {}
@@ -45,7 +53,10 @@ export class UsersController {
 
   @ApiExcludeEndpoint()
   @Post("@me/avatar")
-  async updateAvatar(@CurrentUser() me: User, @Req() req: Request): Promise<UserDto> {
+  async updateAvatar(
+    @CurrentUser() me: User,
+    @Req() req: Request
+  ): Promise<UserDto> {
     const [avatar] = await this.storage.write(req, {
       field: "avatar",
       filter: (_req, file, callback) => {
@@ -63,26 +74,16 @@ export class UsersController {
       transformers: [() => sharp().resize(512, 512).png()]
     });
 
-    await this.files.createEntry({
-      deletable: false,
-      folder: null,
-      hidden: true,
-      id: avatar.id,
-      isFile: true,
-      isFolder: false,
-      name: avatar.filename,
-      public: true,
-      size: avatar.size,
-      uid: me.id
-    });
-
     return this.users.updateAvatar(me, avatar.id).then((user) => user.toDto());
   }
 
   @ApiExcludeEndpoint()
   @Post("@me/delete")
-  deleteOne(@Body() { password }: DeleteUserDto, @CurrentUser() me: User): Promise<UserDto> {
-    return this.users.deleteOne(me, password);
+  deleteOne(
+    @Body() dto: DeleteUserDto,
+    @CurrentUser() me: User
+  ): Promise<UserDto> {
+    return this.users.deleteOne(me, dto.password);
   }
 
   @Get("@me/identify")
@@ -93,7 +94,10 @@ export class UsersController {
 
   @ApiExcludeEndpoint()
   @Patch("@me/update")
-  updateOne(@Body() dto: UpdateUserDto, @CurrentUser() me: User): Promise<UserDto> {
+  updateOne(
+    @Body() dto: UpdateUserDto,
+    @CurrentUser() me: User
+  ): Promise<UserDto> {
     return this.users.updateOne(me, dto).then((user) => user.toDto());
   }
 

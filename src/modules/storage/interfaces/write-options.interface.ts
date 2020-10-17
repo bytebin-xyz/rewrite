@@ -17,5 +17,8 @@ export interface WriteOptions {
 
   limits: busboy.BusboyConfig["limits"];
 
-  transformers?: ((req: IncomingMessage, file: IncomingFile) => Stream | void)[];
+  transformers?: ((
+    req: IncomingMessage,
+    file: IncomingFile
+  ) => Stream | void)[];
 }

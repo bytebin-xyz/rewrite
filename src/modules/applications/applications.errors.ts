@@ -18,7 +18,9 @@ export class ApplicationNotFound extends NotFoundException {
 
 export class InsufficientScopes extends ForbiddenException {
   constructor() {
-    super("Application does not have sufficient scopes to perform this action!");
+    super(
+      "Application does not have sufficient scopes to perform this action!"
+    );
   }
 }
 

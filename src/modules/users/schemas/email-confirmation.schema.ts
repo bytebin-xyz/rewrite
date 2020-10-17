@@ -48,7 +48,9 @@ export class EmailConfirmation extends Document {
   uid!: string;
 }
 
-export const EmailConfirmationSchema = SchemaFactory.createForClass(EmailConfirmation);
+export const EmailConfirmationSchema = SchemaFactory.createForClass(
+  EmailConfirmation
+);
 
 EmailConfirmationSchema.pre<EmailConfirmation>("save", function (next) {
   if (!this.isNew) return next();

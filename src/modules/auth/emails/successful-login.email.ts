@@ -1,13 +1,15 @@
 import { SendMailOptions } from "@/modules/mailer/interfaces/send-mail-options.interface";
 
-import { ISessionData } from "@/modules/sessions/interfaces/session-data.interface";
+import { Session } from "@/interfaces/session.interface";
+
+import { config } from "@/config";
 
 export const successfulLogin = (
   to: string,
   data: {
     displayName: string;
     link: string;
-    session: ISessionData;
+    session: Session;
   }
 ): SendMailOptions => {
   const time = new Date().toUTCString();
@@ -20,7 +22,7 @@ export const successfulLogin = (
       },
       template: "./templates/successful-login.mjml"
     },
-    subject: "Quicksend - Successful Login",
+    subject: `${config.get("branding")} - Successful Login`,
     text: [
       `Hey ${data.displayName},\n`,
       `This email was sent because a new login has occurred on your account at ${time}.\n`,

@@ -1,4 +1,4 @@
-import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 
 import {
   Body,
@@ -6,262 +6,243 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
-  HttpStatus,
   InternalServerErrorException,
   Logger,
   Param,
   ParseBoolPipe,
-  ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   Res,
-  Query,
   UseGuards
 } from "@nestjs/common";
 
-import { ConfigService } from "@nestjs/config";
-
 import { Request, Response } from "express";
 
-import {
-  EntryAlreadyExists,
-  EntryNotDeletable,
-  EntryNotFound,
-  ParentFolderNotFound,
-  ParentIsChildrenOfItself,
-  ParentIsItself
-} from "./files.errors";
+import { FileNotFound } from "./files.errors";
 
 import { FilesService } from "./files.service";
 
-import { CreateFolderEntryDto } from "./dto/create-folder-entry.dto";
-import { EntryDto } from "./dto/entry.dto";
-import { UpdateEntryDto } from "./dto/update-entry.dto";
-import { UploadFileDto } from "./dto/upload-file.dto";
-import { UploadLimitsDto } from "./dto/upload-limits.dto";
+import { CreateDirectoryDto } from "./dto/create-directory.dto";
+import { CopyFileDto } from "./dto/copy-file.dto";
+import { FileDto } from "./dto/file.dto";
+import { MoveFileDto } from "./dto/move-file.dto";
+import { RenameFileDto } from "./dto/rename-file.dto";
+import { UploadedFilesDto } from "./dto/uploaded-files.dto";
+
+import { FileTypes } from "./enums/file-types.enum";
+
+import { config } from "@/config";
 
 import { CurrentUser } from "@/decorators/current-user.decorator";
-import { OptionalAuth } from "@/decorators/optional-auth";
-import { UseScopes } from "@/decorators/use-scopes.decorator";
-
-import { PaginationDto } from "@/dto/pagination.dto";
+import { OptionalAuth } from "@/decorators/optional-auth.decorator";
+// import { UseScopes } from "@/decorators/use-scopes.decorator";
 
 import { AuthGuard } from "@/guards/auth.guard";
 
-import { ApplicationScopes } from "@/modules/applications/enums/application-scopes.enum";
-
-import {
-  FileTooLarge,
-  NoFilesUploaded,
-  TooManyFields,
-  TooManyFiles,
-  TooManyParts,
-  UnsupportedContentType
-} from "@/modules/storage/storage.errors";
-
 import { StorageService } from "@/modules/storage/storage.service";
 
-import { UNSAFE_PATH_REGEX } from "@/validators/is-string-path-safe.validator";
-
 @ApiSecurity("api_key")
-@ApiTags("Files")
+@ApiTags("files")
 @Controller("files")
 @UseGuards(AuthGuard)
 export class FilesController {
   constructor(
-    private readonly config: ConfigService,
     private readonly files: FilesService,
     private readonly logger: Logger,
     private readonly storage: StorageService
   ) {}
 
-  @Delete("/:id/delete")
-  @ApiResponse({ description: EntryNotDeletable.description, status: EntryNotDeletable.status })
-  @ApiResponse({ description: EntryNotFound.description, status: EntryNotFound.status })
-  @UseScopes(ApplicationScopes.FILES_DELETE)
-  async deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
+  @Get(":id")
+  async get(
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<FileDto> {
+    const file = await this.files.findOne({ id, uid });
+    if (!file) throw new FileNotFound();
+
+    return file.toDto();
+  }
+
+  @Post(":id/copy")
+  async copy(
+    @Body() dto: CopyFileDto,
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<FileDto> {
+    const copied = dto.to
+      ? await this.files.copy({ id, uid }, { id: dto.to, uid })
+      : await this.files.copy({ id, uid }, { parent: null, uid });
+
+    return copied.toDto();
+  }
+
+  @Delete(":id/delete")
+  async delete(
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<FileDto> {
     const deleted = await this.files.deleteOne({ id, uid });
 
     return deleted.toDto();
   }
 
-  @Get("/:id/details")
-  @ApiResponse({ description: EntryNotFound.description, status: EntryNotFound.status })
-  @UseScopes(ApplicationScopes.FILES_READ)
-  async findOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<EntryDto> {
-    const entry = await this.files.findOne({ id, uid });
-    if (!entry) throw new EntryNotFound();
-
-    return entry.toDto();
-  }
-
-  @Get("/:id/download")
-  @ApiResponse({ description: EntryNotFound.description, status: EntryNotFound.status })
+  @Get(":id/download")
   @OptionalAuth()
-  @UseScopes(ApplicationScopes.FILES_DOWNLOAD)
   async download(
     @CurrentUser("id") uid: string | undefined,
     @Param("id") id: string,
     @Res() res: Response
   ): Promise<void> {
-    const readable = await this.files.createReadable(id, uid);
+    const readable = await this.files.createReadable({ id, uid });
 
-    readable.on("error", (error: Error) => {
-      // Exception filter disabled when using the @Res() decorator, so we have to log the error manually
+    readable.on("error", (error) => {
+      // Exception filter won't handle this so we need to manually log it ourselves
       this.logger.error(error);
 
       if (!res.headersSent) {
         const err = new InternalServerErrorException(error);
-        res.status(err.getStatus()).send(err.getResponse());
+
+        res
+          .status(err.getStatus())
+          .send(err.getResponse()); // prettier-ignore
       }
     });
 
     readable.pipe(res);
   }
 
-  @Patch("/:id/update")
-  @ApiResponse({ description: EntryAlreadyExists.description, status: EntryAlreadyExists.status })
-  @ApiResponse({ description: EntryNotFound.description, status: EntryNotFound.status })
-  @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
-  @ApiResponse({ description: ParentIsChildrenOfItself.description, status: ParentIsChildrenOfItself.status }) // prettier-ignore
-  @ApiResponse({ description: ParentIsItself.description, status: ParentIsItself.status })
-  @UseScopes(ApplicationScopes.FILES_UPDATE)
-  async updateOne(
-    @Body() dto: UpdateEntryDto,
+  @Patch(":id/move")
+  async move(
+    @Body() dto: MoveFileDto,
     @CurrentUser("id") uid: string,
     @Param("id") id: string
-  ): Promise<EntryDto> {
-    const folder = dto.folder
-      ? await this.files.findOne({ isFolder: true, path: dto.folder, uid })
-      : null;
+  ): Promise<FileDto> {
+    const moved = dto.to
+      ? await this.files.move({ id, uid }, { id: dto.to, uid })
+      : await this.files.move({ id, uid }, { parent: null, uid });
 
-    if (!folder && dto.folder) throw new ParentFolderNotFound();
-
-    const entry = await this.files.updateOne(
-      { id, uid },
-      {
-        ...dto,
-        deletable: true,
-        folder: folder && folder.id,
-        hidden: false
-      }
-    );
-
-    return entry.toDto();
+    return moved.toDto();
   }
 
-  @Post("create-folder")
-  @ApiResponse({ description: EntryAlreadyExists.description, status: EntryAlreadyExists.status })
-  @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
-  @UseScopes(ApplicationScopes.FILES_CREATE)
-  async createFolder(
-    @Body() dto: CreateFolderEntryDto,
-    @CurrentUser("id") uid: string
-  ): Promise<EntryDto> {
-    const parent = dto.path
-      ? await this.files.findOne({ isFolder: true, path: dto.path, uid })
-      : null;
+  @Patch(":id/rename")
+  async rename(
+    @Body() dto: RenameFileDto,
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<FileDto> {
+    const renamed = await this.files.rename({ id, uid }, dto.name);
 
-    if (!parent && dto.path) throw new ParentFolderNotFound();
+    return renamed.toDto();
+  }
 
-    const folder = await this.files.createEntry({
-      deletable: true,
-      folder: parent && parent.id,
-      hidden: false,
-      isFile: false,
-      isFolder: true,
-      name: dto.name,
-      public: dto.public,
-      size: 0,
-      uid
-    });
+  @Post("create-directory")
+  async create(
+    @Body() dto: CreateDirectoryDto,
+    @CurrentUser("id") uid: string,
+    @Query("autorename", new DefaultValuePipe(false), ParseBoolPipe)
+    autorename: boolean
+  ): Promise<FileDto> {
+    const folder = await this.files.create(
+      {
+        ...dto,
+        capabilities: {
+          canAddChildren: true,
+          canCopy: false,
+          canDelete: true,
+          canDownload: false,
+          canMove: true,
+          canRemoveChildren: true,
+          canRename: true,
+          canShare: true
+        },
+        type: FileTypes.Directory,
+        uid,
+        writtenTo: null
+      },
+      {
+        autorename
+      }
+    );
 
     return folder.toDto();
   }
 
-  @Get("limits")
-  @UseScopes()
-  limits(): UploadLimitsDto {
-    return {
-      maxFileSize: this.config.get("MAX_FILE_SIZE") as number,
-      maxFilesPerUpload: this.config.get("MAX_FILES_PER_UPLOAD") as number
-    };
-  }
-
-  @Get("list")
-  @ApiQuery({ name: "cursor", required: false })
-  @ApiQuery({ name: "limit", required: false })
-  @ApiQuery({ name: "path", required: false })
-  @UseScopes(ApplicationScopes.FILES_READ)
-  async list(
-    @CurrentUser("id") uid: string,
-    @Query("cursor", new DefaultValuePipe(0), ParseIntPipe) cursor: number,
-    @Query("limit", new DefaultValuePipe(50), ParseIntPipe) limit: number,
-    @Query("path", new DefaultValuePipe(null)) path: string | null
-  ): Promise<PaginationDto<EntryDto>> {
-    const folder = path ? await this.files.findOne({ isFolder: true, path, uid }) : null;
-    if (!folder && path) throw new EntryNotFound();
-
-    const entries = await this.files.list({ folder: folder && folder.id }, { cursor, limit });
-
-    return {
-      ...entries,
-      items: entries.items.map((entry) => entry.toDto())
-    };
-  }
-
   @Post("upload")
-  @ApiBody({ type: UploadFileDto })
-  @ApiConsumes("multipart/form-data")
-  @ApiQuery({ name: "path", required: false })
-  @ApiQuery({ name: "public", required: false })
-  @ApiResponse({ description: FileTooLarge.description, status: FileTooLarge.status })
-  @ApiResponse({ description: ParentFolderNotFound.description, status: ParentFolderNotFound.status }) // prettier-ignore
-  @ApiResponse({ description: UnsupportedContentType.description, status: UnsupportedContentType.status }) // prettier-ignore
-  @ApiResponse({
-    description: [NoFilesUploaded, TooManyFields, TooManyFiles, TooManyParts]
-      .map((error) => error.description)
-      .join("<br>".repeat(2)),
-    status: HttpStatus.BAD_REQUEST
-  })
-  @UseScopes(ApplicationScopes.FILES_CREATE)
   async upload(
     @CurrentUser("id") uid: string,
-    @Query("path", new DefaultValuePipe(null)) path: string | null,
-    @Query("public", new DefaultValuePipe(false), ParseBoolPipe) isPublic: boolean,
+    @Query("autorename", new DefaultValuePipe(true), ParseBoolPipe)
+    autorename: boolean,
+    @Query("parent", new DefaultValuePipe(null)) parent: string | null,
     @Req() req: Request
-  ): Promise<EntryDto[]> {
-    const folder = path ? await this.files.findOne({ isFolder: true, path, uid }) : null;
-    if (!folder && path) throw new ParentFolderNotFound();
-
-    const files = await this.storage.write(req, {
+  ): Promise<UploadedFilesDto> {
+    const filesWritten = await this.storage.write(req, {
       field: "file",
       limits: {
-        files: this.config.get("MAX_FILES_PER_UPLOAD"),
-        fileSize: this.config.get("MAX_FILE_SIZE")
+        files: config.get("limits").maxFilesPerUpload,
+        fileSize: config.get("limits").maxFileSize
       }
     });
 
-    const entries = [];
+    const failed: UploadedFilesDto["failed"] = [];
+    const succeeded: UploadedFilesDto["succeeded"] = [];
+    const tasks: Promise<void>[] = [];
 
-    for (const file of files) {
-      const entry = await this.files.createEntry({
-        deletable: true,
-        folder: folder && folder.id,
-        hidden: false,
-        id: file.id,
-        isFile: true,
-        isFolder: false,
-        name: file.filename.replace(UNSAFE_PATH_REGEX, ""), // Make sure theres no illegal characters
-        public: isPublic,
-        size: file.size,
-        uid
-      });
+    for (const fileWritten of filesWritten) {
+      const handleError = (error: Error) => {
+        failed.push({
+          error: error.message,
+          file: {
+            mimetype: fileWritten.mimetype,
+            name: fileWritten.filename,
+            size: fileWritten.size
+          }
+        });
+      };
 
-      entries.push(entry.toDto());
+      tasks.push(
+        this.files
+          .create(
+            {
+              capabilities: {
+                canAddChildren: false,
+                canCopy: true,
+                canDelete: true,
+                canDownload: true,
+                canMove: true,
+                canRemoveChildren: false,
+                canRename: true,
+                canShare: true
+              },
+              name: fileWritten.filename,
+              parent,
+              size: fileWritten.size,
+              type: FileTypes.File,
+              uid,
+              writtenTo: fileWritten.id
+            },
+            {
+              autorename
+            }
+          )
+          .then((file) => {
+            succeeded.push(file.toDto());
+          })
+          .catch((error: Error) =>
+            this.storage
+              .delete(fileWritten.id)
+              .then(() => handleError(error))
+              .catch((err) => handleError(err))
+          )
+      );
     }
 
-    return entries;
+    await Promise.all(tasks);
+
+    return {
+      failed,
+      succeeded
+    };
   }
 }

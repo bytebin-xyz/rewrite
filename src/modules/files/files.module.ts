@@ -1,5 +1,4 @@
 import { BullModule } from "@nestjs/bull";
-import { ConfigService } from "@nestjs/config";
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
@@ -7,34 +6,30 @@ import { FilesController } from "./files.controller";
 import { FilesProcessor } from "./files.processor";
 import { FilesService } from "./files.service";
 
-import { Entry, EntrySchema } from "./schemas/entry.schema";
+import { File, FileSchema } from "./schemas/file.schema";
+
+import { config } from "@/config";
 
 import { StorageModule } from "@/modules/storage/storage.module";
 
 @Module({
   imports: [
-    BullModule.registerQueueAsync({
-      inject: [ConfigService],
+    BullModule.registerQueue({
       name: "files",
-      useFactory: (config: ConfigService) => ({
-        redis: {
-          host: config.get("REDIS_HOST"),
-          port: config.get("REDIS_PORT")
-        }
-      })
+      redis: {
+        host: config.get("redis").hostname,
+        port: config.get("redis").port
+      }
     }),
 
-    MongooseModule.forFeature([{ name: Entry.name, schema: EntrySchema }]),
+    MongooseModule.forFeature([{ name: File.name, schema: FileSchema }]),
 
-    StorageModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        engine: {
-          disk: {
-            directory: config.get("UPLOADS_DIRECTORY") as string
-          }
+    StorageModule.register({
+      engine: {
+        disk: {
+          directory: config.get("uploadsDirectory")
         }
-      })
+      }
     })
   ],
   exports: [BullModule, FilesService],

@@ -25,7 +25,9 @@ export const paginate = async <T extends Document>(
   const direction = options.direction || -1;
   const field = options.field || "_id";
   const operator = direction === -1 ? "$lt" : "$gt";
-  const query = options.cursor ? { [field]: { [operator]: options.cursor } } : {};
+  const query = options.cursor
+    ? { [field]: { [operator]: options.cursor } }
+    : {};
 
   const items = await model
     .find({ ...options.query, ...query })

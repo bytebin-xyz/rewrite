@@ -31,12 +31,14 @@ import { WriteOptions } from "./interfaces/write-options.interface";
 import { Counter } from "@/utils/counter";
 import { StreamMeter } from "@/utils/stream-meter";
 
-import { generateId } from "@/utils/generateId";
 import { settle } from "@/utils/settle";
 
 @Injectable()
 export class StorageService implements OnApplicationBootstrap {
-  constructor(@Inject(STORAGE_MODULE_OPTIONS) private readonly options: StorageOptions) {}
+  constructor(
+    @Inject(STORAGE_MODULE_OPTIONS)
+    private readonly options: StorageOptions
+  ) {}
 
   private engine: StorageEngine = new DiskStorage({ directory: os.tmpdir() });
 
@@ -55,7 +57,10 @@ export class StorageService implements OnApplicationBootstrap {
     return this.engine.createReadable(id);
   }
 
-  async write(req: IncomingMessage, options: WriteOptions): Promise<UploadedFile[]> {
+  async write(
+    req: IncomingMessage,
+    options: WriteOptions
+  ): Promise<UploadedFile[]> {
     const busboy = this._createBusboy(req, options.limits);
 
     const filesDetected: string[] = [];
@@ -113,7 +118,7 @@ export class StorageService implements OnApplicationBootstrap {
 
           writeCounter.increment();
 
-          const id = await generateId(8);
+          const id = await this.engine.createIdentifier();
           const writable = await this.engine.createWritable(id);
 
           const meter = new StreamMeter();

@@ -4,199 +4,393 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { InjectQueue } from "@nestjs/bull";
 
-import { FilterQuery, Model, QueryFindBaseOptions, QueryFindOptions } from "mongoose";
+import { DocumentQuery, Model, MongooseFilterQuery } from "mongoose";
+
 import { Queue } from "bull";
+
 import { Readable } from "stream";
 
 import {
-  EntryAlreadyExists,
-  EntryNotDeletable,
-  EntryNotFound,
-  ParentFolderNotFound,
+  FileAlreadyExists,
+  FileNotFound,
+  InsufficientCapabilitiesOnFile,
   ParentIsChildrenOfItself,
-  ParentIsItself
+  ParentIsItself,
+  ParentNotFound
 } from "./files.errors";
 
-import { Entry, ENTRY_COLLATION_OPTIONS } from "./schemas/entry.schema";
+import { FileTypes } from "./enums/file-types.enum";
+
+import { File } from "./schemas/file.schema";
 
 import { StorageService } from "@/modules/storage/storage.service";
 
-import { clamp } from "@/utils/clamp";
-import { paginate, Pagination } from "@/utils/paginate";
+import { escapeRegExp } from "@/utils/escapeRegExp";
 
 @Injectable()
 export class FilesService {
   constructor(
     private readonly storage: StorageService,
 
-    @InjectModel(Entry.name)
-    private readonly entries: Model<Entry>,
+    @InjectModel(File.name)
+    private readonly filesModel: Model<File>,
 
     @InjectQueue("files")
     private readonly filesQueue: Queue
   ) {}
 
-  async createEntry(data: {
-    deletable: Entry["deletable"];
-    folder: Entry["folder"];
-    hidden: Entry["hidden"];
-    id?: Entry["id"];
-    isFile: Entry["isFile"];
-    isFolder: Entry["isFolder"];
-    name: Entry["name"];
-    public: Entry["public"];
-    size: Entry["size"];
-    uid: Entry["uid"];
-  }): Promise<Entry> {
-    const folder = data.folder ? await this.findOne({ id: data.folder, uid: data.uid }) : null;
-    if (!folder && data.folder) throw new ParentFolderNotFound();
+  async copy(
+    source: MongooseFilterQuery<File>,
+    destination: MongooseFilterQuery<File>
+  ): Promise<File> {
+    const file = await this.filesModel.findOne(source);
 
-    const folderId = folder && folder.id;
-    const folderPath = (folder && folder.path) || "/";
+    if (!file) {
+      throw new FileNotFound();
+    }
 
-    const duplicates = await this.hasDuplicates(data.name, { folder: folderId, uid: data.uid });
-    if (duplicates && !data.isFile) throw new EntryAlreadyExists(data.name, folderPath);
+    if (!file.capabilities.canCopy) {
+      throw new InsufficientCapabilitiesOnFile("canCopy");
+    }
 
-    return new this.entries({
-      ...data,
-      folder: folderId,
-      name: this._renameWithIndex(data.name, duplicates)
+    const parent = await this.filesModel.findOne(destination);
+
+    if (!parent) {
+      throw new ParentNotFound();
+    }
+
+    if (!parent.capabilities.canAddChildren) {
+      throw new InsufficientCapabilitiesOnFile("canAddChildren");
+    }
+
+    const exists = await this.exists({
+      name: file.name,
+      parent: parent.path,
+      uid: file.uid
+    });
+
+    if (exists) {
+      throw new FileAlreadyExists(file.name, parent.path);
+    }
+
+    return new this.filesModel({
+      capabilities: file.capabilities,
+      name: file.name,
+      parent: destination.path,
+      size: file.size,
+      type: file.type,
+      uid: file.uid,
+      writtenTo: file.writtenTo
     }).save();
   }
 
-  async createReadable(id: string, uid?: string): Promise<Readable> {
-    const file = uid
-      ? await this.findOne({ id, isFile: true, isFolder: false, uid })
-      : await this.findOne({ id, isFile: true, isFolder: false, public: true });
-
-    if (!file) throw new EntryNotFound();
-
-    return this.storage.read(file.id);
-  }
-
-  async deleteMany(query: FilterQuery<Entry>): Promise<void> {
-    // We have to use .remove on each individual document so that middlewares are executed
-    await this.entries
-      .find(query)
-      .collation(ENTRY_COLLATION_OPTIONS)
-      .cursor()
-      .eachAsync(async (entry: Entry) => {
-        if (entry.isFile) {
-          await this.filesQueue.add("delete", { fileId: entry.id });
-        }
-
-        await entry.remove();
-      });
-  }
-
-  async deleteOne(query: FilterQuery<Entry>): Promise<Entry> {
-    const entry = await this.findOne(query);
-
-    if (!entry) throw new EntryNotFound();
-    if (!entry.deletable) throw new EntryNotDeletable();
-
-    await entry
-      .getChildren({ isFile: true })
-      .eachAsync((child) => this.filesQueue.add("delete", { fileId: child.id }));
-
-    return entry.remove();
-  }
-
-  async exists(query: FilterQuery<Entry>): Promise<boolean> {
-    return this.entries
-      .findOne(query)
-      .collation(ENTRY_COLLATION_OPTIONS)
-      .select({ _id: 1 })
-      .lean()
-      .then((doc) => !!doc);
-  }
-
-  async find(query: FilterQuery<Entry>, options: QueryFindOptions = {}): Promise<Entry[]> {
-    return this.entries.find(query, undefined, options).collation(ENTRY_COLLATION_OPTIONS);
-  }
-
-  async findOne(
-    query: FilterQuery<Entry>,
-    options: QueryFindBaseOptions = {}
-  ): Promise<Entry | null> {
-    return this.entries.findOne(query, undefined, options).collation(ENTRY_COLLATION_OPTIONS);
-  }
-
-  async hasDuplicates(entryName: string, query: FilterQuery<Omit<Entry, "name">>): Promise<number> {
-    const { ext, name } = path.parse(entryName);
-
-    const regexp = ext
-      ? new RegExp(`${name}( \\([0-9]+\\))+\\${ext}`)
-      : new RegExp(`${name}( \\([0-9]+\\))+`);
-
-    return this.entries
-      .countDocuments({ $or: [{ name: name + ext }, { name: regexp }], ...query })
-      .collation(ENTRY_COLLATION_OPTIONS);
-  }
-
-  async list(
-    query: FilterQuery<Entry>,
-    options: {
-      cursor?: number;
-      limit: number;
+  async create(
+    file: {
+      capabilities: File["capabilities"];
+      name: string;
+      parent: string | null;
+      size?: number;
+      type: FileTypes;
+      uid: string;
+      writtenTo: string | null;
+    },
+    options?: {
+      autorename?: boolean;
+      force?: boolean;
+      isRoot?: boolean;
     }
-  ): Promise<Pagination<Entry>> {
-    return paginate(this.entries, {
-      collation: ENTRY_COLLATION_OPTIONS,
-      cursor: options.cursor,
-      field: "timestamp",
-      limit: clamp(1, 100, options.limit),
-      query,
-      sort: {
-        isFolder: -1
+  ): Promise<File> {
+    if (options?.isRoot) {
+      const duplicates = await this.duplicates(file.name, {
+        parent: null,
+        uid: file.uid
+      });
+
+      if (duplicates && !options?.autorename) {
+        throw new FileAlreadyExists(file.name, "/");
       }
+
+      return new this.filesModel({
+        ...file,
+        name: this._renameWithIndex(file.name, duplicates),
+        parent: null
+      }).save();
+    }
+
+    const parent = file.parent
+      ? await this.findOne({ id: file.parent, uid: file.uid })
+      : await this.findOne({ parent: null, uid: file.uid });
+
+    if (!parent) {
+      throw new ParentNotFound();
+    }
+
+    if (!parent.capabilities.canAddChildren && !options?.force) {
+      throw new InsufficientCapabilitiesOnFile("canAddChildren");
+    }
+
+    const duplicates = await this.duplicates(file.name, {
+      parent: parent.path,
+      uid: file.uid
+    });
+
+    if (duplicates && !options?.autorename) {
+      throw new FileAlreadyExists(file.name, parent.path);
+    }
+
+    return new this.filesModel({
+      ...file,
+      name: this._renameWithIndex(file.name, duplicates),
+      parent: parent.path
+    }).save();
+  }
+
+  async createReadable(
+    conditions: MongooseFilterQuery<File>
+  ): Promise<Readable> {
+    const file = await this.findOne(conditions);
+
+    if (!file) {
+      throw new FileNotFound();
+    }
+
+    if (
+      !file.capabilities.canDownload ||
+      !file.writtenTo ||
+      file.type !== FileTypes.File
+    ) {
+      throw new InsufficientCapabilitiesOnFile("canDownload");
+    }
+
+    return this.storage.read(file.writtenTo);
+  }
+
+  // Deletes all children directory and files regardless if its deletable or not
+  async deleteMany(conditions: MongooseFilterQuery<File>): Promise<void> {
+    // Mark files as deleted
+    await this.filesModel.updateMany(conditions, { "state.isDeleted": true });
+
+    // Add files to deletion queue
+    await this.filesQueue.add("deleteMany", {
+      ...conditions,
+      type: FileTypes.File
+    });
+
+    // Delete remaining directories
+    await this.filesModel.deleteMany({
+      ...conditions,
+      type: FileTypes.Directory
     });
   }
 
-  async updateOne(
-    query: FilterQuery<Entry>,
-    data: {
-      deletable: Entry["deletable"];
-      folder: Entry["folder"];
-      hidden: Entry["hidden"];
-      name: Entry["name"];
-      public: Entry["public"];
+  async deleteOne(
+    conditions: MongooseFilterQuery<File>,
+    force = false
+  ): Promise<File> {
+    const file = await this.findOne(conditions);
+
+    if (!file) {
+      throw new FileNotFound();
     }
-  ): Promise<Entry> {
-    const entry = await this.findOne(query);
-    if (!entry) throw new EntryNotFound();
 
-    const folder = data.folder
-      ? this._validateParent(entry, await this.findOne({ id: data.folder, uid: entry.uid }))
-      : null;
+    if (!file.capabilities.canDelete && !force) {
+      throw new InsufficientCapabilitiesOnFile("canDelete");
+    }
 
-    const folderId = folder && folder.id;
-    const folderPath = (folder && folder.path) || "/";
+    switch (file.type) {
+      case FileTypes.Directory:
+        await this.deleteMany({
+          parent: { $regex: `^${escapeRegExp(file.path)}` },
+          uid: file.uid
+        });
 
-    const exists = data.name !== entry.name && (await this.exists({ folder: folderId, name: data.name, uid: entry.uid })); // prettier-ignore
-    if (exists) throw new EntryAlreadyExists(data.name, folderPath);
+        await file.remove();
 
-    entry.folder = folderId;
-    entry.hidden = data.hidden;
-    entry.name = data.name;
-    entry.public = data.public;
+        break;
 
-    return entry.save();
+      case FileTypes.File:
+        // Find how many references to the actual file on disk
+        const copies = await this.filesModel.countDocuments({
+          "state.isDeleted": false,
+          writtenTo: file.writtenTo
+        });
+
+        if (copies <= 1) {
+          // If there is only reference, mark the file to be deleted
+          await this.filesModel.updateOne(
+            { writtenTo: file.writtenTo },
+            { "state.isDeleted": true }
+          );
+
+          // Then add the file to the deletion queue
+          await this.filesQueue.add("deleteOne", {
+            writtenTo: file.writtenTo
+          });
+        } else {
+          // Otherwise, delete only the reference from the database and not the file
+          await file.remove();
+        }
+
+        break;
+    }
+
+    return file;
   }
 
-  private _renameWithIndex(entryName: string, index: number): string {
-    if (index <= 0) return entryName;
+  async duplicates(
+    filename: string,
+    conditions: MongooseFilterQuery<File>
+  ): Promise<number> {
+    const { ext, name } = path.posix.parse(filename);
 
-    const { ext, name } = path.parse(entryName);
+    const regexp = ext
+      ? new RegExp(`${escapeRegExp(name)}( \\([0-9]+\\))+${escapeRegExp(ext)}`)
+      : new RegExp(`${escapeRegExp(name)}( \\([0-9]+\\))+`);
 
-    return path.format({ ext, name: `${name} (${index})` });
+    delete conditions.name;
+
+    return this.filesModel.countDocuments({
+      ...conditions,
+      $or: [{ name: filename }, { name: regexp }],
+      "state.isDeleted": false
+    });
   }
 
-  private _validateParent(entry: Entry, folder?: Entry | null): Entry {
-    if (!folder) throw new ParentFolderNotFound();
-    if (folder.id === entry.id) throw new ParentIsItself();
-    if (folder.path.startsWith(`${entry.path}/`)) throw new ParentIsChildrenOfItself();
+  exists(conditions: MongooseFilterQuery<File>): Promise<boolean> {
+    return this.filesModel.exists({ ...conditions, "state.isDeleted": false });
+  }
 
-    return folder;
+  find(conditions: MongooseFilterQuery<File>): DocumentQuery<File[], File> {
+    return this.filesModel.find({ ...conditions, "state.isDeleted": false });
+  }
+
+  async findOne(conditions: MongooseFilterQuery<File>): Promise<File | null> {
+    return this.filesModel.findOne({ ...conditions, "state.isDeleted": false });
+  }
+
+  async move(
+    source: MongooseFilterQuery<File>,
+    destination: MongooseFilterQuery<File>,
+    force = false
+  ): Promise<File> {
+    const file = await this.findOne(source);
+
+    if (!file) {
+      throw new FileNotFound();
+    }
+
+    if (!file.capabilities.canMove && !force) {
+      throw new InsufficientCapabilitiesOnFile("canMove");
+    }
+
+    const parent = await this.findOne(destination);
+
+    if (!parent) {
+      throw new ParentNotFound();
+    }
+
+    if (!parent.capabilities.canAddChildren) {
+      throw new InsufficientCapabilitiesOnFile("canAddChildren");
+    }
+
+    if (parent.id === file.id) {
+      throw new ParentIsItself();
+    }
+
+    if (parent.path.startsWith(`${file.path}/`)) {
+      throw new ParentIsChildrenOfItself(file.name, parent.path);
+    }
+
+    const exists = await this.exists({
+      name: file.name,
+      parent: parent.path,
+      uid: file.uid
+    });
+
+    if (exists) {
+      throw new FileAlreadyExists(file.name, parent.path);
+    }
+
+    if (file.type === FileTypes.Directory) {
+      await this._rebuildChildrenPaths(
+        file,
+        // /(root)/hello => /(root)/goodbye = /(root)/goodbye/hello
+        path.posix.join(parent.path, file.name)
+      );
+    }
+
+    file.parent = parent.path;
+
+    return file.save();
+  }
+
+  async rename(
+    condtions: MongooseFilterQuery<File>,
+    newName: string,
+    force = false
+  ): Promise<File> {
+    const file = await this.findOne(condtions);
+
+    if (!file) {
+      throw new FileNotFound();
+    }
+
+    if (!file.capabilities.canRename && !force) {
+      throw new InsufficientCapabilitiesOnFile("canRename");
+    }
+
+    const exists = await this.exists({
+      name: newName,
+      parent: file.parent,
+      uid: file.uid
+    });
+
+    if (exists) {
+      throw new FileAlreadyExists(newName, file.parent || "/");
+    }
+
+    if (file.type === FileTypes.Directory) {
+      await this._rebuildChildrenPaths(
+        file,
+        path.posix.join(file.parent || "/", newName)
+      );
+    }
+
+    file.name = newName;
+
+    return file.save();
+  }
+
+  private async _rebuildChildrenPaths(
+    parent: File,
+    newParentPath: string
+  ): Promise<void> {
+    await this.filesModel.updateMany(
+      {
+        parent: { $regex: `^${escapeRegExp(parent.path)}` },
+        uid: parent.uid
+      },
+      [
+        {
+          $set: {
+            parent: {
+              $replaceOne: {
+                input: "$parent",
+                find: parent.path,
+                replacement: newParentPath
+              }
+            }
+          }
+        }
+      ]
+    );
+  }
+
+  private _renameWithIndex(filename: string, index: number): string {
+    if (index <= 0) return filename;
+
+    const { ext, name } = path.posix.parse(filename);
+
+    return path.posix.format({ ext, name: `${name} (${index})` });
   }
 }

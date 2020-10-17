@@ -9,6 +9,8 @@ import { Storage, StorageOptions } from "@google-cloud/storage";
 
 import { StorageEngine } from "../interfaces/storage-engine.interface";
 
+import { generateId } from "@/utils/generateId";
+
 const client = new Storage();
 
 export interface GoogleCloudEngineOptions extends StorageOptions {
@@ -20,8 +22,8 @@ export class GoogleCloudEngine implements StorageEngine {
 
   private readonly bucket = client.bucket(this.options.bucketName);
 
-  async delete(id: string): Promise<void> {
-    await this.bucket.file(id).delete();
+  createIdentifier(): Promise<string> {
+    return generateId(8);
   }
 
   createReadable(id: string): Readable {
@@ -30,5 +32,9 @@ export class GoogleCloudEngine implements StorageEngine {
 
   createWritable(id: string): Writable {
     return this.bucket.file(id).createWriteStream();
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.bucket.file(id).delete();
   }
 }

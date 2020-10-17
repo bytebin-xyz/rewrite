@@ -1,4 +1,3 @@
-import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
@@ -14,11 +13,11 @@ import { ApplicationScopes } from "./enums/application-scopes.enum";
 
 import { Application } from "./schemas/application.schema";
 
+import { config } from "@/config";
+
 @Injectable()
 export class ApplicationsService {
   constructor(
-    private readonly config: ConfigService,
-
     @InjectModel(Application.name)
     private readonly applications: Model<Application>
   ) {}
@@ -45,10 +44,10 @@ export class ApplicationsService {
     const application = await this.applications.findOne(query);
     if (!application) throw new ApplicationNotFound();
 
-    return application.createKey(this.config.get("API_KEY_SECRET") as string);
+    return application.createKey(config.get("secrets").applications);
   }
 
-  async delete(query: FilterQuery<Application>): Promise<void> {
+  async deleteMany(query: FilterQuery<Application>): Promise<void> {
     await this.applications.deleteMany(query);
   }
 
@@ -80,7 +79,9 @@ export class ApplicationsService {
     application.name = data.name;
     application.scopes = new Types.Array<ApplicationScopes>();
 
-    Array.from(new Set(data.scopes)).forEach(scope => application.scopes.addToSet(scope));
+    Array
+      .from(new Set(data.scopes))
+      .forEach((scope) => application.scopes.addToSet(scope)); // prettier-ignore
 
     return application.save();
   }

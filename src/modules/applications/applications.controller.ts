@@ -1,5 +1,15 @@
 import { ApiExcludeEndpoint } from "@nestjs/swagger";
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards
+} from "@nestjs/common";
 
 import { Throttle } from "nestjs-throttler";
 
@@ -23,7 +33,9 @@ export class ApplicationsController {
   all(@CurrentUser("id") uid: string): Promise<ApplicationDto[]> {
     return this.applications
       .find({ uid })
-      .then((applications) => applications.map((application) => application.toDto()));
+      .then((applications) =>
+        applications.map((application) => application.toDto())
+      );
   }
 
   @ApiExcludeEndpoint()
@@ -33,7 +45,9 @@ export class ApplicationsController {
     @Body() dto: CreateApplicationDto,
     @CurrentUser("id") uid: string
   ): Promise<ApplicationDto> {
-    return this.applications.create({ ...dto, uid }).then((application) => application.toDto());
+    return this.applications
+      .create({ ...dto, uid })
+      .then((application) => application.toDto());
   }
 
   @ApiExcludeEndpoint()
@@ -50,8 +64,13 @@ export class ApplicationsController {
 
   @ApiExcludeEndpoint()
   @Delete("/:id/delete")
-  deleteOne(@CurrentUser("id") uid: string, @Param("id") id: string): Promise<ApplicationDto> {
-    return this.applications.deleteOne({ id, uid }).then((application) => application.toDto());
+  deleteOne(
+    @CurrentUser("id") uid: string,
+    @Param("id") id: string
+  ): Promise<ApplicationDto> {
+    return this.applications
+      .deleteOne({ id, uid })
+      .then((application) => application.toDto());
   }
 
   @ApiExcludeEndpoint()
@@ -61,6 +80,8 @@ export class ApplicationsController {
     @CurrentUser("id") uid: string,
     @Param("id") id: string
   ): Promise<ApplicationDto> {
-    return this.applications.updateOne({ id, uid }, dto).then((application) => application.toDto());
+    return this.applications
+      .updateOne({ id, uid }, dto)
+      .then((application) => application.toDto());
   }
 }

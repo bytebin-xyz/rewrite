@@ -34,7 +34,8 @@ export class HealthController {
   @UseScopes()
   readiness(): Promise<HealthCheckResult> {
     return this.health.check([
-      (): Promise<HealthIndicatorResult> => this.db.pingCheck("database", { timeout: 2000 }),
+      (): Promise<HealthIndicatorResult> =>
+        this.db.pingCheck("database", { timeout: 2000 }),
 
       (): Promise<HealthIndicatorResult> =>
         this.disk.checkStorage("disk", {
@@ -42,7 +43,8 @@ export class HealthController {
           thresholdPercent: 0.9
         }),
 
-      (): Promise<HealthIndicatorResult> => this.memory.checkRSS("memory", 200 * 1024 * 1024)
+      (): Promise<HealthIndicatorResult> =>
+        this.memory.checkRSS("memory", 200 * 1024 * 1024)
     ]);
   }
 }

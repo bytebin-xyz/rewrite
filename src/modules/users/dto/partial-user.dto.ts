@@ -31,7 +31,9 @@ export class PartialUserDto {
   @Exclude()
   deleted!: boolean;
 
-  @ApiProperty({ description: "The user's display name. This can differ from their username." })
+  @ApiProperty({
+    description: "The user's display name. This can differ from their username."
+  })
   displayName!: string;
 
   @ApiHideProperty()

@@ -45,7 +45,9 @@ export class StorageModule {
     };
   }
 
-  private static createAsyncProviders(options: AsyncStorageOptions): Provider[] {
+  private static createAsyncProviders(
+    options: AsyncStorageOptions
+  ): Provider[] {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
     }
@@ -59,7 +61,9 @@ export class StorageModule {
     ];
   }
 
-  private static createAsyncOptionsProvider(options: AsyncStorageOptions): Provider {
+  private static createAsyncOptionsProvider(
+    options: AsyncStorageOptions
+  ): Provider {
     if (options.useFactory) {
       return {
         provide: STORAGE_MODULE_OPTIONS,
@@ -70,8 +74,9 @@ export class StorageModule {
 
     return {
       provide: STORAGE_MODULE_OPTIONS,
-      useFactory: async (optionsFactory: StorageOptionsFactory): Promise<StorageOptions> =>
-        optionsFactory.createStorageOptions(),
+      useFactory: async (
+        optionsFactory: StorageOptionsFactory
+      ): Promise<StorageOptions> => optionsFactory.createStorageOptions(),
       inject: [(options.useExisting || options.useClass) as any]
     };
   }

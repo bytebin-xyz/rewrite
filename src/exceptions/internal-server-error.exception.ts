@@ -19,6 +19,7 @@ export class InternalServerErrorExceptionFilter implements ExceptionFilter {
     this.logger.error(exception.message);
 
     res.status(statusCode).json({
+      error: "Internal Server Error",
       message: "An error has occurred! Please try again later.",
       statusCode
     });

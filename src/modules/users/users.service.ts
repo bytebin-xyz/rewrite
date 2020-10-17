@@ -19,6 +19,8 @@ import { User } from "./schemas/user.schema";
 
 import { IncorrectPassword } from "@/modules/auth/auth.errors";
 
+import { FileTypes } from "@/modules/files/enums/file-types.enum";
+
 import { ApplicationsService } from "@/modules/applications/applications.service";
 import { FilesService } from "@/modules/files/files.service";
 import { MailerService } from "@/modules/mailer/mailer.service";
@@ -68,20 +70,56 @@ export class UsersService {
     );
   }
 
-  async create(email: string, password: string, username: string): Promise<User> {
+  async create(
+    email: string,
+    password: string,
+    username: string
+  ): Promise<User> {
     if (await this.users.exists({ email })) throw new EmailTaken();
     if (await this.users.exists({ username })) throw new UsernameTaken();
 
-    return new this.users({ displayName: username, email, password, username }).save();
+    const user = await new this.users({
+      displayName: username,
+      email,
+      password,
+      username
+    }).save();
+
+    await this.files.create(
+      {
+        capabilities: {
+          canAddChildren: true,
+          canCopy: false,
+          canDelete: false,
+          canDownload: false,
+          canMove: false,
+          canRemoveChildren: true,
+          canRename: false,
+          canShare: false
+        },
+        name: "(root)",
+        parent: null,
+        type: FileTypes.Directory,
+        uid: user.id,
+        writtenTo: null
+      },
+      {
+        isRoot: true
+      }
+    );
+
+    return user;
   }
 
   async deleteOne(user: User, password: string): Promise<User> {
-    if (!(await user.comparePassword(password))) throw new IncorrectPassword();
+    if (!(await user.comparePassword(password))) {
+      throw new IncorrectPassword();
+    }
 
     await settle([
-      this.applications.delete({ uid: user.id }),
+      this.applications.deleteMany({ uid: user.id }),
       this.files.deleteMany({ uid: user.id }),
-      this.sessions.delete({ "session.uid": user.id })
+      this.sessions.deleteMany({ "session.uid": user.id })
     ]);
 
     return user.delete();
@@ -91,6 +129,10 @@ export class UsersService {
     return this.users.exists(query);
   }
 
+  async find(query: FilterQuery<User>): Promise<User[]> {
+    return this.users.find({ ...query, deleted: false });
+  }
+
   async findOne(query: FilterQuery<User>): Promise<User | null> {
     return this.users.findOne({ ...query, deleted: false });
   }
@@ -98,50 +140,57 @@ export class UsersService {
   async updateOne(
     user: User,
     data: {
-      newDisplayName?: string;
-      newEmail?: string;
+      displayName: string;
+      email: string;
       newPassword?: string;
       password: string;
     }
   ): Promise<User> {
-    const { newDisplayName, newEmail, newPassword, password } = data;
+    const { displayName, email, newPassword, password } = data;
 
     if (!(await user.comparePassword(password))) {
       throw new IncorrectPassword();
     }
 
-    if (newDisplayName && newDisplayName !== user.displayName) {
-      if (await this.users.exists({ displayName: newDisplayName })) {
+    if (displayName !== user.displayName) {
+      if (await this.users.exists({ displayName })) {
         throw new DisplayNameTaken();
       }
 
-      user.displayName = newDisplayName;
+      user.displayName = displayName;
     }
 
-    if (newEmail && newEmail !== user.email) {
-      if (await this.users.exists({ email: newEmail })) {
+    if (email !== user.email) {
+      if (await this.users.exists({ email })) {
         throw new EmailTaken();
       }
 
-      const confirmation = await new this.emailConfirmations({ newEmail, uid: user.id }).save();
+      const confirmation = await new this.emailConfirmations({
+        email,
+        uid: user.id
+      }).save();
 
       await this.mailer.send(
-        emailConfirmation(newEmail, {
+        emailConfirmation(email, {
           displayName: user.displayName,
-          link: this.mailer.createAbsoluteLink(`/confirm-email/${confirmation.token}`)
+          link: this.mailer.createAbsoluteLink(
+            `/confirm-email/${confirmation.token}`
+          )
         })
       );
+
+      user.email = email;
     }
 
     if (newPassword) {
-      user.password = newPassword;
-
       await this.mailer.send(
         passwordChangedEmail(user.email, {
           displayName: user.displayName,
           link: this.mailer.createAbsoluteLink("/forgot-password")
         })
       );
+
+      user.password = newPassword;
     }
 
     await user.save();
@@ -151,7 +200,9 @@ export class UsersService {
 
   async updateAvatar(user: User, newAvatarId: string): Promise<User> {
     if (user.avatar) {
-      await this.files.deleteOne({ id: user.avatar, uid: user.id }).catch(() => undefined);
+      await this.files
+        .deleteOne({ id: user.avatar, uid: user.id })
+        .catch(() => undefined); // prettier-ignore
     }
 
     user.avatar = newAvatarId;

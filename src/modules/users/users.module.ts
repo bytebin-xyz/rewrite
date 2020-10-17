@@ -1,12 +1,17 @@
-import { ConfigService } from "@nestjs/config";
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
 
-import { EmailConfirmation, EmailConfirmationSchema } from "./schemas/email-confirmation.schema";
+import {
+  EmailConfirmation,
+  EmailConfirmationSchema
+} from "./schemas/email-confirmation.schema";
+
 import { User, UserSchema } from "./schemas/user.schema";
+
+import { config } from "@/config";
 
 import { AuthModule } from "@/modules/auth/auth.module";
 import { FilesModule } from "@/modules/files/files.module";
@@ -26,15 +31,12 @@ import { StorageModule } from "@/modules/storage/storage.module";
 
     SessionsModule,
 
-    StorageModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        engine: {
-          disk: {
-            directory: config.get("UPLOADS_DIRECTORY") as string
-          }
+    StorageModule.register({
+      engine: {
+        disk: {
+          directory: config.get("uploadsDirectory")
         }
-      })
+      }
     })
   ],
   exports: [UsersService],

@@ -9,5 +9,8 @@ import { UsersService } from "@/modules/users/users.service";
 @Controller("admin")
 @UseGuards(AdminGuard)
 export class AdminController {
-  constructor(private readonly admin: AdminService, private readonly users: UsersService) {}
+  constructor(
+    private readonly admin: AdminService,
+    private readonly users: UsersService
+  ) {}
 }

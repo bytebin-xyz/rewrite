@@ -54,7 +54,9 @@ export class UserActivation extends Document {
   uid!: string;
 }
 
-export const UserActivationSchema = SchemaFactory.createForClass(UserActivation);
+export const UserActivationSchema = SchemaFactory.createForClass(
+  UserActivation
+);
 
 UserActivationSchema.pre<UserActivation>("save", function (next) {
   if (!this.isNew) return next();

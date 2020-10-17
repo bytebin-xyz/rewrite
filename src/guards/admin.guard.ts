@@ -1,6 +1,10 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException
+} from "@nestjs/common";
 
-import { IRequest } from "@/interfaces/request.interface";
+import { Request } from "@/interfaces/request.interface";
 
 import { AuthGuard } from "./auth.guard";
 
@@ -9,8 +13,11 @@ export class AdminGuard extends AuthGuard {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     await super.canActivate(context);
 
-    const req = context.switchToHttp().getRequest<IRequest>();
-    if (!req.user?.admin) throw new UnauthorizedException("You are not an admin!");
+    const req = context.switchToHttp().getRequest<Request>();
+
+    if (!req.user?.admin) {
+      throw new UnauthorizedException("You are not an admin!");
+    }
 
     return true;
   }

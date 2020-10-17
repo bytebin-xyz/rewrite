@@ -13,19 +13,23 @@ export class UpdateUserDto {
   @IsNotEmpty({ message: "New display name cannot be empty!" })
   @IsOptional()
   @IsString()
-  @MaxLength(32, { message: "Display names cannot be longer than $constraint1 characters!" })
-  newDisplayName?: string;
+  @MaxLength(32, {
+    message: "Display names cannot be longer than $constraint1 characters!"
+  })
+  displayName!: string;
 
   @IsEmail({}, { message: "You must enter a valid email!" })
   @IsNotEmpty({ message: "Email cannot be empty!" })
   @IsOptional()
   @IsString()
-  newEmail?: string;
+  email!: string;
 
   @IsNotEmpty({ message: "New password cannot be empty!" })
   @IsOptional()
   @IsString()
-  @MinLength(8, { message: "Your password must be at least $constraint1 characters long!" })
+  @MinLength(8, {
+    message: "Your password must be at least $constraint1 characters long!"
+  })
   newPassword?: string;
 
   @IsNotEmpty({ message: "Password cannot be empty!" })

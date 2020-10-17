@@ -31,10 +31,14 @@ export class UserDto {
   @Exclude()
   deleted!: boolean;
 
-  @ApiProperty({ description: "The user's display name. This can differ from their username." })
+  @ApiProperty({
+    description: "The user's display name. This can differ from their username."
+  })
   displayName!: string;
 
-  @ApiProperty({ description: "The email that was used to create this account." })
+  @ApiProperty({
+    description: "The email that was used to create this account."
+  })
   email!: string;
 
   @ApiHideProperty()

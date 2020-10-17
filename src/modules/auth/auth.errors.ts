@@ -1,4 +1,8 @@
-import { BadRequestException, ForbiddenException, UnauthorizedException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ForbiddenException,
+  UnauthorizedException
+} from "@nestjs/common";
 
 export class IncorrectPassword extends UnauthorizedException {
   constructor() {
@@ -14,13 +18,17 @@ export class InvalidCredentials extends UnauthorizedException {
 
 export class InvalidPasswordResetLink extends BadRequestException {
   constructor() {
-    super("Invalid password reset link, please ensure that the link is correct!");
+    super(
+      "Invalid password reset link, please ensure that the link is correct!"
+    );
   }
 }
 
 export class InvalidUserActivationLink extends BadRequestException {
   constructor() {
-    super("Invalid user activation link, please ensure that the link is correct!");
+    super(
+      "Invalid user activation link, please ensure that the link is correct!"
+    );
   }
 }
 

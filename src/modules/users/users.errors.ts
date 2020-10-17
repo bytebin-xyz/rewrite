@@ -25,7 +25,9 @@ export class InvalidAvatarFileType extends UnprocessableEntityException {
 
 export class InvalidEmailConfirmationToken extends BadRequestException {
   constructor() {
-    super("Invalid email confirmation token, please ensure that the link is correct!");
+    super(
+      "Invalid email confirmation token, please ensure that the link is correct!"
+    );
   }
 }
 

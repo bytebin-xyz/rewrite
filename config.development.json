@@ -1,0 +1,50 @@
+{
+  "domains": {
+    "backend": "localhost:3000",
+    "frontend": "localhost:3001"
+  },
+
+  "limits": {
+    "maxFileSize": 1000000000,
+    "maxFilesPerUpload": 5
+  },
+
+  "mongodb": {
+    "dbName": "quicksend",
+    "hostname": "localhost",
+    "password": "",
+    "poolSize": 5,
+    "port": 27017,
+    "username": ""
+  },
+
+  "port": 3000,
+
+  "redis": {
+    "hostname": "localhost",
+    "port": 6379
+  },
+
+  "secrets": {
+    "applications": "abc12345",
+    "recaptcha": "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
+    "sessions": "abc123"
+  },
+
+  "smtp": {
+    "from": "no-reply@bytebin.xyz",
+    "host": "smtp.gmail.com",
+    "password": "vvwrinzczydoevbk",
+    "port": 465,
+    "secure": true,
+    "tls": true,
+    "username": "bytebin.no.reply"
+  },
+
+  "throttler": {
+    "limit": 250,
+    "ttl": 60
+  },
+
+  "uploadsDirectory": "/quicksend"
+}

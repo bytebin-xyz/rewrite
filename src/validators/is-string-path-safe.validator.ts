@@ -5,11 +5,25 @@ import {
   ValidationOptions
 } from "class-validator";
 
-export const UNSAFE_CHARACTERS = ["\\\\", "/", ":", "*", "?", '"', "<", ">", "|"];
-export const UNSAFE_PATH_REGEX = new RegExp(`[${UNSAFE_CHARACTERS.join("")}]`, "g");
+export const UNSAFE_CHARACTERS = [
+  "\\\\",
+  "/",
+  ":",
+  "*",
+  "?",
+  '"',
+  "<",
+  ">",
+  "|"
+];
+export const UNSAFE_PATH_REGEX = new RegExp(
+  `[${UNSAFE_CHARACTERS.join("")}]`,
+  "g"
+);
 
 @ValidatorConstraint({ name: "isStringPathSafe" })
-export class IsStringPathSafeConstraint implements ValidatorConstraintInterface {
+export class IsStringPathSafeConstraint
+  implements ValidatorConstraintInterface {
   static validate(value: string): boolean {
     /**
      * Do NOT use UNSAFE_PATH_REGEX.test(), as it is a stateful object which can cause the validation to return different values
@@ -19,7 +33,9 @@ export class IsStringPathSafeConstraint implements ValidatorConstraintInterface 
   }
 
   defaultMessage(): string {
-    return `Value ($value) cannot contain any of these characters ${UNSAFE_CHARACTERS.join(" ")}`;
+    return `Value ($value) cannot contain any of these characters ${UNSAFE_CHARACTERS.join(
+      " "
+    )}`;
   }
 
   validate(value: string): boolean {

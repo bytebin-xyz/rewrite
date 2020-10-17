@@ -6,8 +6,15 @@ import { AuthService } from "./auth.service";
 
 import { SessionsModule } from "@/modules/sessions/sessions.module";
 
-import { PasswordReset, PasswordResetSchema } from "./schemas/password-reset.schema";
-import { UserActivation, UserActivationSchema } from "./schemas/user-activation.schema";
+import {
+  PasswordReset,
+  PasswordResetSchema
+} from "./schemas/password-reset.schema";
+
+import {
+  UserActivation,
+  UserActivationSchema
+} from "./schemas/user-activation.schema";
 
 @Module({
   imports: [

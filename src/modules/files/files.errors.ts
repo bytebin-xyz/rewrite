@@ -1,3 +1,5 @@
+import * as path from "path";
+
 import {
   ConflictException,
   ForbiddenException,
@@ -5,66 +7,105 @@ import {
   NotFoundException
 } from "@nestjs/common";
 
-export class EntryAlreadyExists extends ConflictException {
-  static message = "There is already an entry with this name at the current path!";
+import { File } from "./schemas/file.schema";
+
+export class FileAlreadyExists extends ConflictException {
+  static message = "A file already exists with this name at the current path!";
   static status = HttpStatus.CONFLICT;
 
   constructor(name: string, path?: string) {
     path
-      ? super(`Entry '${name}' already exists at '${path}'!`)
-      : super(`Entry '${name}' already exists!`);
+      ? super(`File '${name}' already exists at '${path}'!`)
+      : super(`File '${name}' already exists!`);
   }
 
   static get description(): string {
-    return `${EntryAlreadyExists.name}: ${EntryAlreadyExists.message}`;
+    return `${FileAlreadyExists.name}: ${FileAlreadyExists.message}`;
   }
 }
 
-export class EntryNotDeletable extends ForbiddenException {
-  static message = "This entry cannot be deleted!";
+export class FileNotFound extends NotFoundException {
+  static message = "The file you are looking for does not exist!";
+  static status = HttpStatus.NOT_FOUND;
+
+  constructor() {
+    super(FileNotFound.message);
+  }
+
+  static get description(): string {
+    return `${FileNotFound.name}: ${FileNotFound.message}`;
+  }
+}
+
+export class InsufficientCapabilitiesOnFile extends ForbiddenException {
+  static message = "The file cannot perform the requested action.";
+  static status = HttpStatus.FORBIDDEN;
+
+  constructor(action: keyof File["capabilities"]) {
+    switch (action) {
+      case "canAddChildren":
+        super("This file cannot contain children!");
+        break;
+
+      case "canCopy":
+        super("This file cannot be copied!");
+        break;
+
+      case "canDelete":
+        super("This file cannot be deleted!");
+        break;
+
+      case "canDownload":
+        super("This file cannot be downloaded!");
+        break;
+
+      case "canMove":
+        super("This file cannot be moved!");
+        break;
+
+      case "canRemoveChildren":
+        super("This file cannot remove childrens!");
+        break;
+
+      case "canRename":
+        super("This file cannot be renamed!");
+        break;
+
+      case "canShare":
+        super("This file cannot be shared!");
+        break;
+    }
+  }
+
+  static get description(): string {
+    return `${InsufficientCapabilitiesOnFile.name}: ${InsufficientCapabilitiesOnFile.message}`;
+  }
+}
+
+export class NoAccess extends ForbiddenException {
+  static message = "You cannot access a file that is not shared with you!";
   static status = HttpStatus.FORBIDDEN;
 
   constructor() {
-    super(EntryNotDeletable.message);
+    super(NoAccess.message);
   }
 
   static get description(): string {
-    return `${EntryNotDeletable.name}: ${EntryNotDeletable.message}`;
-  }
-}
-
-export class EntryNotFound extends NotFoundException {
-  static message = "The entry you are looking for does not exist!";
-  static status = HttpStatus.NOT_FOUND;
-
-  constructor() {
-    super(EntryNotFound.message);
-  }
-
-  static get description(): string {
-    return `${EntryNotFound.name}: ${EntryNotFound.message}`;
-  }
-}
-
-export class ParentFolderNotFound extends NotFoundException {
-  static message = "The parent folder does not exist!";
-  static status = HttpStatus.NOT_FOUND;
-
-  constructor() {
-    super(ParentFolderNotFound.message);
-  }
-
-  static get description(): string {
-    return `${ParentFolderNotFound.name}: ${ParentFolderNotFound.message}`;
+    return `${NoAccess.name}: ${NoAccess.message}`;
   }
 }
 
 export class ParentIsChildrenOfItself extends ForbiddenException {
-  static message = "The parent of an entry cannot be a children of itself!";
+  static message = "The parent of a file cannot be a subdirectory of itself!";
   static status = HttpStatus.FORBIDDEN;
 
-  constructor() {
-    super(ParentIsChildrenOfItself.message);
+  constructor(source: string, destination: string) {
+    super(
+      `The parent of '${source}' cannot be a subdirectory if itself, '${path.join(
+        source,
+        destination
+      )}'`
+    );
   }
 
   static get description(): string {
@@ -73,7 +114,7 @@ export class ParentIsChildrenOfItself extends ForbiddenException {
 }
 
 export class ParentIsItself extends ForbiddenException {
-  static message = "The parent of an entry cannot be itself!";
+  static message = "The parent of a file cannot be itself!";
   static status = HttpStatus.FORBIDDEN;
 
   constructor() {
@@ -82,5 +123,18 @@ export class ParentIsItself extends ForbiddenException {
 
   static get description(): string {
     return `${ParentIsItself.name}: ${ParentIsItself.message}`;
+  }
+}
+
+export class ParentNotFound extends NotFoundException {
+  static message = "The parent you are looking for does not exist!";
+  static status = HttpStatus.NOT_FOUND;
+
+  constructor() {
+    super(ParentNotFound.message);
+  }
+
+  static get description(): string {
+    return `${ParentNotFound.name}: ${ParentNotFound.message}`;
   }
 }

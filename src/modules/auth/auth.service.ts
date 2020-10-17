@@ -68,22 +68,35 @@ export class AuthService {
   }
 
   async login(username: string, password: string): Promise<User> {
-    const user = await this.users.findOne({ $or: [{ email: username }, { username }] });
+    const user = await this.users.findOne({
+      $or: [{ email: username }, { username }]
+    });
 
-    if (!user || !(await user.comparePassword(password))) throw new InvalidCredentials();
-    if (!user.activated) throw new UserNotActivated();
+    if (!(await user?.comparePassword(password))) {
+      throw new InvalidCredentials();
+    }
+
+    if (!user?.activated) {
+      throw new UserNotActivated();
+    }
 
     return user;
   }
 
-  async register(email: string, password: string, username: string): Promise<void> {
+  async register(
+    email: string,
+    password: string,
+    username: string
+  ): Promise<void> {
     const user = await this.users.create(email, password, username);
     const activation = await new this.userActivations({ uid: user.id }).save();
 
     await this.mailer.send(
       userActivation(email, {
         displayName: user.displayName,
-        link: this.mailer.createAbsoluteLink(`/activate-account/${activation.token}`)
+        link: this.mailer.createAbsoluteLink(
+          `/activate-account/${activation.token}`
+        )
       })
     );
   }
@@ -95,7 +108,7 @@ export class AuthService {
     const user = await this.users.findOne({ id: passwordReset.uid });
     if (!user) throw new InvalidPasswordResetLink();
 
-    await this.sessions.delete({ "session.uid": user.id });
+    await this.sessions.deleteMany({ "session.uid": user.id });
 
     user.password = newPassword;
 
